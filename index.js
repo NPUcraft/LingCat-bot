@@ -11,7 +11,7 @@ const path = require("path");
 
 //调用指定oicq模块
 try {
-    var { createClient, cqcode ,segment} = require("oicq");
+    var { createClient, cqcode, segment } = require("oicq");
 } catch {
     var { createClient } = require("../index");
 }
@@ -294,7 +294,7 @@ bot.on("message.group.normal", function (e) {
         let hour = now.getHours();
         let target = 24;
         if (hour >= 17) target = Math.floor(Math.random() * (24 - 8) + 8) * 2;
-		
+
         // 找有解题目
         let my24Point = game24Points.twentyFourPoints(13, target);
         while (my24Point.result === false) {
