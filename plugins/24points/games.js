@@ -1,5 +1,3 @@
-
-
 /**
  * @param {Int} upper | 生成四个范围[1, upper]随机数
  * @returns {object}  | data:四个数, result:所有解答
