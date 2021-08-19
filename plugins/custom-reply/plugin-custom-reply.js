@@ -2,6 +2,7 @@
 const { bot } = require("../../index");
 const fs = require("fs");
 const path = require("path");
+const { segment } = require("oicq");
 
 //自定义回复
 let textjs = fs.readFileSync(path.join(__dirname, './text.json'), 'utf-8');
@@ -73,7 +74,8 @@ win10系统全屏截图键prt screen，图片保存在剪切板中；alt+prt sc�
             bot.sendGroupMsg(data.group_id, v);
             break;
         case "卫星地图":
-            bot.sendGroupMsg(data.group_id, map);
+            data.reply(segment.share(map, 'NPUcraft卫星地图', "https://pic.imgdb.cn/item/611e2c9f4907e2d39c02aec7.png", 'NPUcraft卫星地图'))
+            // bot.sendGroupMsg(data.group_id, map);
             break;
         case '-help':
             bot.sendGroupMsg(data.group_id,

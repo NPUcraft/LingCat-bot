@@ -1,5 +1,5 @@
 "use strict"
-const account = 123456; // bot_id
+const account = 447010560; // bot_id
 
 const bot = require("oicq").createClient(account)
 
@@ -25,6 +25,7 @@ require("./plugins/plugin-increase"); //监听群员入群事件
 
 
 /* === test plugins === */
+require("./plugins/jr-dontstarve/plugin-jrjh"); // 今日饥荒菜谱
 require("./plugins/24points/plugin-24points");  // 24点游戏
 require("./plugins/plugin-at") //at 事件
 require("./plugins/custom-reply/plugin-custom-reply");  // 自定义回复 //骂人功能

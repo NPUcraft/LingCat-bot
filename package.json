@@ -9,6 +9,7 @@
     "author": "",
     "license": "MIT",
     "dependencies": {
+        "cheerio": "^1.0.0-rc.10",
         "mongodb": "^4.1.0",
         "oicq": "^1.18.3",
         "seed-random": "^2.2.0"
