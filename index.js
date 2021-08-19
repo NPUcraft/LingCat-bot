@@ -1,5 +1,5 @@
 "use strict"
-const account = 123456; // bot_id
+const account = 1330615670; // bot_id
 
 const bot = require("oicq").createClient(account)
 
