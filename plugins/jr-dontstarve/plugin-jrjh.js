@@ -6,32 +6,34 @@ const http = require('http');
 const cheerio = require("cheerio");
 const seedRandom = require("../../lib/seed-random");
 const path = require("path");
+const { getPermission } = require("../../lib/permission");
 
-bot.on("message.group.normal", async function (e) {
-    if (e.raw_message === "-今日菜品") {
+async function jrjh(data, args) {
+    if (!await getPermission(data, "今日菜品")) return;
+    if (args.length === 0) {
         let dontStarveFoodList = await getDontStarveFoodList(); // 创建一个数组，用来保存资源
-        const seedID = e.sender.user_id + new Date().toLocaleDateString();
+        const seedID = data.sender.user_id + new Date().toLocaleDateString();
         let foodItem = dontStarveFoodList[
             seedRandom.getRandomInt(seedID, 0, dontStarveFoodList.length)
         ];
-        e.reply([
-            segment.text(`${e.sender.nickname}，今天的菜品是${foodItem.name}`),
+        data.reply([
+            segment.text(`${data.sender.nickname}，今天的菜品是${foodItem.name}`),
             segment.image(foodItem.image),
             segment.text(`HP:${foodItem.HP}，HV:${foodItem.HV}，SAN:${foodItem.SAN}`)
         ]);
-    }
-});
-
-bot.on("message.group.normal", (e) => {
-    if (e.raw_message === "-更新菜谱") {
-        try {
-            updateDontStarveFoodList();
-            e.reply("菜谱已更新");
-        } catch (error) {
-            e.reply("更新失败")
+    } else if (args.length === 1) {
+        if (args[0] === "更新") {
+            if (data.sender.role === "member") { data.reply("权限不足"); return; };
+            try {
+                updateDontStarveFoodList();
+                data.reply("菜谱已更新");
+            } catch (error) {
+                data.reply("更新失败")
+            }
         }
     }
-});
+}
+module.exports = jrjh;
 
 async function getDontStarveFoodList() {
     let content;

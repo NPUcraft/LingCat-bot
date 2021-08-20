@@ -106,12 +106,3 @@ win10系统全屏截图键prt screen，图片保存在剪切板中；alt+prt sc�
             break;
     }
 })
-
-//骂人功能
-bot.on("message.group.normal", (data) => {
-    var o0 = RegExp(/灵喵/);
-    var o = o0.test(data.raw_message);
-    if (o == true && data.sender.user_id != 2987084315 && data.sender.user_id != 1354825038) {
-        bot.sendGroupMsg(data.group_id, "FAKE NEWS!");
-    }
-});
