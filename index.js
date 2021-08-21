@@ -39,6 +39,13 @@ bot.on("message.group.normal", (e) => {
             const { turnOff } = require("./plugins/plugin-manage");
             turnOff(e, args);
             break;
+        case "-help":       // 帮助菜单
+            const { helpList } = require("./plugins/plugin-help");
+            helpList(e, args);
+            break;
+        case "-百度":       // 为你百度（恶搞）
+            require("./plugins/plugin-baidu-for-u")(e, args);
+            break;
         default:
             break;
     }
@@ -68,5 +75,5 @@ bot.on("notice.group", (e) => {
 
 /* === test plugins === */
 // require("./plugins/24points/plugin-24points");  // 24点游戏
-// require("./plugins/custom-reply/plugin-custom-reply");  // 自定义回复
+require("./plugins/custom-reply/plugin-custom-reply");  // 自定义回复
 /* ==== NOT STABLE ==== */
