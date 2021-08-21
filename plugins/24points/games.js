@@ -157,9 +157,9 @@ exports.check = function (list, target, str) {
     str = str.replace(/以/g, '');
     str = str.replace(/\s+/ig, '');
     // // 对习惯性乘法写法添加*
-    str = str.replace(/([)）])([(（])/g, "$1*$2");
-    str = str.replace(/([)）])(\d)/g, "$1*$2");
-    str = str.replace(/(\d)([(（])/g, "$1*$2");
+    // str = str.replace(/([)）])([(（])/g, "$1*$2");
+    // str = str.replace(/([)）])(\d)/g, "$1*$2");
+    // str = str.replace(/(\d)([(（])/g, "$1*$2");
 
     let strList = parseNumber(str);
     let result = "";
@@ -200,8 +200,9 @@ exports.check = function (list, target, str) {
         throw new Error("请用给定的数字解答！");
     }
 
+    const { limitedEvaluate } = require("../../lib/limited-evaluate");
     try {
-        return Math.abs(eval(result) - target) < 1e-6;
+        return Math.abs(limitedEvaluate(result) - target) < 1e-6;
     } catch (error) {
         throw new Error("错误的表达式！");
     }

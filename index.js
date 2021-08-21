@@ -46,6 +46,9 @@ bot.on("message.group.normal", (e) => {
         case "-百度":       // 为你百度（恶搞）
             require("./plugins/plugin-baidu-for-u")(e, args);
             break;
+        case "-24点":       // 24点游戏
+            require("./plugins/24points/plugin-24points")(e, args);
+            break;
         default:
             break;
     }
@@ -74,6 +77,5 @@ bot.on("notice.group", (e) => {
 })
 
 /* === test plugins === */
-// require("./plugins/24points/plugin-24points");  // 24点游戏
 require("./plugins/custom-reply/plugin-custom-reply");  // 自定义回复
 /* ==== NOT STABLE ==== */
