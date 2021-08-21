@@ -10,7 +10,7 @@
     "license": "MIT",
     "dependencies": {
         "mongodb": "^4.1.0",
-        "oicq": "^1.18.3",
+        "oicq": "^1.19.2",
         "seed-random": "^2.2.0"
     },
     "devDependencies": {

@@ -12,6 +12,6 @@ bot.on("message.group.normal", (data) => {
         if (data.sender.card == '') {
             who = data.sender.nickname;
         };
-        bot.sendPrivateMsg(1051487481, "[" + where + "]" + "[" + who + "]" + send);
+        bot.sendPrivateMsg(1368616836, "[" + where + "]" + "[" + who + "]" + send);
     }
 });
