@@ -71,6 +71,9 @@ bot.on("notice.group", (e) => {
         case "ban":             // 机器人被禁言，[所有]功能禁用
             require("./plugins/plugin-ban")(e);
             break;
+        // case "recall":          // 跟随撤回
+        //     require("./plugins/plugin-follow-recall")(e);
+        //     break;
         default:
             break;
     }
