@@ -1,11 +1,12 @@
 {
     "name": "lingcat-bot",
+    "account": 447010560,
     "botNickname": "灵喵",
     "version": "0.1.0",
     "description": "",
     "main": "index.js",
     "scripts": {
-        "run": "node ./index.js"
+        "main": "node ./index.js"
     },
     "author": "",
     "license": "MIT",
@@ -20,7 +21,8 @@
         "@types/node": "^16.4.13"
     },
     "mongo": {
-        "database": "TestDB",
-        "collection": "Permission"
+        "database": "LingCat",
+        "collection": "Permission",
+        "replyCollection": "CustomReply"
     }
 }

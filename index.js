@@ -1,5 +1,8 @@
 "use strict"
-const account = 447010560; // bot_id
+const fs = require("fs");
+const path = require("path");
+const botInfo = JSON.parse(fs.readFileSync(path.join(__dirname, "./package.json")));
+const account = botInfo.account; // bot_id
 
 const bot = require("oicq").createClient(account)
 const parseCommand = require("./lib/command");
@@ -19,11 +22,12 @@ exports.bot = bot
 
 /* ====== Plugins ====== */
 // 系统类插件直接加载
-// require("./plugins/plugin-online"); // 监听上线事件【调试请注释】
+require("./plugins/plugin-online"); // 机器人上线事件
 
 // 群消息监听类插件
 bot.on("message.group.normal", (e) => {
     let [cmd, ...args] = parseCommand(e.raw_message);
+    cmd = cmd ? cmd : e.raw_message;
     switch (cmd) {
         case "-sendsl":     // -sendsl留言功能
             require("./plugins/plugin-sendsl")(e, args);
@@ -49,7 +53,20 @@ bot.on("message.group.normal", (e) => {
         case "-24点":       // 24点游戏
             require("./plugins/24points/plugin-24points")(e, args);
             break;
-        default:
+        case "#set":        // 添加自定义词
+            let [key, ...values] = args.join('').split('=');
+            let value = values.join('=');
+            value = value.replace(/\s+/ig, '');
+            const { setReply } = require("./plugins/plugin-custom-reply");
+            setReply(e, key, value);
+            break;
+        case "#del":        // 删除自定义词
+            const { deleteReply } = require("./plugins/plugin-custom-reply");
+            deleteReply(e, args);
+            break;
+        default:            // 触发自定义回复
+            const { customReply } = require("./plugins/plugin-custom-reply");
+            customReply(e, cmd);
             break;
     }
 })
@@ -80,5 +97,5 @@ bot.on("notice.group", (e) => {
 })
 
 /* === test plugins === */
-require("./plugins/custom-reply/plugin-custom-reply");  // 自定义回复
+// require("./plugins/custom-reply/plugin-custom-reply");  // 自定义回复
 /* ==== NOT STABLE ==== */
