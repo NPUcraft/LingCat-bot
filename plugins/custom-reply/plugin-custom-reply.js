@@ -2,6 +2,7 @@
 const { bot } = require("../../index");
 const fs = require("fs");
 const path = require("path");
+const { segment } = require("oicq");
 
 //自定义回复
 let textjs = fs.readFileSync(path.join(__dirname, './text.json'), 'utf-8');
@@ -65,31 +66,8 @@ win10系统全屏截图键prt screen，图片保存在剪切板中；alt+prt sc�
             bot.sendGroupMsg(data.group_id, v);
             break;
         case "卫星地图":
-            bot.sendGroupMsg(data.group_id, map);
-            break;
-        case '-help':
-            bot.sendGroupMsg(data.group_id,
-                `-----Project SeaBit-----
-    1.输入“-help”获取帮助
-    2.使用“-sendsl"留言给汐灵
-    3.发送“卫星地图”查看NPUcraft生存服地图
-    4.自定义回复(输入-help4查看详情)
-    5.自动同意好友申请和群邀请
-    6.自动转发服务器公屏消息及通知至群聊
-    7.使用-Say向服务器内发送消息
-    8.服内发送“zzz”督促猫猫睡觉
-    9.服内天气变化监测（自动执行） `);
-            break;
-        case '-cmdhelp':
-            if (data.group_id == OP_group) {
-                bot.sendGroupMsg(OP_group,
-                    `-----灵喵命令模式使用说明-----
-1.输入“-cmdhelp”获取帮助
-2.输入“-title”+内容向全服执行title
-3.输入“-kick”+玩家名称kick某一玩家
-4.输入“-mute”+玩家名称禁言某一玩家
-5.其他命令使用“-command”+完整命令语句执行`);
-            }
+            data.reply(segment.share(map, 'NPUcraft卫星地图', "https://pic.imgdb.cn/item/611e2c9f4907e2d39c02aec7.png", 'NPUcraft卫星地图'))
+            // bot.sendGroupMsg(data.group_id, map);
             break;
     }
 })
@@ -101,14 +79,14 @@ bot.on("message.group.normal", (data) => {
         let join_time = new Date(res.data.join_time * 1e3);
         let time = Date.now() - join_time;
         let newTime = 10;// 判定为新人的时间，单位：天
-        console.log(time / 86400000);
+        //console.log(time / 86400000);
         let isNew = ((time / 86400000 < newTime) || data.sender.level == 1 || data.sender.user_id == 1368616836)?true:false;
 
         // 判断是否在指定群
         let isGroup = (data.group_id == 598445021 || data.group_id == 710085830)?true:false;
         // 判断是否是机器人id
         let isID = (data.sender.user_id != 2987084315 && data.sender.user_id != 1354825038)?true:false;
-        console.log(isNew, isGroup, isID);
+        //console.log(isNew, isGroup, isID);
 
         if (isNew && isGroup && isID) {
             if (RegExp(/考核服/).test(data.message[0].data.text) == true) {

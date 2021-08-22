@@ -1,6 +1,7 @@
 {
     "name": "lingcat-bot",
-    "version": "0.0.1",
+    "botNickname": "灵喵",
+    "version": "0.1.0",
     "description": "",
     "main": "index.js",
     "scripts": {
@@ -9,11 +10,16 @@
     "author": "",
     "license": "MIT",
     "dependencies": {
+        "cheerio": "^1.0.0-rc.10",
         "mongodb": "^4.1.0",
-        "oicq": "^1.19.2",
+        "oicq": "^1.19.3",
         "seed-random": "^2.2.0"
     },
     "devDependencies": {
         "@types/node": "^16.4.13"
+    },
+    "mongo": {
+        "database": "TestDB",
+        "collection": "Permission"
     }
 }
