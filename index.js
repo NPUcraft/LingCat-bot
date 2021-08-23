@@ -3,9 +3,9 @@ const fs = require("fs");
 const path = require("path");
 const botInfo = JSON.parse(fs.readFileSync(path.join(__dirname, "./package.json")));
 const account = botInfo.account; // bot_id
-
-const bot = require("oicq").createClient(account)
 const parseCommand = require("./lib/command");
+const bot = require("oicq").createClient(account)
+
 
 bot.on("system.login.qrcode", function (e) {
     this.logger.mark("扫码后按Enter完成登录") //通过扫码二维码登录
@@ -51,7 +51,9 @@ bot.on("message.group.normal", (e) => {
             require("./plugins/plugin-baidu-for-u")(e, args);
             break;
         case "-24点":       // 24点游戏
-            require("./plugins/24points/plugin-24points")(e, args);
+
+            let a = require("./plugins/24points/plugin-24points");
+            a(e, args)
             break;
         case "#set":        // 添加自定义词
             let [key, ...values] = args.join('').split('=');
