@@ -147,6 +147,18 @@ async function getGrid(img, r, c, type) {
     return img;
 }
 
+async function selectPlayer(img, type) {
+    let SelectX = await Jimp.read(path.join(__dirname, "./resource/blueRound.png"));
+    let SelectO = await Jimp.read(path.join(__dirname, "./resource/orangeRound.png"));
+    if (type === 'x') {
+        img.composite(SelectX, img.bitmap.width / 14 * 10.13, img.bitmap.height / 8 * 1.4);
+    } else {
+        img.composite(SelectO, img.bitmap.width / 14 * 10.13, img.bitmap.height / 8 * 4.6);
+    }
+    return img;
+}
+
+exports.selectPlayer = selectPlayer;
 exports.getNextImgWithoutSel = getNextImgWithoutSel;
 exports.getNextImgWithSel = getNextImgWithSel;
 exports.getWaitingImg = getWaitingImg;

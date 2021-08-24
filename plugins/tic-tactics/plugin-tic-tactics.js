@@ -9,7 +9,7 @@ const database = databaseInfo.database;
 const collection = databaseInfo.collection;
 const { getPermission } = require("../../lib/permission");
 const Jimp = require("jimp");
-const { getNextImgWithSel, getNextImgWithoutSel, getWaitingImg, getPKImg, getGrid } = require("./paint");
+const { getNextImgWithSel, getNextImgWithoutSel, getWaitingImg, getPKImg, getGrid, selectPlayer } = require("./paint");
 let playingGID = [];
 let playerObj = {};
 let msgId = {};
@@ -134,8 +134,11 @@ class Board {
             await getGrid(imgWithoutSel, r, c, this.gridStatus[3 * r + c] == 1 ? 'x' : 'o');
         }
         let imgWithSel = imgWithoutSel.clone();
-        if ((!this.freeStatus) && (!this.isWin())) {
-            await getNextImgWithSel(imgWithSel, currentRound);
+        if (!this.isWin()) {
+            await selectPlayer(imgWithSel, player == 1 ? 'o' : 'x');
+            if (!this.freeStatus) {
+                await getNextImgWithSel(imgWithSel, currentRound);
+            }
         }
         let buf = await imgWithSel.getBufferAsync("image/png")
         return buf;
