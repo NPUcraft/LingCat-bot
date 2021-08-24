@@ -1,5 +1,6 @@
 "use strict"
 const fs = require("fs");
+const { segment } = require("oicq");
 const path = require("path");
 const botInfo = JSON.parse(fs.readFileSync(path.join(__dirname, "./package.json")));
 const account = botInfo.account; // bot_id
@@ -51,9 +52,10 @@ bot.on("message.group.normal", (e) => {
             require("./plugins/plugin-baidu-for-u")(e, args);
             break;
         case "-24点":       // 24点游戏
-
-            let a = require("./plugins/24points/plugin-24points");
-            a(e, args)
+            require("./plugins/24points/plugin-24points")(e, args);
+            break;
+        case "-井字棋":
+            require("./plugins/tic-tactics/plugin-tic-tactics")(e, args);
             break;
         case "#set":        // 添加自定义词
             let [key, ...values] = args.join('').split('=');

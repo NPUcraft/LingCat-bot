@@ -1,0 +1,251 @@
+"use strict"
+const { bot } = require("../../index");
+const { segment } = require("oicq");
+const fs = require("fs");
+const path = require("path");
+const databaseInfo = JSON.parse(fs.readFileSync(path.join(__dirname, "../../package.json"))).mongo;
+const mongodbUtils = require("../../lib/mongodb");
+const database = databaseInfo.database;
+const collection = databaseInfo.collection;
+const { getPermission } = require("../../lib/permission");
+const Jimp = require("jimp");
+const { getNextImgWithSel, getNextImgWithoutSel, getWaitingImg, getPKImg } = require("./paint");
+let playingGID = [];
+let playerObj = {};
+let msgId = {};
+const help = `
+[玩法简介]
+超级井字棋是由九个井字棋棋盘组合而成，每个井字旗棋盘称为『小宫』
+游戏中对手上一步下的小宫中的位置，就是你这一步能下的小宫位置
+例如：
+上一步下在了某一小宫的7号位，所以下一步只能下在第七个小宫里
+[获胜方法]
+小宫内的获胜规则和井字棋相同
+当小宫率先被一人赢下时，另一人再连成线时不视为获得该小宫
+当你在大宫中将你胜利的小宫连成一条线时，你就获胜了
+[下棋方法]
+一人发送<-井字棋>创建对局，另一人发送<加入>加入对局
+输入1~9下棋，已自动为你确定要下的小宫位置，由橙(蓝)框框选
+`.trim();
+
+class Board {
+    /**
+     * 棋盘状态：0为空，1，-1为玩家
+     * 小宫状态：0为未知，1，-1位玩家获得,2为平局
+     */
+    constructor(img) {
+        this.img = img;
+        this.boardStatus = (() => {
+            let tmp = [];
+            for (let i = 0; i < 3; i++) {
+                tmp[i] = new Array();
+                for (let j = 0; j < 3; j++) {
+                    tmp[i][j] = [0, 0, 0, 0, 0, 0, 0, 0, 0];
+                }
+            }
+            return tmp;
+        })();
+        this.gridStatus = [0, 0, 0, 0, 0, 0, 0, 0, 0];
+        this.WIN = [
+            [0, 1, 2], [3, 4, 5], [6, 7, 8],
+            [0, 3, 6], [1, 4, 7], [2, 5, 8],
+            [0, 4, 8], [2, 4, 6]
+        ];  // 获胜情况
+        this.winner = 0;
+    }
+
+    // 设置棋盘状态
+    setBoardStatus(r, c, i, j, value) {
+        this.boardStatus[r][c][i * 3 + j] = value;
+    }
+
+    // 设置小宫状态
+    setGridStatus(r, c, value) {
+        this.gridStatus[r * 3 + c] = value;
+    }
+
+    // 刷新选定小宫状态
+    refreshGrid(r, c) {
+        if (this.gridStatus[3 * r + c] !== 0) return;   // 有人获得小宫则不刷新该小宫状态
+        for (let index = 0; index < this.WIN.length; index++) {
+            const element = this.WIN[index];
+            if (this.boardStatus[r][c][element[0]] == this.boardStatus[r][c][element[1]]
+                && this.boardStatus[r][c][element[1]] == this.boardStatus[r][c][element[2]]
+                && this.boardStatus[r][c][element[0]] != 0) {
+                this.setGridStatus(r, c, this.boardStatus[r][c][element[0]]);
+                break;
+            }
+        }
+        for (let i = 0; i < 9; i++) {
+            if (this.boardStatus[r][c][i] === 0) break;
+            if (i === 8) this.setGridStatus(r, c, 2);
+        }
+
+    }
+
+    // 判断是否获胜
+    isWin() {
+        for (let index = 0; index < this.WIN.length; index++) {
+            const element = this.WIN[index];
+            if (this.gridStatus[element[0]] == this.gridStatus[element[1]]
+                && this.gridStatus[element[1]] == this.gridStatus[element[2]]
+                && this.gridStatus[element[0]] != 0) {
+                this.winner = this.gridStatus[element[0]];
+                break;
+            }
+        }
+
+        if (this.winner != 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    // 判断是否平局
+    isTie() {
+        for (let i = 0; i < 9; i++) {
+            if (this.gridStatus[i] === 0) return false;
+        }
+        return true;
+    }
+
+    generatePKImg = async (player1Img, player2Img) => {
+        await getPKImg(this.img, player1Img, player2Img);
+    }
+
+    // 获得下一张图片buffer
+    getNextImaBuffer = async (r, c, i, j, player) => {
+        let currentRound = {
+            'r': r,
+            'c': c,
+            'i': i,
+            'j': j,
+            'type': player == 1 ? 'x' : 'o'
+        };
+        let imgWithoutSel = await getNextImgWithoutSel(this.img, currentRound);
+        let imgWithSel = imgWithoutSel.clone();
+        await getNextImgWithSel(imgWithSel, currentRound);
+        let buf = await imgWithSel.getBufferAsync("image/png")
+        return buf;
+    }
+}
+
+async function ticTactics(data, args) {
+    if (args.length > 0) {
+        data.reply(help);
+        return;
+    }
+    if (playingGID.indexOf(data.group_id) !== -1) return;
+    playingGID.push(data.group_id);
+    const field = String(data.group_id);
+    playerObj[field] = [data.sender.user_id];
+
+    let r = Math.floor(Math.random() * 3);
+    let c = Math.floor(Math.random() * 3);
+    let player = 1;
+    let gameStatus = 1; // 游戏状态：正在进行
+    let bk = await Jimp.read(path.join(__dirname, "./resource/bkg.png"));
+    let bkClone = bk.clone();
+    await getNextImgWithSel(bkClone, {
+        "i": r,
+        "j": c,
+        "type": player == 1 ? 'o' : 'x'
+    });
+    let player1Img = await Jimp.read(`http://q1.qlogo.cn/g?b=qq&nk=${data.user_id}&s=100`);
+    await getWaitingImg(bkClone, player1Img);
+    let bkBuf = await bkClone.getBufferAsync("image/png");
+
+    msgId[field] = [];
+
+    let msgid = await data.reply([segment.image(bkBuf)]);
+    msgId[field].push(msgid);
+    let ticGame = new Board(bk);
+
+    // 六十分钟超时结束游戏
+    let gameTimeOut = new setTimeout(async () => {
+        data.reply("没人玩井字棋我就溜啦~");
+        let index = playingGID.indexOf(data.group_id);
+        playingGID.splice(index, 1);
+        delete playerObj[field];
+        bot.off("message.group.normal", run);
+        bot.off("message.group.normal", joinGame);
+    }, 60 * 60 * 1000);
+
+
+    async function joinGame(e) {
+        if (e.group_id === data.group_id
+            && e.raw_message.trim() === "加入"
+            && playerObj[field][0] !== e.sender.user_id) {
+            playerObj[field].push(e.sender.user_id);
+            let megid = await e.reply([segment.text(`对局开始:\n蓝色方`),
+            segment.at(playerObj[field][0]),
+            segment.text(`\n橙色方`),
+            segment.at(playerObj[field][1]),
+            segment.text(`\n由蓝色方先行开局`)
+            ]);
+            msgId[field].push(megid);
+            let player2Img = await Jimp.read(`http://q1.qlogo.cn/g?b=qq&nk=${e.user_id}&s=100`);
+            ticGame.generatePKImg(player1Img, player2Img);
+            bot.off("message.group.normal", joinGame);
+        }
+    }
+    bot.on("message.group.normal", joinGame);
+    async function run(e) {
+        if (e.group_id === data.group_id
+            && e.raw_message.trim().length === 1
+            && playerObj[field].length === 2
+            && e.sender.user_id !== 1472303809) {
+            if (e.sender.user_id !== playerObj[field][Math.abs(player >> 1)]) {
+                return;
+            }
+            let cmd = e.raw_message.trim();
+            if (!(cmd <= '9' && cmd >= '1')) return;
+            let [i, j] = parsePosCmd(cmd);
+            if (ticGame.boardStatus[r][c][3 * i + j] !== 0) {
+                e.reply(`请在其他地方落子`);
+                return;
+            }
+            ticGame.setBoardStatus(r, c, i, j, player);
+            let buf = await ticGame.getNextImaBuffer(r, c, i, j, player);
+            let msgid = await e.reply([segment.image(buf)]);
+            msgId[field].push(msgid);
+            bot.deleteMsg(msgId[field].splice(0, 1)[0].data.message_id);
+            ticGame.refreshGrid(r, c);  // 刷新所下棋小宫状态
+            player = -player;   // 交换对手
+            r = i; c = j;   // 记录下一步落子小宫位置
+            if (ticGame.isWin()) {
+                // 如果有人胜利
+
+                let winnerQid = ticGame.winner == 1 ? playerObj[field][0] : playerObj[field][1];
+                e.reply([segment.text(`恭喜玩家`),
+                segment.at(winnerQid),
+                segment.text(`获得胜利！`)
+                ]);
+                gameStatus = 0;
+            }
+            if (ticGame.isTie() && gameStatus !== 0) {
+                e.reply(`本局是个平局~`);
+                gameStatus = 0;
+            }
+
+        }
+
+        if (!gameStatus) {
+            let index = playingGID.indexOf(e.group_id);
+            playingGID.splice(index, 1);
+            delete playerObj[field];
+            clearTimeout(gameTimeOut);
+            bot.off("message.group.normal", run);
+        }
+    }
+    bot.on("message.group.normal", run);
+
+    function parsePosCmd(cmd) {
+        cmd--;
+        let j = cmd % 3;
+        let i = (cmd - j) / 3;
+        return [i, j]
+    }
+}
+module.exports = ticTactics;

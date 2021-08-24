@@ -12,6 +12,7 @@
     "license": "MIT",
     "dependencies": {
         "cheerio": "^1.0.0-rc.10",
+        "jimp": "^0.16.1",
         "mathjs": "^9.4.4",
         "mongodb": "^4.1.0",
         "oicq": "^1.19.3",
