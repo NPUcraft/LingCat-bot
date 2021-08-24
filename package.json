@@ -2,7 +2,7 @@
     "name": "lingcat-bot",
     "account": 447010560,
     "botNickname": "灵喵",
-    "version": "0.1.0",
+    "version": "0.4.1",
     "description": "",
     "main": "index.js",
     "scripts": {
