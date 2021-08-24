@@ -144,13 +144,7 @@ async function getGrid(img, r, c, type) {
     } else {
         img.composite(OO, (640 - 40) * c / 3 + 65, (640 - 40) * r / 3 + 65);
     }
-    // if (type === 'x') {
-    //     img.composite(selectedBlue, (img.bitmap.width - 40) * c / 3 + 40, (img.bitmap.height - 40) * r / 3 + 40);
-    // } else {
-    //     img.composite(selected, (img.bitmap.width - 40) * c / 3 + 40, (img.bitmap.height - 40) * r / 3 + 40);
-    // }
-    // return img;
-    img.write(path.join(__dirname, "./res.png"))
+    return img;
 }
 
 exports.getNextImgWithoutSel = getNextImgWithoutSel;

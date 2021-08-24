@@ -9,7 +9,7 @@ const database = databaseInfo.database;
 const collection = databaseInfo.collection;
 const { getPermission } = require("../../lib/permission");
 const Jimp = require("jimp");
-const { getNextImgWithSel, getNextImgWithoutSel, getWaitingImg, getPKImg } = require("./paint");
+const { getNextImgWithSel, getNextImgWithoutSel, getWaitingImg, getPKImg, getGrid } = require("./paint");
 let playingGID = [];
 let playerObj = {};
 let msgId = {};
@@ -34,6 +34,7 @@ class Board {
      * 小宫状态：0为未知，1，-1位玩家获得,2为平局
      */
     constructor(img) {
+        this.freeStatus = false;    // 自由状态:目前可以任意下子的状态
         this.img = img;
         this.boardStatus = (() => {
             let tmp = [];
@@ -65,7 +66,12 @@ class Board {
     }
 
     // 刷新选定小宫状态
-    refreshGrid(r, c) {
+    refreshGrid(r, c, i, j) {
+        if (this.gridStatus[3 * i + j] !== 0) {
+            this.freeStatus = true;
+        } else {
+            this.freeStatus = false;
+        }
         if (this.gridStatus[3 * r + c] !== 0) return;   // 有人获得小宫则不刷新该小宫状态
         for (let index = 0; index < this.WIN.length; index++) {
             const element = this.WIN[index];
@@ -114,7 +120,7 @@ class Board {
         await getPKImg(this.img, player1Img, player2Img);
     }
 
-    // 获得下一张图片buffer
+    // 获得下一张图片buffer[如果已获得则显示已获得，如果下一步是自由状态，不添加选区]
     getNextImaBuffer = async (r, c, i, j, player) => {
         let currentRound = {
             'r': r,
@@ -124,8 +130,13 @@ class Board {
             'type': player == 1 ? 'x' : 'o'
         };
         let imgWithoutSel = await getNextImgWithoutSel(this.img, currentRound);
+        if (Math.abs(this.gridStatus[3 * r + c]) === 1) {
+            await getGrid(imgWithoutSel, r, c, this.gridStatus[3 * r + c] == 1 ? 'x' : 'o');
+        }
         let imgWithSel = imgWithoutSel.clone();
-        await getNextImgWithSel(imgWithSel, currentRound);
+        if ((!this.freeStatus) && (!this.isWin())) {
+            await getNextImgWithSel(imgWithSel, currentRound);
+        }
         let buf = await imgWithSel.getBufferAsync("image/png")
         return buf;
     }
@@ -192,43 +203,56 @@ async function ticTactics(data, args) {
     }
     bot.on("message.group.normal", joinGame);
     async function run(e) {
-        if (e.group_id === data.group_id
-            && e.raw_message.trim().length === 1
-            && playerObj[field].length === 2
-            && e.sender.user_id !== 1472303809) {
-            if (e.sender.user_id !== playerObj[field][Math.abs(player >> 1)]) {
-                return;
-            }
-            let cmd = e.raw_message.trim();
-            if (!(cmd <= '9' && cmd >= '1')) return;
-            let [i, j] = parsePosCmd(cmd);
+        if (!(e.group_id === data.group_id && playerObj[field].length === 2)) return;   // 不够两人不开始
+        if (e.sender.user_id !== playerObj[field][Math.abs(player >> 1)]) return;   // 不是当前回合的玩家不相应
+        let cmd = e.raw_message.trim().toLowerCase();
+
+        // 处理命令
+        let i, j;
+        if (cmd.length === 1 && cmd <= '9' && cmd >= '1' && (!ticGame.freeStatus)) {    // 数字命令
+            [i, j] = parsePosCmd(cmd, 1);
             if (ticGame.boardStatus[r][c][3 * i + j] !== 0) {
                 e.reply(`请在其他地方落子`);
                 return;
             }
-            ticGame.setBoardStatus(r, c, i, j, player);
-            let buf = await ticGame.getNextImaBuffer(r, c, i, j, player);
-            let msgid = await e.reply([segment.image(buf)]);
-            msgId[field].push(msgid);
-            bot.deleteMsg(msgId[field].splice(0, 1)[0].data.message_id);
-            ticGame.refreshGrid(r, c);  // 刷新所下棋小宫状态
-            player = -player;   // 交换对手
-            r = i; c = j;   // 记录下一步落子小宫位置
-            if (ticGame.isWin()) {
-                // 如果有人胜利
-
-                let winnerQid = ticGame.winner == 1 ? playerObj[field][0] : playerObj[field][1];
-                e.reply([segment.text(`恭喜玩家`),
-                segment.at(winnerQid),
-                segment.text(`获得胜利！`)
-                ]);
-                gameStatus = 0;
+        } else if (cmd.length === 2 && cmd[0] <= 'i' && cmd[0] >= 'a'
+            && cmd[1] <= '9' && cmd[1] >= '1') {            // 坐标命令
+            let [tempr, tempc, tempi, tempj] = parsePosCmd(cmd, 2);
+            if (!((tempr === r && tempc === c && ticGame.freeStatus == false
+                && ticGame.boardStatus[r][c][3 * tempi + tempj] === 0)  // 约束状态下如果不在指定区域内则不响应
+                ||
+                (ticGame.freeStatus == true && ticGame.gridStatus[3 * tempr + tempc] === 0
+                    && ticGame.boardStatus[tempr][tempc][3 * tempi + tempj] === 0))) {// 自由放置下在已获得小宫不响应
+                e.reply(`请在其他地方落子`)
+                return;
             }
-            if (ticGame.isTie() && gameStatus !== 0) {
-                e.reply(`本局是个平局~`);
-                gameStatus = 0;
-            }
+            c = tempc, r = tempr, i = tempi, j = tempj;
+        } else {
+            return;
+        }
 
+        ticGame.setBoardStatus(r, c, i, j, player);
+        ticGame.refreshGrid(r, c, i, j);  // 刷新所下棋小宫状态【同时确定下一步是否为自由状态
+        let buf = await ticGame.getNextImaBuffer(r, c, i, j, player);
+        let msgid = await e.reply([segment.image(buf)]);
+        msgId[field].push(msgid);
+        bot.deleteMsg(msgId[field].splice(0, 1)[0].data.message_id);
+
+        player = -player;   // 交换对手
+        r = i; c = j;   // 记录下一步落子小宫位置
+        if (ticGame.isWin()) {
+            // 如果有人胜利
+
+            let winnerQid = ticGame.winner == 1 ? playerObj[field][0] : playerObj[field][1];
+            e.reply([segment.text(`恭喜玩家`),
+            segment.at(winnerQid),
+            segment.text(`获得胜利！`)
+            ]);
+            gameStatus = 0;
+        }
+        if (ticGame.isTie() && gameStatus !== 0) {
+            e.reply(`本局是个平局~`);
+            gameStatus = 0;
         }
 
         if (!gameStatus) {
@@ -241,11 +265,23 @@ async function ticTactics(data, args) {
     }
     bot.on("message.group.normal", run);
 
-    function parsePosCmd(cmd) {
-        cmd--;
-        let j = cmd % 3;
-        let i = (cmd - j) / 3;
-        return [i, j]
+    function parsePosCmd(cmd, mode) {
+        let i, j;
+        if (mode === 1) {
+            cmd--;
+            j = cmd % 3;
+            i = (cmd - j) / 3;
+            return [i, j]
+        } else if (mode === 2) {
+            let cmdList = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i'];
+            let dy = cmdList.indexOf(cmd[0]);
+            let dx = +cmd[1] - 1;
+            i = dy % 3;
+            j = dx % 3;
+            let r = (dy - i) / 3;
+            let c = (dx - j) / 3;
+            return [r, c, i, j];
+        }
     }
 }
 module.exports = ticTactics;
