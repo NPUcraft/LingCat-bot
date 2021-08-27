@@ -35,6 +35,8 @@ bot.on("message.group.normal", (e) => {
         case "-今日菜品":       // 今日饥荒菜谱
             require("./plugins/jr-dontstarve/plugin-jrjh")(e, args);
             break;
+        case "-jrrp":       //今日人品
+            require("./plugins/plugin-jrrp")(e);
         case "#开启":       // 开启插件
             const { turnOn } = require("./plugins/plugin-manage");
             turnOn(e, args);
