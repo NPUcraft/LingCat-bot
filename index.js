@@ -37,6 +37,7 @@ bot.on("message.group.normal", (e) => {
             break;
         case "-jrrp":       //今日人品
             require("./plugins/plugin-jrrp")(e);
+            break;
         case "#开启":       // 开启插件
             const { turnOn } = require("./plugins/plugin-manage");
             turnOn(e, args);
