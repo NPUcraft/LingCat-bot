@@ -32,7 +32,6 @@ async function g24points(data, args) {
         data.reply(help);
         return;
     }
-    console.log(tempPointData)
     if (playingGID.indexOf(data.group_id) !== -1) { // 开始游戏则发送正在游戏的信息
         let dataObj = tempPointData[data.group_id];
         data.reply([
