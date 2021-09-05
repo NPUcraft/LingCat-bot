@@ -5,7 +5,9 @@ const path = require("path");
 const botInfo = JSON.parse(fs.readFileSync(path.join(__dirname, "./package.json")));
 const account = botInfo.account; // bot_id
 const parseCommand = require("./lib/command");
-const bot = require("oicq").createClient(account)
+const bot = require("oicq").createClient(account, {
+    platform: 5
+})
 
 
 bot.on("system.login.qrcode", function (e) {
@@ -61,11 +63,9 @@ bot.on("message.group.normal", (e) => {
             require("./plugins/tic-tactics/plugin-tic-tactics")(e, args);
             break;
         case "#set":        // 添加自定义词
-            let [key, ...values] = args.join('').split('=');
-            let value = values.join('=');
-            value = value.replace(/\s+/ig, '');
             const { setReply } = require("./plugins/plugin-custom-reply");
-            setReply(e, key, value);
+            if (args[1] == '') return;
+            setReply(e, args[0], args[1]);
             break;
         case "#del":        // 删除自定义词
             const { deleteReply } = require("./plugins/plugin-custom-reply");
@@ -104,5 +104,5 @@ bot.on("notice.group", (e) => {
 })
 
 /* === test plugins === */
-// require("./plugins/custom-reply/plugin-custom-reply");  // 自定义回复
+require("./plugins/custom-reply/plugin-custom-reply");  // 自定义回复
 /* ==== NOT STABLE ==== */
