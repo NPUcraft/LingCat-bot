@@ -3,10 +3,13 @@ const fs = require("fs");
 const path = require("path");
 const botInfo = JSON.parse(fs.readFileSync(path.join(__dirname, "../package.json")));
 const permissionPath = path.join(__dirname, "../config/permission.json");
+const replyPath = path.join(__dirname, "../config/customReply.json");
 
 async function install(data, args = null) {
     const gid = String(data.group_id);
     if (["admin", "owner"].indexOf(data.sender.role) === -1) return;    // 仅管理员可以安装机器人
+
+    /* 配置权限 */
     let permission = JSON.parse(fs.readFileSync(permissionPath));
     let installedGroup = [];
     for (const key in permission) {
@@ -18,11 +21,19 @@ async function install(data, args = null) {
         return;
     }
     // 配置该群相关参数
-    const template = permission["example"];
-    permission[gid] = JSON.parse(JSON.stringify(template));
+    const permissionTemplate = permission["example"];
+    permission[gid] = JSON.parse(JSON.stringify(permissionTemplate));
     permission[gid]["group_id"] = data.group_id;
     permission[gid]["version"] = botInfo.version;
     fs.writeFileSync(permissionPath, JSON.stringify(permission));
+
+    /* 配置自定义回复 */
+    let customReply = JSON.parse(fs.readFileSync(replyPath));
+    const replyTemplate = customReply["example"];
+    customReply[gid] = JSON.parse(JSON.stringify(replyTemplate));
+    customReply[gid]["group_id"] = data.group_id;
+    fs.writeFileSync(replyPath, JSON.stringify(customReply));
+
     data.reply(`温柔甜美的${botInfo.botNickname}已被带回家~`);
 }
 

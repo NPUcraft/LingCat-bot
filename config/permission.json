@@ -1,92 +1,121 @@
 {
-    "710085830": {
-        "group_id": 710085830,
-        "version": "0.4.8",
-        "banned": false,
-        "_24点": {
-            "exists": true,
-            "activation": true,
-            "isadmin": false
-        },
-        "_为你百度": {
-            "exists": true,
-            "activation": true,
-            "isadmin": false
-        },
-        "_sendsl": {
-            "exists": true,
-            "activation": true,
-            "isadmin": false
-        },
-        "_turnOff": {
-            "exists": true,
-            "activation": true,
-            "isadmin": true
-        },
-        "_turnOn": {
-            "exists": true,
-            "activation": true,
-            "isadmin": true
-        },
-        "_今日菜品": {
-            "exists": true,
-            "activation": true,
-            "isadmin": false
-        },
-        "_自定义回复": {
-            "exists": true,
-            "activation": true,
-            "isadmin": false
-        },
-        "_井字棋": {
-            "exists": true,
-            "activation": true,
-            "isadmin": false
-        }
-    },
     "example": {
         "group_id": null,
         "version": null,
         "banned": false,
         "_24点": {
-            "exists": true,
             "activation": true,
-            "isadmin": false
+            "help": {
+                "desc": "24点游戏",
+                "cmd": "-24点"
+            },
+            "isadmin": [
+                "member",
+                "admin",
+                "owner"
+            ]
         },
         "_为你百度": {
-            "exists": true,
             "activation": true,
-            "isadmin": false
+            "help": {
+                "desc": "让我帮你百度",
+                "cmd": "-百度"
+            },
+            "isadmin": [
+                "member",
+                "admin",
+                "owner"
+            ]
         },
         "_sendsl": {
-            "exists": true,
             "activation": true,
-            "isadmin": false
+            "help": null,
+            "isadmin": [
+                "member",
+                "admin",
+                "owner"
+            ]
+        },
+        "_help": {
+            "activation": true,
+            "help": null,
+            "isadmin": [
+                "member",
+                "admin",
+                "owner"
+            ]
         },
         "_turnOff": {
-            "exists": true,
             "activation": true,
-            "isadmin": true
+            "help": null,
+            "isadmin": [
+                "admin",
+                "owner"
+            ]
         },
         "_turnOn": {
-            "exists": true,
             "activation": true,
-            "isadmin": true
+            "help": null,
+            "isadmin": [
+                "admin",
+                "owner"
+            ]
+        },
+        "_入群欢迎": {
+            "activation": true,
+            "help": null
+        },
+        "_戳一戳": {
+            "activation": true,
+            "help": null
         },
         "_今日菜品": {
-            "exists": true,
             "activation": true,
-            "isadmin": false
+            "help": {
+                "desc": "查看今日菜品",
+                "cmd": "-今日菜品"
+            },
+            "isadmin": [
+                "member",
+                "admin",
+                "owner"
+            ]
+        },
+        "_jrrp": {
+            "activation": true,
+            "help": {
+                "desc": "查看今日人品",
+                "cmd": "-jrrp"
+            },
+            "isadmin": [
+                "member",
+                "admin",
+                "owner"
+            ]
         },
         "_自定义回复": {
-            "exists": true,
             "activation": true,
-            "isadmin": false
+            "help": {
+                "desc": "自定义回复",
+                "cmd": "#set/#del"
+            },
+            "isadmin": [
+                "member",
+                "admin",
+                "owner"
+            ]
         },
         "_井字棋": {
-            "exists": true,
             "activation": true,
-            "isadmin": false
+            "help": {
+                "desc": "井字棋对战",
+                "cmd": "-井字棋"
+            },
+            "isadmin": [
+                "member",
+                "admin",
+                "owner"
+            ]
         }
     }
 }

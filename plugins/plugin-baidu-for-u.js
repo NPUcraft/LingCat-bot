@@ -1,20 +1,13 @@
 "use strict"
-const { bot } = require("../index");
 const { segment } = require("oicq")
-const fs = require("fs");
-const path = require("path");
-const databaseInfo = JSON.parse(fs.readFileSync(path.join(__dirname, "../package.json"))).mongo;
-const database = databaseInfo.database;
-const collection = databaseInfo.collection;
 const { getPermission } = require("../lib/permission");
-const https = require("https");
 
 const help = `
 [为你百度 帮助]
 使用命令<-百度 要百度的内容>帮你百度一下~
 `.trim();
 async function baiduForU(data, args) {
-    if (!await getPermission(data, "baiduForU")) return;
+    if (!await getPermission(data, "为你百度")) return;
     if (args.length === 0) {
         data.reply(help);
     } else {
@@ -24,4 +17,4 @@ async function baiduForU(data, args) {
     }
 }
 
-module.exports = baiduForU;
+exports.baiduForU = baiduForU;

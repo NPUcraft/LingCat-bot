@@ -7,4 +7,4 @@ const { bot } = require("../index");
 function whatsUp(data) {
     data.reply("喵~ 找窝干嘛?");
 }
-module.exports = whatsUp;
+exports.whatsUp = whatsUp;

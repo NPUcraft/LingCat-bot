@@ -1,12 +1,7 @@
 "use strict"
 const { bot } = require("../../index");
 const { segment, cqcode } = require("oicq");
-const fs = require("fs");
 const path = require("path");
-const databaseInfo = JSON.parse(fs.readFileSync(path.join(__dirname, "../../package.json"))).mongo;
-const mongodbUtils = require("../../lib/mongodb");
-const database = databaseInfo.database;
-const collection = databaseInfo.collection;
 const { getPermission } = require("../../lib/permission");
 let playingGID = [];        // 记录游戏中的群号
 let tempPointData = {}; // 记录临时点数
@@ -167,4 +162,4 @@ async function g24points(data, args) {
 
 }
 
-module.exports = g24points;
+exports.g24points = g24points;

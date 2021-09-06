@@ -33,7 +33,7 @@ async function jrjh(data, args) {
         }
     }
 }
-module.exports = jrjh;
+exports.jrjh = jrjh;
 
 async function getDontStarveFoodList() {
     let content;

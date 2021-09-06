@@ -9,6 +9,6 @@ async function sendsl(data, args) {
     if (args.length === 0) return;
     const where = data.group_name;
     const who = data.sender.nickname;
-    bot.sendGroupMsg(710085830, `[${where}][${who}]:${args.join(" ")}`);
+    bot.sendGroupMsg(710085830, `[${where}][${who}(${data.user_id})]:\n${args.join(" ")}`);
 }
-module.exports = sendsl;
+exports.sendsl = sendsl;

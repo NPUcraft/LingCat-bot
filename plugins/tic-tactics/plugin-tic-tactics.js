@@ -3,10 +3,6 @@ const { bot } = require("../../index");
 const { segment } = require("oicq");
 const fs = require("fs");
 const path = require("path");
-const databaseInfo = JSON.parse(fs.readFileSync(path.join(__dirname, "../../package.json"))).mongo;
-const mongodbUtils = require("../../lib/mongodb");
-const database = databaseInfo.database;
-const collection = databaseInfo.collection;
 const { getPermission } = require("../../lib/permission");
 const Jimp = require("jimp");
 const { getNextImgWithSel, getNextImgWithoutSel, getWaitingImg, getPKImg, getGrid, selectPlayer } = require("./paint");
@@ -146,6 +142,7 @@ class Board {
 }
 
 async function ticTactics(data, args) {
+    if (!await getPermission(data, "井字棋")) return;
     if (args.length > 0) {
         data.reply(help);
         return;
@@ -287,4 +284,4 @@ async function ticTactics(data, args) {
         }
     }
 }
-module.exports = ticTactics;
+exports.ticTactics = ticTactics;
