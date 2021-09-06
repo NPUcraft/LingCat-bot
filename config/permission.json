@@ -1,0 +1,92 @@
+{
+    "710085830": {
+        "group_id": 710085830,
+        "version": "0.4.8",
+        "banned": false,
+        "_24点": {
+            "exists": true,
+            "activation": true,
+            "isadmin": false
+        },
+        "_为你百度": {
+            "exists": true,
+            "activation": true,
+            "isadmin": false
+        },
+        "_sendsl": {
+            "exists": true,
+            "activation": true,
+            "isadmin": false
+        },
+        "_turnOff": {
+            "exists": true,
+            "activation": true,
+            "isadmin": true
+        },
+        "_turnOn": {
+            "exists": true,
+            "activation": true,
+            "isadmin": true
+        },
+        "_今日菜品": {
+            "exists": true,
+            "activation": true,
+            "isadmin": false
+        },
+        "_自定义回复": {
+            "exists": true,
+            "activation": true,
+            "isadmin": false
+        },
+        "_井字棋": {
+            "exists": true,
+            "activation": true,
+            "isadmin": false
+        }
+    },
+    "example": {
+        "group_id": null,
+        "version": null,
+        "banned": false,
+        "_24点": {
+            "exists": true,
+            "activation": true,
+            "isadmin": false
+        },
+        "_为你百度": {
+            "exists": true,
+            "activation": true,
+            "isadmin": false
+        },
+        "_sendsl": {
+            "exists": true,
+            "activation": true,
+            "isadmin": false
+        },
+        "_turnOff": {
+            "exists": true,
+            "activation": true,
+            "isadmin": true
+        },
+        "_turnOn": {
+            "exists": true,
+            "activation": true,
+            "isadmin": true
+        },
+        "_今日菜品": {
+            "exists": true,
+            "activation": true,
+            "isadmin": false
+        },
+        "_自定义回复": {
+            "exists": true,
+            "activation": true,
+            "isadmin": false
+        },
+        "_井字棋": {
+            "exists": true,
+            "activation": true,
+            "isadmin": false
+        }
+    }
+}

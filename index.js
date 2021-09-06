@@ -27,6 +27,8 @@ exports.bot = bot
 // 系统类插件直接加载
 require("./plugins/plugin-online"); // 机器人上线事件
 
+const { install, update } = require("./plugins/plugin-install"); // 安装|更新机器人
+
 // 群消息监听类插件
 bot.on("message.group.normal", (e) => {
     let [cmd, ...args] = parseCommand(e.raw_message);
@@ -70,6 +72,12 @@ bot.on("message.group.normal", (e) => {
         case "#del":        // 删除自定义词
             const { deleteReply } = require("./plugins/plugin-custom-reply");
             deleteReply(e, args);
+            break;
+        case "#install":    // 安装
+            install(e);
+            break;
+        case "#update":     // 更新
+            update(e);
             break;
         default:            // 触发自定义回复
             const { customReply } = require("./plugins/plugin-custom-reply");
