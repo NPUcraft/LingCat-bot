@@ -4,7 +4,7 @@ const fs = require("fs");
 const path = require("path");
 
 /**
- * 灵喵上线提示,并更新数据
+ * 上线提示,并更新数据
  */
 bot.once("system.online", async function () {
 	console.log(`我是${this.nickname}(${this.uin})，我有${this.fl.size}个好友，${this.gl.size}个群`);

@@ -69,6 +69,10 @@
             "activation": true,
             "help": null
         },
+        "_closeAll": {
+            "activation": true,
+            "help": null
+        },
         "_今日菜品": {
             "activation": true,
             "help": {

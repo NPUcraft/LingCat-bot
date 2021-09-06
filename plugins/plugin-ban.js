@@ -2,8 +2,10 @@
 const fs = require("fs");
 const path = require("path");
 const permissionPath = path.join(__dirname, "../config/permission.json");
+const { getPermission } = require("../lib/permission");
 
 function banned(data) {
+    if (!await getPermission(data, "closeAll")) return;
     let permission = JSON.parse(fs.readFileSync(permissionPath));
     const gid = String(data.group_id);
 

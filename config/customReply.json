@@ -1,4 +1,16 @@
 {
+    "710085830": {
+        "group_id": 710085830,
+        "SUPERUSER": [],
+        "reply": {
+            "欢迎新人": "欢迎来到NPUcraft!新人请先阅读http://wiki.npucraft.top/npucraftwiki/index.php/%E6%96%87%E6%A1%A3再根据提示阅读相关文档规则文件。当你确认你已经了解服务器规则之后，使用整合包进入考核服生存考核，当你完成考核任务（制作一套钻套）后，服务器将会自动为你添加生存服进入权限。",
+            "服务器官号": "现阶段我们在QQ与bilibili开设有官方宣传号\rQQ：431167351(NPU-Minecraft)\rB站：NPU-Minecraft\r服务器简介视频：https://b23.tv/2s9eiU",
+            "这是什么群": "这里是NPUcraft生存服交流群，同时也是西北工业大学NPUcraft社团兼服务器总群。我们设有互通生存服，同时有建筑服正在进行学校复原工程（不对外开放）",
+            "卫星地图": "http://dynmap.npucraft.top",
+            "客户端异常退出怎么办": "客户端崩溃调试办法：\r1.首先检查内存分配有没有超，java路径对不对\r2.独立显卡是英伟达的检查一下NVIDIA显卡设置里有没有将java.exe设置成使用高性能显卡启动(之后会出教程文档)\r3.在hmcl启动器右下角先切换成原版启动;原版不能启动就删除.minecraft下的assets和libraries文件夹然后重试\r4.在原版里创建单机存档看能不能打开\r5.在原版里看看能不能登上服务器大厅\r6.如果fabric版还是不能启动就重复步骤3\r7.如果fabric版还是不行就一次禁用一两个mod，看看到底是禁用了哪个mod后能正常启动;或者一次只启用一两个，看看启用了哪个会崩(有些mod有依赖关系，之后会出说明文档)\r8.用fabric版启动游戏后创建单机存档\r9.用fabric版登录服务器\r以上某一步出问题之后贴出崩溃报告/问题截图，并说明是哪一步，群友就可以更好的帮你解决问题鸭",
+            "怎么截图": "[CQ:image,file=9bed757074c3a793ccc0e5b0b8b7586d122185-910-800.jpg,url=https://gchat.qpic.cn/gchatpic_new/1694605269/710085830-2890454701-9BED757074C3A793CCC0E5B0B8B7586D/0?term=3]"
+        }
+    },
     "example": {
         "group_id": null,
         "SUPERUSER": [],
