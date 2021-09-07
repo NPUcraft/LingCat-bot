@@ -16,40 +16,6 @@
 
 > 介于作者技术力低下，LingCat-bot 的体验可能并不是很好。如果使用中有任何意见或者建议都欢迎提交[issue](https://github.com/NPUcraft/LingCat-bot/issues)进行反馈，我会努力去完善它。
 
-## TODO List
-
-+ 小游戏
-  - [x] 24点
-  - [x] 超级井字棋
-  - [x] 今日XX（人品|菜品）
-  - [ ] 今日车万
-+ 查询与服务
-  - [ ] Wiki查询
-  - [x] 为你百度
-  - [ ] MC服务器状态
-  - [ ] Bilibili直播间推送
-  - [ ] up猪视频更新推送
-  - [ ] MC&qq跨平台聊天
-
-## 技术细节
-
-机器人基于 Node.js 开发，感谢以下开源项目：
-
-+ [oicq](https://github.com/takayama-lily/oicq) 
-+ [Jimp](https://github.com/oliver-moran/jimp)
-+ [cheerio](https://github.com/cheeriojs/cheerio)
-+ [mathjs](https://github.com/josdejong/mathjs)
-
-## 一些参考资料
-
-> [JavaScript语言基础](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript) 
-> 
-> [Node.js入门教程](http://nodejs.cn/learn) 
-> 
-> [5分钟上手TypeScript](https://www.tslang.cn/docs/handbook/typescript-in-5-minutes.html) 
-> 
-> [优秀npm三方库集合](https://github.com/sindresorhus/awesome-nodejs) 
-
 ## 开始使用
 
 **（推荐方式）通过脚手架安装**
@@ -103,6 +69,42 @@ $ npm i
 ```bash
 $ npm run main
 ```
+
+
+## TODO List
+
++ 小游戏
+  - [x] 24点
+  - [x] 超级井字棋
+  - [x] 今日XX（人品|菜品）
+  - [ ] 今日车万
++ 查询与服务
+  - [ ] Wiki查询
+  - [x] 为你百度
+  - [ ] MC服务器状态
+  - [ ] Bilibili直播间推送
+  - [ ] up猪视频更新推送
+  - [ ] MC&qq跨平台聊天
+
+## 技术细节
+
+机器人基于 Node.js 开发，感谢以下开源项目：
+
++ [oicq](https://github.com/takayama-lily/oicq) 
++ [Jimp](https://github.com/oliver-moran/jimp)
++ [cheerio](https://github.com/cheeriojs/cheerio)
++ [mathjs](https://github.com/josdejong/mathjs)
+
+## 一些参考资料
+
+> [JavaScript语言基础](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript) 
+> 
+> [Node.js入门教程](http://nodejs.cn/learn) 
+> 
+> [5分钟上手TypeScript](https://www.tslang.cn/docs/handbook/typescript-in-5-minutes.html) 
+> 
+> [优秀npm三方库集合](https://github.com/sindresorhus/awesome-nodejs) 
+
 
 ## 贡献
 
