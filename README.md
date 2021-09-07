@@ -57,7 +57,7 @@
 1. 安装管理工具
 
 ```bash
-$ npm i sirios-cli
+$ npm i sirios-cli -g
 ```
 
 2. 初始化项目：
