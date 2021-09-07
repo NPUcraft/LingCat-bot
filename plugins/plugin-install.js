@@ -25,14 +25,14 @@ async function install(data, args = null) {
     permission[gid] = JSON.parse(JSON.stringify(permissionTemplate));
     permission[gid]["group_id"] = data.group_id;
     permission[gid]["version"] = botInfo.version;
-    fs.writeFileSync(permissionPath, JSON.stringify(permission));
+    fs.writeFileSync(permissionPath, JSON.stringify(permission, null, '\t'));
 
     /* 配置自定义回复 */
     let customReply = JSON.parse(fs.readFileSync(replyPath));
     const replyTemplate = customReply["example"];
     customReply[gid] = JSON.parse(JSON.stringify(replyTemplate));
     customReply[gid]["group_id"] = data.group_id;
-    fs.writeFileSync(replyPath, JSON.stringify(customReply));
+    fs.writeFileSync(replyPath, JSON.stringify(customReply, null, '\t'));
 
     data.reply(`温柔甜美的${botInfo.botNickname}已被带回家~`);
 }
@@ -55,7 +55,7 @@ async function update(data, args = null) {
             permission[gid][key] = permission["example"][key];
         }
     }
-    fs.writeFileSync(permissionPath, JSON.stringify(permission));
+    fs.writeFileSync(permissionPath, JSON.stringify(permission, null, '\t'));
     data.reply(`[V${currentVer} -> V${botInfo.version}]\n我变得更加温柔咯~`);
 }
 

@@ -16,7 +16,7 @@ async function setReply(data, key, value) {
         return;
     }
     replyData[gid]["reply"][key] = value;
-    fs.writeFileSync(replyPath, JSON.stringify(replyData));
+    fs.writeFileSync(replyPath, JSON.stringify(replyData, null, '\t'));
     data.reply("添加成功");
 }
 exports.setReply = setReply;
@@ -32,7 +32,7 @@ async function deleteReply(data, args) {
     args.forEach(elem => {
         delete replyData[gid]["reply"][elem];
     });
-    fs.writeFileSync(replyPath, JSON.stringify(replyData));
+    fs.writeFileSync(replyPath, JSON.stringify(replyData, null, '\t'));
     data.reply("删除成功");
 }
 exports.deleteReply = deleteReply;

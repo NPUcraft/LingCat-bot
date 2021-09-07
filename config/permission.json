@@ -1,125 +1,125 @@
 {
-    "example": {
-        "group_id": null,
-        "version": null,
-        "banned": false,
-        "_24点": {
-            "activation": true,
-            "help": {
-                "desc": "24点游戏",
-                "cmd": "-24点"
-            },
-            "isadmin": [
-                "member",
-                "admin",
-                "owner"
-            ]
-        },
-        "_为你百度": {
-            "activation": true,
-            "help": {
-                "desc": "让我帮你百度",
-                "cmd": "-百度"
-            },
-            "isadmin": [
-                "member",
-                "admin",
-                "owner"
-            ]
-        },
-        "_sendsl": {
-            "activation": true,
-            "help": null,
-            "isadmin": [
-                "member",
-                "admin",
-                "owner"
-            ]
-        },
-        "_help": {
-            "activation": true,
-            "help": null,
-            "isadmin": [
-                "member",
-                "admin",
-                "owner"
-            ]
-        },
-        "_turnOff": {
-            "activation": true,
-            "help": null,
-            "isadmin": [
-                "admin",
-                "owner"
-            ]
-        },
-        "_turnOn": {
-            "activation": true,
-            "help": null,
-            "isadmin": [
-                "admin",
-                "owner"
-            ]
-        },
-        "_入群欢迎": {
-            "activation": true,
-            "help": null
-        },
-        "_戳一戳": {
-            "activation": true,
-            "help": null
-        },
-        "_closeAll": {
-            "activation": true,
-            "help": null
-        },
-        "_今日菜品": {
-            "activation": true,
-            "help": {
-                "desc": "查看今日菜品",
-                "cmd": "-今日菜品"
-            },
-            "isadmin": [
-                "member",
-                "admin",
-                "owner"
-            ]
-        },
-        "_jrrp": {
-            "activation": true,
-            "help": {
-                "desc": "查看今日人品",
-                "cmd": "-jrrp"
-            },
-            "isadmin": [
-                "member",
-                "admin",
-                "owner"
-            ]
-        },
-        "_自定义回复": {
-            "activation": true,
-            "help": {
-                "desc": "自定义回复",
-                "cmd": "#set/#del"
-            },
-            "isadmin": [
-                "member",
-                "admin",
-                "owner"
-            ]
-        },
-        "_井字棋": {
-            "activation": true,
-            "help": {
-                "desc": "井字棋对战",
-                "cmd": "-井字棋"
-            },
-            "isadmin": [
-                "member",
-                "admin",
-                "owner"
-            ]
-        }
-    }
+	"example": {
+		"group_id": null,
+		"version": null,
+		"banned": false,
+		"_24点": {
+			"activation": true,
+			"help": {
+				"desc": "24点游戏",
+				"cmd": "-24点"
+			},
+			"isadmin": [
+				"member",
+				"admin",
+				"owner"
+			]
+		},
+		"_为你百度": {
+			"activation": true,
+			"help": {
+				"desc": "让我帮你百度",
+				"cmd": "-百度"
+			},
+			"isadmin": [
+				"member",
+				"admin",
+				"owner"
+			]
+		},
+		"_sendsl": {
+			"activation": true,
+			"help": null,
+			"isadmin": [
+				"member",
+				"admin",
+				"owner"
+			]
+		},
+		"_help": {
+			"activation": true,
+			"help": null,
+			"isadmin": [
+				"member",
+				"admin",
+				"owner"
+			]
+		},
+		"_turnOff": {
+			"activation": true,
+			"help": null,
+			"isadmin": [
+				"admin",
+				"owner"
+			]
+		},
+		"_turnOn": {
+			"activation": true,
+			"help": null,
+			"isadmin": [
+				"admin",
+				"owner"
+			]
+		},
+		"_入群欢迎": {
+			"activation": true,
+			"help": null
+		},
+		"_戳一戳": {
+			"activation": true,
+			"help": null
+		},
+		"_closeAll": {
+			"activation": true,
+			"help": null
+		},
+		"_今日菜品": {
+			"activation": true,
+			"help": {
+				"desc": "查看今日菜品",
+				"cmd": "-今日菜品"
+			},
+			"isadmin": [
+				"member",
+				"admin",
+				"owner"
+			]
+		},
+		"_jrrp": {
+			"activation": true,
+			"help": {
+				"desc": "查看今日人品",
+				"cmd": "-jrrp"
+			},
+			"isadmin": [
+				"member",
+				"admin",
+				"owner"
+			]
+		},
+		"_自定义回复": {
+			"activation": true,
+			"help": {
+				"desc": "自定义回复",
+				"cmd": "#set/#del"
+			},
+			"isadmin": [
+				"member",
+				"admin",
+				"owner"
+			]
+		},
+		"_井字棋": {
+			"activation": true,
+			"help": {
+				"desc": "井字棋对战",
+				"cmd": "-井字棋"
+			},
+			"isadmin": [
+				"member",
+				"admin",
+				"owner"
+			]
+		}
+	}
 }

@@ -18,7 +18,7 @@ async function turnOn(data, args) {
         const gid = String(data.group_id);
         let permission = JSON.parse(fs.readFileSync(permissionPath));
         permission[gid][name]["activation"] = true;
-        fs.writeFileSync(permissionPath, JSON.stringify(permission));
+        fs.writeFileSync(permissionPath, JSON.stringify(permission, null, '\t'));
         data.reply(`已开启${name}`);
     } else {
         data.reply("参数太多！");
@@ -38,7 +38,7 @@ async function turnOff(data, args) {
         const gid = String(data.group_id);
         let permission = JSON.parse(fs.readFileSync(permissionPath));
         permission[gid][name]["activation"] = false;
-        fs.writeFileSync(permissionPath, JSON.stringify(permission));
+        fs.writeFileSync(permissionPath, JSON.stringify(permission, null, '\t'));
         data.reply(`已关闭${name}`);
     } else {
         data.reply("参数太多！");
