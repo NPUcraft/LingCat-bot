@@ -1,6 +1,7 @@
 "use strict"
 const fs = require("fs");
 const path = require("path");
+const { segment } = require('oicq')
 const botInfo = JSON.parse(fs.readFileSync(path.join(__dirname, "./package.json")));
 const account = botInfo.account; // bot_id
 const parseCommand = require("./lib/command");
@@ -34,6 +35,7 @@ const { helpList } = require("./plugins/plugin-help");       // 帮助菜单
 const { setReply, deleteReply, customReply } = require("./plugins/plugin-custom-reply");
 const { g24points } = require("./plugins/24points/plugin-24points");   // 24点游戏
 const { jrjh } = require("./plugins/jr-dontstarve/plugin-jrjh");      // 今日饥荒菜谱
+const { jrmc } = require("./plugins/jrmc/plugin-jrmc");       // 今日MC
 const { jrrp } = require("./plugins/plugin-jrrp");        // 今日人品
 const { ticTactics } = require("./plugins/tic-tactics/plugin-tic-tactics");     // 超级井字棋
 const { baiduForU } = require("./plugins/plugin-baidu-for-u");     // 为你百度
@@ -52,6 +54,9 @@ bot.on("message.group.normal", (e) => {
             break;
         case "-今日菜品":       // 今日饥荒菜谱
             jrjh(e, args);
+            break;
+        case "-jrmc":       // 今日MC
+            jrmc(e, args);
             break;
         case "-jrrp":       //今日人品
             jrrp(e);

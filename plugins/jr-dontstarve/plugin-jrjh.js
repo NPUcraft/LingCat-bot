@@ -16,8 +16,9 @@ async function jrjh(data, args) {
         let foodItem = dontStarveFoodList[
             seedRandom.getRandomInt(seedID, 0, dontStarveFoodList.length)
         ];
+        let card = data.sender.card;
         data.reply([
-            segment.text(`${data.sender.nickname}，今天的菜品是${foodItem.name}`),
+            segment.text(`${card === '' ? data.sender.nickname : card}，今天的菜品是${foodItem.name}`),
             segment.image(foodItem.image),
             segment.text(`HP:${foodItem.HP}，HV:${foodItem.HV}，SAN:${foodItem.SAN}`)
         ]);

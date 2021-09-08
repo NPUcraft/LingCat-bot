@@ -97,6 +97,18 @@
 				"owner"
 			]
 		},
+		"_jrmc": {
+			"activation": true,
+			"help": {
+				"desc": "查看今日MC",
+				"cmd": "-jrmc"
+			},
+			"isadmin": [
+				"member",
+				"admin",
+				"owner"
+			]
+		},
 		"_自定义回复": {
 			"activation": true,
 			"help": {
