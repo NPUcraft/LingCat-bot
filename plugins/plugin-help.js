@@ -4,12 +4,14 @@ const fs = require("fs");
 const path = require("path");
 const botNickname = JSON.parse(fs.readFileSync(path.join(__dirname, "../package.json"))).botNickname;
 const { getPermission } = require("../lib/permission");
-const permissionPath = path.join(__dirname, "../config/permission.json");
+const { _readFileSync } = require("../lib/file");
+const permissionDir = path.join(__dirname, "../config-template/config");
+const permissionPath = permissionDir + "/permission.json";
 
 async function helpList(data, args) {
     if (!await getPermission(data, "help")) return;
     const gid = String(data.group_id);
-    let permission = JSON.parse(fs.readFileSync(permissionPath));
+    let permission = _readFileSync(permissionDir, "permission");
     let doc = permission[gid];
     let index = 1;
 

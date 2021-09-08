@@ -1,7 +1,6 @@
 "use strict"
 const fs = require("fs");
 const path = require("path");
-const { segment } = require('oicq')
 const botInfo = JSON.parse(fs.readFileSync(path.join(__dirname, "./package.json")));
 const account = botInfo.account; // bot_id
 const parseCommand = require("./lib/command");

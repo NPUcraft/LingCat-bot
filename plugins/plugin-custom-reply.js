@@ -1,7 +1,9 @@
 "use strict"
 const fs = require("fs");
 const path = require("path");
-const replyPath = path.join(__dirname, "../config/customReply.json");
+const { _readFileSync } = require("../lib/file");
+const replyDir = path.join(__dirname, "../config-template/config");
+const replyPath = replyDir + "/customReply.json";
 const { getPermission } = require("../lib/permission");
 
 async function setReply(data, key, value) {
@@ -10,7 +12,7 @@ async function setReply(data, key, value) {
     if (key.startsWith("[CQ:")) return;
 
     const gid = String(data.group_id);
-    let replyData = JSON.parse(fs.readFileSync(replyPath));
+    let replyData = _readFileSync(replyDir, "customReply");
     if (data.sender.role === "member" && replyData[gid]["SUPERUSER"].indexOf(data.user_id) === -1) {
         data.reply(`权限不足`);
         return;
@@ -24,7 +26,7 @@ exports.setReply = setReply;
 async function deleteReply(data, args) {
     if (!await getPermission(data, "自定义回复")) return;
     const gid = String(data.group_id);
-    let replyData = JSON.parse(fs.readFileSync(replyPath));
+    let replyData = _readFileSync(replyDir, "customReply");
     if (data.sender.role === "member" && replyData[gid]["SUPERUSER"].indexOf(data.user_id) === -1) {
         data.reply(`权限不足`);
         return;
@@ -40,7 +42,7 @@ exports.deleteReply = deleteReply;
 async function customReply(data, args) {
     if (!await getPermission(data, "自定义回复")) return;
     const gid = String(data.group_id);
-    let replyData = JSON.parse(fs.readFileSync(replyPath));
+    let replyData = _readFileSync(replyDir, "customReply");
     let replyObj = replyData[gid]["reply"];
     data.reply(replyObj?.[args]);
 }

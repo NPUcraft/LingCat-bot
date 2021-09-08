@@ -1,12 +1,14 @@
 "use strict"
 const fs = require("fs");
 const path = require("path");
-const permissionPath = path.join(__dirname, "../config/permission.json");
+const { _readFileSync } = require("../lib/file");
+const permissionDir = path.join(__dirname, "../config-template/config");
+const permissionPath = permissionDir + "/permission.json";
 const { getPermission } = require("../lib/permission");
 
 async function banned(data) {
     if (!await getPermission(data, "closeAll")) return;
-    let permission = JSON.parse(fs.readFileSync(permissionPath));
+    let permission = _readFileSync(permissionDir, "permission");
     const gid = String(data.group_id);
 
     if (data.duration > 0) {    // 被禁言

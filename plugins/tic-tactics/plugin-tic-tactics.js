@@ -1,7 +1,6 @@
 "use strict"
 const { bot } = require("../../index");
 const { segment } = require("oicq");
-const fs = require("fs");
 const path = require("path");
 const { getPermission } = require("../../lib/permission");
 const Jimp = require("jimp");

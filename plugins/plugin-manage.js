@@ -2,8 +2,10 @@
 const mongodbUtils = require("../lib/mongodb");
 const fs = require("fs");
 const path = require("path");
+const { _readFileSync } = require("../lib/file");
 const { getPermission } = require("../lib/permission");
-const permissionPath = path.join(__dirname, "../config/permission.json");
+const permissionDir = path.join(__dirname, "../config-template/config");
+const permissionPath = permissionDir + "/permission.json";
 
 /**
  * 打开插件
@@ -16,7 +18,7 @@ async function turnOn(data, args) {
     } else if (args.length === 1) {
         let name = "_" + args[0];
         const gid = String(data.group_id);
-        let permission = JSON.parse(fs.readFileSync(permissionPath));
+        let permission = _readFileSync(permissionDir, "permission");
         permission[gid][name]["activation"] = true;
         fs.writeFileSync(permissionPath, JSON.stringify(permission, null, '\t'));
         data.reply(`已开启${name}`);
@@ -36,7 +38,7 @@ async function turnOff(data, args) {
     } else if (args.length === 1) {
         let name = "_" + args[0];
         const gid = String(data.group_id);
-        let permission = JSON.parse(fs.readFileSync(permissionPath));
+        let permission = _readFileSync(permissionDir, "permission");
         permission[gid][name]["activation"] = false;
         fs.writeFileSync(permissionPath, JSON.stringify(permission, null, '\t'));
         data.reply(`已关闭${name}`);
