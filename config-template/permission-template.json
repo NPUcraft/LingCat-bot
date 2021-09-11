@@ -27,7 +27,7 @@
 				"owner"
 			]
 		},
-		"_sendsl": {
+		"_send": {
 			"activation": true,
 			"help": null,
 			"isadmin": [
@@ -65,6 +65,10 @@
 			"activation": true,
 			"help": null
 		},
+		"_退群": {
+			"activation": true,
+			"help": null
+		},
 		"_戳一戳": {
 			"activation": true,
 			"help": null
@@ -90,6 +94,18 @@
 			"help": {
 				"desc": "查看今日人品",
 				"cmd": "-jrrp"
+			},
+			"isadmin": [
+				"member",
+				"admin",
+				"owner"
+			]
+		},
+		"_getMcAlmanac": {
+			"activation": true,
+			"help": {
+				"desc": "查看今日运势",
+				"cmd": "-今日运势"
 			},
 			"isadmin": [
 				"member",

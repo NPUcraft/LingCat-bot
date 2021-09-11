@@ -36,11 +36,13 @@ const { g24points } = require("./plugins/24points/plugin-24points");   // 24点�
 const { jrjh } = require("./plugins/jr-dontstarve/plugin-jrjh");      // 今日饥荒菜谱
 const { jrmc } = require("./plugins/jrmc/plugin-jrmc");       // 今日MC
 const { jrrp } = require("./plugins/plugin-jrrp");        // 今日人品
+const { jrmchl } = require("./plugins/plugin-jrmchl");        // 今日mc运势
 const { ticTactics } = require("./plugins/tic-tactics/plugin-tic-tactics");     // 超级井字棋
 const { baiduForU } = require("./plugins/plugin-baidu-for-u");     // 为你百度
-const { sendsl } = require("./plugins/plugin-sendsl");    // 反馈
+const { send } = require("./plugins/plugin-send");    // 反馈
 
 const { increase } = require("./plugins/plugin-increase");      // 入群欢迎
+const { decrease } = require("./plugins/plugin-decrease");     // 退群
 const { poke } = require("./plugins/plugin-poke");    // 戳一戳
 
 // 群消息监听类插件
@@ -48,14 +50,17 @@ bot.on("message.group.normal", (e) => {
     let [cmd, ...args] = parseCommand(e.raw_message);
     cmd = cmd ? cmd : e.raw_message;
     switch (cmd) {
-        case "-sendsl":     // -sendsl留言功能
-            sendsl(e, args);
+        case "-send":     // -send留言功能
+            send(e, args);
             break;
         case "-今日菜品":       // 今日饥荒菜谱
             jrjh(e, args);
             break;
         case "-jrmc":       // 今日MC
             jrmc(e, args);
+            break;
+        case "-今日运势":   // 今日mc运势
+            jrmchl(e, args);
             break;
         case "-jrrp":       //今日人品
             jrrp(e);
@@ -107,15 +112,15 @@ bot.on("notice.group", (e) => {
         case "increase":        //监听群员入群事件
             increase(e);
             break;
+        case "decrease":        //退群事件
+            decrease(e);
+            break;
         case "poke":            //戳一戳
             poke(e);
             break;
         case "ban":             // 机器人被禁言，[所有]功能禁用
             banned(e);
             break;
-        // case "recall":          // 跟随撤回
-        //     require("./plugins/plugin-follow-recall")(e);
-        //     break;
         default:
             break;
     }

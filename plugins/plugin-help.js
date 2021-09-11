@@ -26,7 +26,7 @@ async function helpList(data, args) {
             content += `${index++}. <${doc[name]["help"]["cmd"]}> ${doc[name]["help"]["desc"]} ${await getPermission(data, name.slice(1)) ? "" : "(已关闭)"}\n`;
         }
     }
-    const end = `有什么建议可以直接通过<-sendsl 消息>联系窝~~`;
+    const end = `有什么建议可以直接通过<-send 消息>联系窝~~`;
     data.reply(`${header}\n${content + end}`);
 }
 exports.helpList = helpList;

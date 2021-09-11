@@ -15,12 +15,14 @@ const help = `
 例如：
 上一步下在了某一小宫的7号位，所以下一步只能下在第七个小宫里
 [获胜方法]
-小宫内的获胜规则和井字棋相同
-当小宫率先被一人赢下时，另一人再连成线时不视为获得该小宫
+小宫内的获胜规则和井字棋相同，玩家获胜即获得了该小宫
+当你要下的小宫已被玩家获得时，可以通过坐标任意下子(e.g. b3)
 当你在大宫中将你胜利的小宫连成一条线时，你就获胜了
 [下棋方法]
-一人发送<-井字棋>创建对局，另一人发送<加入>加入对局
-输入1~9下棋，已自动为你确定要下的小宫位置，由橙(蓝)框框选
+<-井字棋>: 创建对局
+<加入>: 发送者加入对局
+<不想玩了>: 退出对局
+输入1~9下棋（已自动为你确定要下的小宫位置，由橙(蓝)框框选）
 `.trim();
 
 class Board {
@@ -142,8 +144,10 @@ class Board {
 
 async function ticTactics(data, args) {
     if (!await getPermission(data, "井字棋")) return;
-    if (args.length > 0) {
+    if (args.length === 1 && ["help", '帮助'].indexOf(args[0]) !== -1) {
         data.reply(help);
+        return;
+    } else if (args.length > 1) {
         return;
     }
     if (playingGID.indexOf(data.group_id) !== -1) return;
@@ -188,15 +192,23 @@ async function ticTactics(data, args) {
             && e.raw_message.trim() === "加入"
             && playerObj[field][0] !== e.sender.user_id) {
             playerObj[field].push(e.sender.user_id);
-            let megid = await e.reply([segment.text(`对局开始:\n蓝色方`),
+            e.reply([segment.text(`对局开始:\n蓝色方`),
             segment.at(playerObj[field][0]),
             segment.text(`\n橙色方`),
             segment.at(playerObj[field][1]),
             segment.text(`\n由蓝色方先行开局`)
             ]);
-            msgId[field].push(megid);
+
             let player2Img = await Jimp.read(`http://q1.qlogo.cn/g?b=qq&nk=${e.user_id}&s=100`);
-            ticGame.generatePKImg(player1Img, player2Img);
+            await ticGame.generatePKImg(player1Img, player2Img);
+            let pk = ticGame.img.clone();
+            await getNextImgWithSel(pk, {
+                "i": r,
+                "j": c,
+                "type": player == 1 ? 'o' : 'x'
+            });
+            let megid = await e.reply([segment.image(await pk.getBufferAsync("image/png"))]);
+            msgId[field].push(megid);
             bot.off("message.group.normal", joinGame);
         }
     }
@@ -205,6 +217,15 @@ async function ticTactics(data, args) {
         if (!(e.group_id === data.group_id && playerObj[field].length === 2)) return;   // 不够两人不开始
         if (e.sender.user_id !== playerObj[field][Math.abs(player >> 1)]) return;   // 不是当前回合的玩家不相应
         let cmd = e.raw_message.trim().toLowerCase();
+
+        // 退出命令
+        if (cmd === "不想玩了") {
+            data.reply("游戏结束");
+            let index = playingGID.indexOf(data.group_id);
+            playingGID.splice(index, 1);
+            delete playerObj[field];
+            bot.off("message.group.normal", run);
+        }
 
         // 处理命令
         let i, j;

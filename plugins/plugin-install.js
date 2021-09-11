@@ -24,17 +24,18 @@ async function install(data, args = null) {
         return;
     }
     // 配置该群相关参数
-    permission = JSON.parse(fs.readFileSync(path.join(__dirname, "../config-template/permission-template.json")));
-    const permissionTemplate = permission["example"];
-    permission[gid] = JSON.parse(JSON.stringify(permissionTemplate));
+    let permissionTemp = JSON.parse(fs.readFileSync(path.join(__dirname, "../config-template/permission-template.json")));
+    permissionTemp = permissionTemp["example"];
+    permission[gid] = JSON.parse(JSON.stringify(permissionTemp));
     permission[gid]["group_id"] = data.group_id;
     permission[gid]["version"] = botInfo.version;
     fs.writeFileSync(permissionPath, JSON.stringify(permission, null, '\t'));
 
     /* 配置自定义回复 */
-    let customReply = JSON.parse(fs.readFileSync(path.join(__dirname, "../config-template/customReply-template.json")));
-    const replyTemplate = customReply["example"];
-    customReply[gid] = JSON.parse(JSON.stringify(replyTemplate));
+    let customReply = _readFileSync(replyDir, "customReply");
+    let customReplyTemp = JSON.parse(fs.readFileSync(path.join(__dirname, "../config-template/customReply-template.json")));
+    customReplyTemp = customReplyTemp["example"];
+    customReply[gid] = JSON.parse(JSON.stringify(customReplyTemp));
     customReply[gid]["group_id"] = data.group_id;
     fs.writeFileSync(replyPath, JSON.stringify(customReply, null, '\t'));
 
@@ -44,6 +45,7 @@ async function install(data, args = null) {
 async function update(data, args = null) {
     const gid = String(data.group_id);
     let permission = _readFileSync(permissionDir, "permission");
+    let permissionTemp = JSON.parse(fs.readFileSync(path.join(__dirname, "../config-template/permission-template.json")));
     let currentVer = permission[gid]["version"];
     if (botInfo.version === currentVer) {
         data.reply(`已是最新版本:[V${botInfo.version}]`);
@@ -54,9 +56,9 @@ async function update(data, args = null) {
     for (const key in permission[gid]) {
         groupPlugin.push(key)
     }   // 获取当前群插件列表
-    for (const key in permission["example"]) {
+    for (const key in permissionTemp["example"]) {
         if (groupPlugin.indexOf(key) === -1) {
-            permission[gid][key] = permission["example"][key];
+            permission[gid][key] = permissionTemp["example"][key];
         }
     }
     fs.writeFileSync(permissionPath, JSON.stringify(permission, null, '\t'));
