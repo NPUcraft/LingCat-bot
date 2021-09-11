@@ -1,5 +1,4 @@
 "use strict"
-const { bot } = require("../../index");
 const { segment } = require("oicq");
 const path = require("path");
 const { getPermission } = require("../../lib/permission");
@@ -142,12 +141,12 @@ class Board {
     }
 }
 
-async function ticTactics(data, args) {
+async function ticTactics(_bot, data, args = null) {
     if (!await getPermission(data, "井字棋")) return;
-    if (args.length === 1 && ["help", '帮助'].indexOf(args[0]) !== -1) {
+    if (args?.length === 1 && ["help", '帮助'].indexOf(args?.[0]) !== -1) {
         data.reply(help);
         return;
-    } else if (args.length > 1) {
+    } else if (args?.length > 1) {
         return;
     }
     if (playingGID.indexOf(data.group_id) !== -1) return;
@@ -182,8 +181,8 @@ async function ticTactics(data, args) {
         let index = playingGID.indexOf(data.group_id);
         playingGID.splice(index, 1);
         delete playerObj[field];
-        bot.off("message.group.normal", run);
-        bot.off("message.group.normal", joinGame);
+        _bot.off("message.group.normal", run);
+        _bot.off("message.group.normal", joinGame);
     }, 60 * 60 * 1000);
 
 
@@ -209,10 +208,10 @@ async function ticTactics(data, args) {
             });
             let megid = await e.reply([segment.image(await pk.getBufferAsync("image/png"))]);
             msgId[field].push(megid);
-            bot.off("message.group.normal", joinGame);
+            _bot.off("message.group.normal", joinGame);
         }
     }
-    bot.on("message.group.normal", joinGame);
+    _bot.on("message.group.normal", joinGame);
     async function run(e) {
         if (!(e.group_id === data.group_id && playerObj[field].length === 2)) return;   // 不够两人不开始
         if (e.sender.user_id !== playerObj[field][Math.abs(player >> 1)]) return;   // 不是当前回合的玩家不相应
@@ -224,7 +223,7 @@ async function ticTactics(data, args) {
             let index = playingGID.indexOf(data.group_id);
             playingGID.splice(index, 1);
             delete playerObj[field];
-            bot.off("message.group.normal", run);
+            _bot.off("message.group.normal", run);
         }
 
         // 处理命令
@@ -256,7 +255,7 @@ async function ticTactics(data, args) {
         let buf = await ticGame.getNextImaBuffer(r, c, i, j, player);
         let msgid = await e.reply([segment.image(buf)]);
         msgId[field].push(msgid);
-        bot.deleteMsg(msgId[field].splice(0, 1)[0].data.message_id);
+        _bot.deleteMsg(msgId[field].splice(0, 1)[0].data.message_id);
 
         player = -player;   // 交换对手
         r = i; c = j;   // 记录下一步落子小宫位置
@@ -280,10 +279,10 @@ async function ticTactics(data, args) {
             playingGID.splice(index, 1);
             delete playerObj[field];
             clearTimeout(gameTimeOut);
-            bot.off("message.group.normal", run);
+            _bot.off("message.group.normal", run);
         }
     }
-    bot.on("message.group.normal", run);
+    _bot.on("message.group.normal", run);
 
     function parsePosCmd(cmd, mode) {
         let i, j;

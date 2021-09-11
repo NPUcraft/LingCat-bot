@@ -7,32 +7,37 @@ const seedRandom = require("../../lib/seed-random");
 const path = require("path");
 const { getPermission } = require("../../lib/permission");
 const Jimp = require('jimp')
+const help = `
+查看今日MC物品方块
+`.trim();
 
-async function jrmc(data, args) {
+async function jrmc(_bot, data, args = null) {
     if (!await getPermission(data, "jrmc")) return;
-    if (args.length === 0) {
-        let mcList = await getMcList(); // 创建一个数组，用来保存资源
-        const seedID = data.sender.user_id + new Date().toLocaleDateString();
-        let mcItem = mcList[
-            seedRandom.getRandomInt(seedID, 0, mcList.length)
-        ];
-        let card = data.sender.card;
-        let img = typeof mcItem.image == 'string' ? mcItem.image : Buffer.from(mcItem.image);
-        data.reply([
-            segment.text(`${card === '' ? data.sender.nickname : card}，今天的MC是${mcItem.name}`),
-            segment.image(img)
-        ]);
-    } else if (args.length === 1) {
-        if (args[0] === "更新") {
-            if (data.sender.role === "member") { data.reply("权限不足"); return; };
-            try {
-                updateAll();
-                data.reply("MC物品已更新");
-            } catch (error) {
-                data.reply("更新失败")
-            }
+    if (args?.length === 1 && ["help", '帮助'].indexOf(args?.[0]) !== -1) {
+        data.reply(help);
+        return;
+    } else if (args?.length === 1 && args?.[0] === "更新") {
+        if (data.sender.role === "member") { data.reply("权限不足"); return; };
+        try {
+            updateAll();
+            data.reply("MC物品已更新");
+        } catch (error) {
+            data.reply("更新失败")
         }
+    } else if (args?.length > 1) {
+        return;
     }
+    let mcList = await getMcList(); // 创建一个数组，用来保存资源
+    const seedID = data.sender.user_id + new Date().toLocaleDateString();
+    let mcItem = mcList[
+        seedRandom.getRandomInt(seedID, 0, mcList.length)
+    ];
+    let card = data.sender.card;
+    let img = typeof mcItem.image == 'string' ? mcItem.image : Buffer.from(mcItem.image);
+    data.reply([
+        segment.text(`${card === '' ? data.sender.nickname : card}，今天的MC是${mcItem.name}`),
+        segment.image(img)
+    ]);
 }
 exports.jrmc = jrmc;
 

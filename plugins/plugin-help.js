@@ -1,5 +1,4 @@
 "use strict"
-const mongodbUtils = require("../lib/mongodb");
 const fs = require("fs");
 const path = require("path");
 const botNickname = JSON.parse(fs.readFileSync(path.join(__dirname, "../package.json"))).botNickname;
@@ -8,7 +7,7 @@ const { _readFileSync } = require("../lib/file");
 const permissionDir = path.join(__dirname, "../config-template/config");
 const permissionPath = permissionDir + "/permission.json";
 
-async function helpList(data, args) {
+async function helpList(_bot, data, args) {
     if (!await getPermission(data, "help")) return;
     const gid = String(data.group_id);
     let permission = _readFileSync(permissionDir, "permission");

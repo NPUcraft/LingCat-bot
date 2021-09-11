@@ -1,7 +1,5 @@
 "use strict"
-const { bot } = require("../../index");
 const { segment, cqcode } = require("oicq");
-const path = require("path");
 const { getPermission } = require("../../lib/permission");
 let playingGID = [];        // 记录游戏中的群号
 let tempPointData = {}; // 记录临时点数
@@ -21,10 +19,12 @@ const help = `
 `.trim();
 
 //-24点
-async function g24points(data, args) {
+async function g24points(_bot, data, args = null) {
     if (!await getPermission(data, "24点")) return;
-    if (args.length > 0) {
+    if (args?.length === 1 && ["help", '帮助'].indexOf(args?.[0]) !== -1) {
         data.reply(help);
+        return;
+    } else if (args?.length > 1) {
         return;
     }
     if (playingGID.indexOf(data.group_id) !== -1) { // 开始游戏则发送正在游戏的信息
@@ -67,7 +67,7 @@ async function g24points(data, args) {
         data.reply("没人玩24点我就溜啦~");
         let index = playingGID.indexOf(data.group_id);
         playingGID.splice(index, 1);
-        bot.off("message.group.normal", solve);
+        _bot.off("message.group.normal", solve);
     }, 10 * 60 * 1000);
 
     function solve(event) {
@@ -120,11 +120,11 @@ async function g24points(data, args) {
                 let index = playingGID.indexOf(event.group_id);
                 playingGID.splice(index, 1);
                 clearTimeout(gameTimeOut);
-                bot.off("message.group.normal", solve);
+                _bot.off("message.group.normal", solve);
             }
         }
     }
-    bot.on("message.group.normal", solve);
+    _bot.on("message.group.normal", solve);
 
     function buildingMessage(state, chances) {
         let message;

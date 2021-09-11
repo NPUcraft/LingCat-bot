@@ -15,7 +15,7 @@
 				"owner"
 			]
 		},
-		"_为你百度": {
+		"_百度": {
 			"activation": true,
 			"help": {
 				"desc": "让我帮你百度",
@@ -101,7 +101,7 @@
 				"owner"
 			]
 		},
-		"_getMcAlmanac": {
+		"_今日运势": {
 			"activation": true,
 			"help": {
 				"desc": "查看今日运势",

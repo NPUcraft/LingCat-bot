@@ -6,7 +6,7 @@ const permissionDir = path.join(__dirname, "../config-template/config");
 const permissionPath = permissionDir + "/permission.json";
 const { getPermission } = require("../lib/permission");
 
-async function banned(data) {
+async function banned(_bot, data) {
     if (!await getPermission(data, "closeAll")) return;
     let permission = _readFileSync(permissionDir, "permission");
     const gid = String(data.group_id);

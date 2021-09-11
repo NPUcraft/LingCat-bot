@@ -7,8 +7,18 @@ const permissionDir = path.join(__dirname, "../config-template/config");
 const permissionPath = permissionDir + "/permission.json";
 const replyDir = path.join(__dirname, "../config-template/config");
 const replyPath = replyDir + "/customReply.json";
+const help = `
+<#install> 为本群安装机器人服务
+<#update> 为本群更新到最新的机器人版本
+`.trim();
 
-async function install(data, args = null) {
+async function install(_bot, data, args = null) {
+    if (args?.length === 1 && ["help", '帮助'].indexOf(args?.[0]) !== -1) {
+        data.reply(help);
+        return;
+    } else if (args?.length > 1) {
+        return;
+    }
     const gid = String(data.group_id);
     if (["admin", "owner"].indexOf(data.sender.role) === -1) return;    // 仅管理员可以安装机器人
 
@@ -42,7 +52,13 @@ async function install(data, args = null) {
     data.reply(`温柔甜美的${botInfo.botNickname}已被带回家~`);
 }
 
-async function update(data, args = null) {
+async function update(_bot, data, args = null) {
+    if (args?.length === 1 && ["help", '帮助'].indexOf(args?.[0]) !== -1) {
+        data.reply(help);
+        return;
+    } else if (args?.length > 1) {
+        return;
+    }
     const gid = String(data.group_id);
     let permission = _readFileSync(permissionDir, "permission");
     let permissionTemp = JSON.parse(fs.readFileSync(path.join(__dirname, "../config-template/permission-template.json")));

@@ -1,14 +1,19 @@
 "use strict"
-// const { bot } = require("../../index");
-const fs = require("fs");
-const { segment } = require("oicq");
 const https = require('https');
 const cheerio = require("cheerio");
-const path = require("path");
 const { getPermission } = require("../lib/permission");
+const help = `
+查看今日MC运势
+`.trim();
 
-async function jrmchl(data, args = null) {
-    if (!await getPermission(data, "getMcAlmanac")) return;
+async function jrmchl(_bot, data, args = null) {
+    if (!await getPermission(data, "今日运势")) return;
+    if (args?.length === 1 && ["help", '帮助'].indexOf(args?.[0]) !== -1) {
+        data.reply(help);
+        return;
+    } else if (args?.length > 1) {
+        return;
+    }
     let time = new Date().toLocaleDateString();
     await getMcAlmanac(e => {
         let goods = [];
