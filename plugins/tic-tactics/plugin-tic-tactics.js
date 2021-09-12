@@ -223,6 +223,7 @@ async function ticTactics(_bot, data, args = null) {
             let index = playingGID.indexOf(data.group_id);
             playingGID.splice(index, 1);
             delete playerObj[field];
+            clearTimeout(gameTimeOut);
             _bot.off("message.group.normal", run);
         }
 
