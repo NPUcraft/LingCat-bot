@@ -14,9 +14,11 @@ async function helpList(_bot, data, args) {
     let doc = permission[gid];
     let index = 1;
 
-    const header = `
-    ===== ${botNickname}功能一览 =====
-    `.trim();
+    // const header = `
+    // ===== ${botNickname}功能一览 =====
+    // `.trim();
+
+    const header = formatString(16, ` ${botNickname}功能一览 `, "=");
 
     let content = '';
     for (let name in doc) {
@@ -29,3 +31,10 @@ async function helpList(_bot, data, args) {
     data.reply(`${header}\n${content + end}`);
 }
 exports.helpList = helpList;
+
+const formatString = (len, str, symbol) => {
+    const totalLength = len;
+    const strLength = str.length;
+    const l = Math.floor((totalLength - strLength) / 2);
+    return `${str.padEnd(strLength + l, symbol).padStart(totalLength, symbol)}`
+}
