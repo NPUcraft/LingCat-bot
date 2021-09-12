@@ -1,33 +1,31 @@
 "use strict"
-const { bot } = require("../index");
-const mongodbUtils = require("../lib/mongodb");
 const fs = require("fs");
 const path = require("path");
-const databaseInfo = JSON.parse(fs.readFileSync(path.join(__dirname, "../package.json"))).mongo;
-const database = databaseInfo.database;
-const collection = databaseInfo.collection;
+const { _readFileSync } = require("../lib/file");
 const { getPermission } = require("../lib/permission");
-
+const permissionDir = path.join(__dirname, "../config-template/config");
+const permissionPath = permissionDir + "/permission.json";
+const help = `
+<#开启 [插件命令名]>: 开启该插件功能
+<#关闭 [插件命令名]>: 关闭该插件功能
+`.trim();
 
 /**
  * 打开插件
  * @param {*} data 
  * @param {*} args 插件名
  */
-async function turnOn(data, args) {
+async function turnOn(_bot, data, args) {
     if (!await getPermission(data, "turnOn")) return;
     if (args.length === 0) {
+        data.reply(help);
     } else if (args.length === 1) {
         let name = "_" + args[0];
-        let filter = { "group_id": data.group_id };
-        filter[(name + ".exists")] = true;
-        let document = {};
-        document[(name + ".activation")] = true;
-        mongodbUtils.findAndUpdateDocument(database, collection, filter, document)
-            .then(
-                res => { if (res.value !== null) data.reply(`已开启${name}`) },
-                err => { data.reply(`发生错误:${err.message}`) }
-            );
+        const gid = String(data.group_id);
+        let permission = _readFileSync(permissionDir, "permission");
+        permission[gid][name]["activation"] = true;
+        fs.writeFileSync(permissionPath, JSON.stringify(permission, null, '\t'));
+        data.reply(`已开启${name}`);
     } else {
         data.reply("参数太多！");
     }
@@ -38,20 +36,17 @@ async function turnOn(data, args) {
  * @param {*} data 
  * @param {*} args 插件名
  */
-async function turnOff(data, args) {
+async function turnOff(_bot, data, args) {
     if (!await getPermission(data, "turnOff")) return;
     if (args.length === 0) {
+        data.reply(help);
     } else if (args.length === 1) {
         let name = "_" + args[0];
-        let filter = { "group_id": data.group_id };
-        filter[(name + ".exists")] = true;
-        let document = {};
-        document[(name + ".activation")] = false;
-        mongodbUtils.findAndUpdateDocument(database, collection, filter, document)
-            .then(
-                res => { if (res.value !== null) data.reply(`已关闭${name}`) },
-                err => { data.reply(`发生错误:${err.message}`) }
-            );
+        const gid = String(data.group_id);
+        let permission = _readFileSync(permissionDir, "permission");
+        permission[gid][name]["activation"] = false;
+        fs.writeFileSync(permissionPath, JSON.stringify(permission, null, '\t'));
+        data.reply(`已关闭${name}`);
     } else {
         data.reply("参数太多！");
     }
