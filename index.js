@@ -104,5 +104,5 @@ bot.on("notice.group", (e) => {
 })
 
 /* === test plugins === */
-// require("./plugins/custom-reply/plugin-custom-reply");  // 自定义回复
+require("./plugins/plugin-custom-reply-auto");  // 自定义正则回复
 /* ==== NOT STABLE ==== */
