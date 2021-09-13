@@ -40,6 +40,7 @@ const { ticTactics } = require("./plugins/tic-tactics/plugin-tic-tactics");     
 const { baiduForU } = require("./plugins/plugin-baidu-for-u");     // 为你百度
 const { send } = require("./plugins/plugin-send");    // 反馈
 const { biliLive, getEveryLiveStatus } = require("./plugins/bilibili/plugin-bili-live"); // bili直播间
+const { ping } = require("./plugins/mcbot/plugin-mcbot");   // mcbot
 // 通知类插件
 const { increase } = require("./plugins/plugin-increase");      // 入群欢迎
 const { decrease } = require("./plugins/plugin-decrease");     // 退群
@@ -108,6 +109,9 @@ bot.on("message.group.normal", function (e) {
             break;
         case "-彩虹屁":     // 彩虹屁
             chp(this, e, args);
+            break;
+        case "-mc":         // mcbot
+            ping(this, e, args);
             break;
         default:            // 触发自定义回复
             customReply(this, e, cmd);

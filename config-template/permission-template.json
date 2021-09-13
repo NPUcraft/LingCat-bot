@@ -172,6 +172,18 @@
 				"admin",
 				"owner"
 			]
+		},
+		"_mc": {
+			"activation": true,
+			"help": {
+				"desc": "mcping并查看在线人数",
+				"cmd": "-mc"
+			},
+			"isadmin": [
+				"member",
+				"admin",
+				"owner"
+			]
 		}
 	}
 }
