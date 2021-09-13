@@ -3,7 +3,7 @@
     "account": 123456789,
     "botNickname": "灵喵",
     "owner": 123456789,
-    "version": "2.0.0",
+    "version": "2.1.0",
     "description": "",
     "main": "index.js",
     "scripts": {
@@ -16,6 +16,7 @@
         "cheerio": "^1.0.0-rc.10",
         "jimp": "^0.16.1",
         "mathjs": "^9.4.4",
+        "minecraft-protocol": "^1.26.5",
         "mongodb": "^4.1.0",
         "oicq": "^1.19.3",
         "seed-random": "^2.2.0"
