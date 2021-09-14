@@ -41,6 +41,8 @@ const { baiduForU } = require("./plugins/plugin-baidu-for-u");     // 为你百�
 const { send } = require("./plugins/plugin-send");    // 反馈
 const { biliLive, getEveryLiveStatus } = require("./plugins/bilibili/plugin-bili-live"); // bili直播间
 const { ping } = require("./plugins/mcbot/plugin-mcbot");   // mcbot
+const { repeater } = require("./plugins/plugin-repeater");      // 复读
+const { noAbbreviated } = require("./plugins/plugin-yyds");      // 好好说话 
 // 通知类插件
 const { increase } = require("./plugins/plugin-increase");      // 入群欢迎
 const { decrease } = require("./plugins/plugin-decrease");     // 退群
@@ -113,8 +115,10 @@ bot.on("message.group.normal", function (e) {
         case "-mc":         // mcbot
             ping(this, e, args);
             break;
-        default:            // 触发自定义回复
-            customReply(this, e, cmd);
+        default:
+            noAbbreviated(this, e); // 好好说话
+            repeater(this, e);      // 复读
+            customReply(this, e, cmd);  // 触发自定义回复
             break;
     }
 })
