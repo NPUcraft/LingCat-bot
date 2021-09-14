@@ -18,8 +18,9 @@ const getPlayerInfo = async (host, port = 25565) => {
     let playerInfo = serverInfo?.players;
     let playerList = serverInfo?.players?.sample;
     let players = [];
-    if (typeof playerList === "undefined" || playerList?.length === 0) players = "暂无信息";
-    playerList.forEach(player => {
+    if (playerList?.length === 0) players = "暂无信息";
+    else if (typeof playerList === "undefined") players = "该服务器空荡荡~";
+    else playerList.forEach(player => {
         players.push(player?.name);
     });
     playerInfo["sample"] = players;

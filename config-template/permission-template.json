@@ -184,6 +184,24 @@
 				"admin",
 				"owner"
 			]
+		},
+		"_repeater": {
+			"activation": true,
+			"help": null,
+			"isadmin": [
+				"member",
+				"admin",
+				"owner"
+			]
+		},
+		"_noAbbreviated": {
+			"activation": true,
+			"help": null,
+			"isadmin": [
+				"member",
+				"admin",
+				"owner"
+			]
 		}
 	}
 }
