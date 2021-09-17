@@ -187,6 +187,17 @@ async function ticTactics(_bot, data, args = null) {
 
 
     async function joinGame(e) {
+        if (playerObj[field][0] == e.sender.user_id && e.raw_message === "不想玩了") {
+            // 退出命令
+            e.reply("游戏结束");
+            let index = playingGID.indexOf(e.group_id);
+            playingGID.splice(index, 1);
+            delete playerObj[field];
+            clearTimeout(gameTimeOut);
+            _bot.off("message.group.normal", run);
+            _bot.off("message.group.normal", joinGame);
+            return;
+        }
         if (e.group_id === data.group_id
             && e.raw_message.trim() === "加入"
             && playerObj[field][0] !== e.sender.user_id) {
@@ -213,9 +224,9 @@ async function ticTactics(_bot, data, args = null) {
     }
     _bot.on("message.group.normal", joinGame);
     async function run(e) {
-        if (!(e.group_id === data.group_id && playerObj[field].length === 2)) return;   // 不够两人不开始
-        if (e.sender.user_id !== playerObj[field][Math.abs(player >> 1)]) return;   // 不是当前回合的玩家不相应
         let cmd = e.raw_message.trim().toLowerCase();
+        if (!(e.group_id === data.group_id && playerObj[field]?.length === 2)) return;   // 不够两人不开始
+        if (e.sender.user_id !== playerObj[field][Math.abs(player >> 1)]) return;   // 不是当前回合的玩家不相应
 
         // 退出命令
         if (cmd === "不想玩了") {
