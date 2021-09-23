@@ -63,11 +63,6 @@ class Board {
 
     // 刷新选定小宫状态
     refreshGrid(r, c, i, j) {
-        if (this.gridStatus[3 * i + j] !== 0) {
-            this.freeStatus = true;
-        } else {
-            this.freeStatus = false;
-        }
         if (this.gridStatus[3 * r + c] !== 0) return;   // 有人获得小宫则不刷新该小宫状态
         for (let index = 0; index < this.WIN.length; index++) {
             const element = this.WIN[index];
@@ -82,7 +77,11 @@ class Board {
             if (this.boardStatus[r][c][i] === 0) break;
             if (i === 8) this.setGridStatus(r, c, 2);
         }
-
+        if (this.gridStatus[3 * i + j] !== 0) {
+            this.freeStatus = true;
+        } else {
+            this.freeStatus = false;
+        }
     }
 
     // 判断是否获胜

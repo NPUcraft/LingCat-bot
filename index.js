@@ -29,7 +29,7 @@ const { install, update } = require("./plugins/plugin-install"); // 安装|更�
 const { banned } = require("./plugins/plugin-ban");   // 机器人被禁言，[所有]功能禁用
 const { turnOff, turnOn } = require("./plugins/plugin-manage");      // 插件开关
 const { helpList } = require("./plugins/plugin-help");       // 帮助菜单
-const { setReply, deleteReply, customReply, getReplyList } = require("./plugins/plugin-custom-reply");  // 自定义回复
+const { setReply, deleteReply, customReply, getReplyList } = require("./plugins/plugin-custom-reply");
 const { g24points } = require("./plugins/24points/plugin-24points");   // 24点游戏
 const { jrjh } = require("./plugins/jr-dontstarve/plugin-jrjh");      // 今日饥荒菜谱
 const { jrmc } = require("./plugins/jrmc/plugin-jrmc");       // 今日MC
@@ -41,9 +41,9 @@ const { baiduForU } = require("./plugins/plugin-baidu-for-u");     // 为你百�
 const { send } = require("./plugins/plugin-send");    // 反馈
 const { biliLive, getEveryLiveStatus } = require("./plugins/bilibili/plugin-bili-live"); // bili直播间
 const { ping } = require("./plugins/mcbot/plugin-mcbot");   // mcbot
-const { customRegReply } = require("./plugins/plugin-custom-regular-reply");  // 自定义正则回复
 const { repeater } = require("./plugins/plugin-repeater");      // 复读
 const { noAbbreviated } = require("./plugins/plugin-yyds");      // 好好说话 
+const { getWordCloud, getMessage } = require("./plugins/wordCloud/plugin-wordcloud");       // 词云分析
 // 通知类插件
 const { increase } = require("./plugins/plugin-increase");      // 入群欢迎
 const { decrease } = require("./plugins/plugin-decrease");     // 退群
@@ -116,7 +116,11 @@ bot.on("message.group.normal", function (e) {
         case "-mc":         // mcbot
             ping(this, e, args);
             break;
+        // case "-wordcloud":  // 词云分析
+        //     getWordCloud(this, e, args);
+        //     break;
         default:
+            getMessage(this, e);
             noAbbreviated(this, e); // 好好说话
             repeater(this, e);      // 复读
             customReply(this, e, cmd);  // 触发自定义回复
