@@ -210,6 +210,18 @@
 				"admin",
 				"owner"
 			]
+		},
+		"_echo": {
+			"activation": true,
+			"help": {
+				"desc": "学说话",
+				"cmd": "-echo"
+			},
+			"isadmin": [
+				"member",
+				"admin",
+				"owner"
+			]
 		}
 	}
 }

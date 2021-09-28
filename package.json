@@ -3,7 +3,7 @@
     "account": 123456789,
     "botNickname": "灵喵",
     "owner": 123456789,
-    "version": "2.2.0",
+    "version": "2.2.1",
     "description": "",
     "main": "index.js",
     "scripts": {
@@ -22,6 +22,7 @@
         "seed-random": "^2.2.0"
     },
     "devDependencies": {
-        "@types/node": "^16.4.13"
+        "@types/node": "^16.4.13",
+        "nth-check": ">=2.0.1"
     }
 }

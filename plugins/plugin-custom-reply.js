@@ -11,7 +11,7 @@ const help = `
 
 async function setReply(_bot, data, key, value) {
     if (!await getPermission(data, "自定义回复")) return;
-    if (value[1] == '') return;
+    if (typeof value?.[1] === "undefined") return;
     if (key.startsWith("[CQ:")) return;
 
     const gid = String(data.group_id);
