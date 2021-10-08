@@ -61,6 +61,10 @@ async function update(_bot, data, args = null) {
     }
     const gid = String(data.group_id);
     let permission = _readFileSync(permissionDir, "permission");
+    if (typeof permission?.[gid] === "undefined") {
+        data.reply("未安装！请管理员先使用#install进行安装");
+        return;
+    }
     let permissionTemp = JSON.parse(fs.readFileSync(path.join(__dirname, "../config-template/permission-template.json")));
     let currentVer = permission[gid]["version"];
     if (botInfo.version === currentVer) {
