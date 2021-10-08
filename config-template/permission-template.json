@@ -195,7 +195,7 @@
 			]
 		},
 		"_noAbbreviated": {
-			"activation": true,
+			"activation": false,
 			"help": null,
 			"isadmin": [
 				"member",
@@ -204,7 +204,7 @@
 			]
 		},
 		"_wordCloud": {
-			"activation": true,
+			"activation": false,
 			"help": null,
 			"isadmin": [
 				"admin",
@@ -216,6 +216,27 @@
 			"help": {
 				"desc": "学说话",
 				"cmd": "-echo"
+			},
+			"isadmin": [
+				"member",
+				"admin",
+				"owner"
+			]
+		},
+		"_搜图": {
+			"activation": true,
+			"help": null,
+			"isadmin": [
+				"member",
+				"admin",
+				"owner"
+			]
+		},
+		"_musicgen": {
+			"activation": true,
+			"help": {
+				"desc": "生成音乐",
+				"cmd": "-musicgen"
 			},
 			"isadmin": [
 				"member",

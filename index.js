@@ -64,6 +64,8 @@ const { repeater } = require("./plugins/plugin-repeater");      // 复读
 const { noAbbreviated } = require("./plugins/plugin-yyds");      // 好好说话 
 const { getWordCloud, getMessage } = require("./plugins/wordCloud/plugin-wordcloud");       // 词云分析
 const { echo } = require("./plugins/plugin-echo");  // 复述功能
+const { findPic } = require("./plugins/plugin-findPic");       // 搜图
+const { musicgen } = require("./plugins/musicgen/plugin-musicgen");     // 生成音乐 
 // 通知类插件
 const { increase } = require("./plugins/plugin-increase");      // 入群欢迎
 const { decrease } = require("./plugins/plugin-decrease");     // 退群
@@ -140,6 +142,12 @@ bot.on("message.group.normal", function (e) {
                 break;
             case "-mc":         // mcbot
                 await ping(_bot, e, args).catch(errorHandler);
+                break;
+            case "-pic":
+                await findPic(_bot, e, args).catch(errorHandler);
+                break;
+            case "-musicgen":
+                await musicgen(_bot, e, args).catch(errorHandler);
                 break;
             // case "-wordcloud":  // 词云分析
             //     getWordCloud(_bot, e, args);
