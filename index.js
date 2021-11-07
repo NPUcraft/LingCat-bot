@@ -65,9 +65,10 @@ const { noAbbreviated } = require("./plugins/plugin-yyds");      // 好好说话
 const { getWordCloud, getMessage } = require("./plugins/wordCloud/plugin-wordcloud");       // 词云分析
 const { echo } = require("./plugins/plugin-echo");  // 复述功能
 const { findPic } = require("./plugins/plugin-findPic");       // 搜图
-const { musicgen } = require("./plugins/musicgen/plugin-musicgen");     // 生成音乐 
+const { musicgen, saveFile } = require("./plugins/musicgen/plugin-musicgen");     // 生成音乐 
+// const { checkRecall } = require("./plugins/plugin-check-recall");       // 查撤回
 // 通知类插件
-const { increase } = require("./plugins/plugin-increase");      // 入群欢迎
+const { increase, setWelcomeMsg } = require("./plugins/increase/plugin-increase");      // 入群欢迎
 const { decrease } = require("./plugins/plugin-decrease");     // 退群
 const { poke } = require("./plugins/plugin-poke");    // 戳一戳
 
@@ -134,6 +135,9 @@ bot.on("message.group.normal", function (e) {
             case "#update":     // 更新
                 await update(_bot, e, args).catch(errorHandler);
                 break;
+            case "#welcome":
+                await setWelcomeMsg(_bot, e, args).catch(errorHandler);
+                break;
             case "-bili":       // bilibili相关工具
                 await biliLive(_bot, e, args).catch(errorHandler);
                 break;
@@ -154,6 +158,7 @@ bot.on("message.group.normal", function (e) {
             //     break;
             default:
                 // getMessage(_bot, e);
+                await saveFile(_bot, e).catch(errorHandler);    // 保存.mscg文件内容
                 await noAbbreviated(_bot, e).catch(errorHandler); // 好好说话
                 await repeater(_bot, e).catch(errorHandler);      // 复读
                 await customReply(_bot, e, cmd).catch(errorHandler);  // 触发自定义回复
@@ -170,7 +175,23 @@ bot.on("message.group.normal", function (e) {
 
 // 私聊消息监听类插件
 bot.on("message.private", function (e) {
-    whatsUp(this, e);     // 私聊敷衍
+    let [cmd, ...args] = parseCommand(e.raw_message);
+    cmd = cmd ? cmd : e.raw_message;
+    const msgHandle = async function (cmd, e, args) {
+        if (cmd === "-musicgen") {
+            e.group_id = 920326805;
+            e.post_type = "notice";
+            await musicgen(null, e, args).catch(errorHandler);
+        }
+        else whatsUp(this, e);     // 私聊敷衍
+    }
+
+    // 处理错误信息并汇报给主人
+    msgHandle(cmd, e, args).catch(err => {
+        this.logger.error(err);
+        this.sendPrivateMsg(botInfo?.["owner"], err.message);
+    })
+
 })
 
 // 群通知类插件

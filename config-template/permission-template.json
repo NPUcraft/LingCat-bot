@@ -63,7 +63,11 @@
 		},
 		"_入群欢迎": {
 			"activation": true,
-			"help": null
+			"help": null,
+			"isadmin": [
+				"admin",
+				"owner"
+			]
 		},
 		"_退群": {
 			"activation": true,

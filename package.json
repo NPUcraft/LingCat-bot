@@ -3,7 +3,7 @@
     "account": 123456789,
     "botNickname": "灵喵",
     "owner": 123456789,
-    "version": "2.3.0",
+    "version": "2.3.1",
     "description": "",
     "main": "index.js",
     "scripts": {

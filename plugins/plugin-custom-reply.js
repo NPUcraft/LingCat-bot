@@ -3,6 +3,7 @@ const fs = require("fs");
 const path = require("path");
 const { _readFileSync } = require("../lib/file");
 const replyDir = path.join(__dirname, "../config-template/config");
+const botInfo = JSON.parse(fs.readFileSync(path.join(__dirname, "../package.json")));
 const replyPath = replyDir + "/customReply.json";
 const { getPermission } = require("../lib/permission");
 const help = `
@@ -11,12 +12,14 @@ const help = `
 
 async function setReply(_bot, data, key, value) {
     if (!await getPermission(data, "自定义回复")) return;
-    if (typeof value?.[1] === "undefined") return;
+    if (typeof value?.[0] === "undefined") return;
     if (key.startsWith("[CQ:")) return;
 
     const gid = String(data.group_id);
     let replyData = _readFileSync(replyDir, "customReply");
-    if (data.sender.role === "member" && replyData[gid]["SUPERUSER"].indexOf(data.user_id) === -1) {
+    if (!((data.sender.role === "member" && replyData[gid]["SUPERUSER"].indexOf(data.user_id) !== -1)
+        || Number(botInfo["owner"]) == data.user_id
+        || ["admin", "owner"].indexOf(data.sender.role) !== -1)) {
         data.reply(`权限不足`);
         return;
     }
@@ -30,7 +33,9 @@ async function deleteReply(_bot, data, args) {
     if (!await getPermission(data, "自定义回复")) return;
     const gid = String(data.group_id);
     let replyData = _readFileSync(replyDir, "customReply");
-    if (data.sender.role === "member" && replyData[gid]["SUPERUSER"].indexOf(data.user_id) === -1) {
+    if (!((data.sender.role === "member" && replyData[gid]["SUPERUSER"].indexOf(data.user_id) !== -1)
+        || Number(botInfo["owner"]) == data.user_id
+        || ["admin", "owner"].indexOf(data.sender.role) !== -1)) {
         data.reply(`权限不足`);
         return;
     }
@@ -47,7 +52,10 @@ async function customReply(_bot, data, args) {
     const gid = String(data.group_id);
     let replyData = _readFileSync(replyDir, "customReply");
     let replyObj = replyData[gid]["reply"];
-    data.reply(replyObj?.[args]);
+    // data.reply(replyObj?.[args]);
+    // data.reply(`[CQ:image,file=http://iw233.cn/api/Random.php]`);
+    console.log(replyObj?.[args])
+    console.log(`[CQ:image,file=http://iw233.cn/api/Random.php]` === replyObj?.[args]);
 }
 exports.customReply = customReply;
 

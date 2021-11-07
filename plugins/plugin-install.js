@@ -20,7 +20,7 @@ async function install(_bot, data, args = null) {
         return;
     }
     const gid = String(data.group_id);
-    if (["admin", "owner"].indexOf(data.sender.role) === -1) return;    // 仅管理员可以安装机器人
+    if (!(["admin", "owner"].indexOf(data.sender.role) !== -1 || data.user_id === Number(botInfo["owner"]))) return;    // 仅管理员或拥有者可以安装机器人
 
     /* 配置权限 */
     let permission = _readFileSync(permissionDir, "permission");
@@ -80,6 +80,14 @@ async function update(_bot, data, args = null) {
         if (groupPlugin.indexOf(key) === -1) {
             permission[gid][key] = permissionTemp["example"][key];
         }
+        if (key.startsWith("_")) {
+            if (JSON.stringify(permissionTemp["example"][key]) !== JSON.stringify(permission[gid][key])) {
+                let status = permission[gid][key]["activation"];
+                permission[gid][key] = permissionTemp["example"][key];
+                permission[gid][key]["activation"] = status;
+            }
+        }
+
     }
     fs.writeFileSync(permissionPath, JSON.stringify(permission, null, '\t'));
     data.reply(`[V${currentVer} -> V${botInfo.version}]\n我变得更加温柔咯~`);
