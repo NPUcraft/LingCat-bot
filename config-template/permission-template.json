@@ -137,6 +137,18 @@
 				"owner"
 			]
 		},
+		"_自定义正则回复": {
+			"activation": false,
+			"help": {
+				"desc": "自定义回复",
+				"cmd": "#seta/#dela"
+			},
+			"isadmin": [
+				"member",
+				"admin",
+				"owner"
+			]
+		},
 		"_井字棋": {
 			"activation": true,
 			"help": {
@@ -195,7 +207,7 @@
 			]
 		},
 		"_noAbbreviated": {
-			"activation": true,
+			"activation": false,
 			"help": null,
 			"isadmin": [
 				"member",

@@ -1,9 +1,9 @@
 {
     "name": "lingcat-bot",
-    "account": 123456789,
-    "botNickname": "灵喵",
-    "owner": 123456789,
-    "version": "2.1.3",
+    "account": 1330615670,
+    "botNickname": "灵音",
+    "owner": 1368616836,
+    "version": "2.1.4",
     "description": "",
     "main": "index.js",
     "scripts": {
