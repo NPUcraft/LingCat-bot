@@ -3,6 +3,7 @@ const fs = require("fs");
 const path = require("path");
 const { _readFileSync } = require("../lib/file");
 const botInfo = JSON.parse(fs.readFileSync(path.join(__dirname, "../package.json")));
+const accountInfo = JSON.parse(fs.readFileSync(path.join(__dirname, "./account.json")));
 const permissionDir = path.join(__dirname, "../config-template/config");
 const permissionPath = permissionDir + "/permission.json";
 const replyDir = path.join(__dirname, "../config-template/config");
@@ -21,7 +22,7 @@ async function install(_bot, data, args = null) {
         return;
     }
     const gid = String(data.group_id);
-    if (!(["admin", "owner"].indexOf(data.sender.role) !== -1 || data.user_id === Number(botInfo["owner"]))) return;    // 仅管理员或拥有者可以安装机器人
+    if (!(["admin", "owner"].indexOf(data.sender.role) !== -1 || data.user_id === Number(accountInfo["owner"]))) return; // 仅管理员或拥有者可以安装机器人
 
     /* 配置权限 */
     let permission = _readFileSync(permissionDir, "permission");
@@ -31,7 +32,7 @@ async function install(_bot, data, args = null) {
         installedGroup.push(key)
     }
     if (installedGroup.indexOf(gid) !== -1) { // 已存在退出
-        data.reply(`已领养${botInfo.botNickname}咯~`);
+        data.reply(`已领养${accountInfo.botNickname}咯~`);
         return;
     }
     // 配置该群相关参数 简化代号：initPlugin，请提取本段代码的接口
@@ -58,8 +59,9 @@ async function install(_bot, data, args = null) {
     customRegReply[gid]["group_id"] = data.group_id;
     fs.writeFileSync(replyPath_reg, JSON.stringify(customRegReply, null, '\t'));
 
-    data.reply(`温柔甜美的${botInfo.botNickname}已被带回家~`);
+    data.reply(`温柔甜美的${accountInfo.botNickname}已被带回家~`);
 }
+exports.install = install;
 
 async function update(_bot, data, args = null) {
     if (args?.length === 1 && ["help", '帮助'].indexOf(args?.[0]) !== -1) {
@@ -90,10 +92,6 @@ async function update(_bot, data, args = null) {
         if (groupPlugin.indexOf(key) === -1) {
             permission[gid][key] = permissionTemp["example"][key];
         }
-    } // 初始化新加入的权限设置
-
-    initPlugin(_bot, data); // 暂时用来放初始化(新)插件所需的设置 简化代号：initPlugin，请删除本行
-
         if (key.startsWith("_")) {
             if (JSON.stringify(permissionTemp["example"][key]) !== JSON.stringify(permission[gid][key])) {
                 let status = permission[gid][key]["activation"];
@@ -102,10 +100,13 @@ async function update(_bot, data, args = null) {
             }
         }
 
-    }
+    }// 初始化新加入的权限设置
+
+    initPlugin(_bot, data); // 暂时用来放初始化(新)插件所需的设置 简化代号：initPlugin，请删除本行
     fs.writeFileSync(permissionPath, JSON.stringify(permission, null, '\t'));
     data.reply(`[V${currentVer} -> V${botInfo.version}]\n我变得更加温柔咯~`);
 }
+exports.update = update;
 
 function initPlugin(_bot, data, args = null) {
     // 配置自定义正则回复
@@ -117,6 +118,3 @@ function initPlugin(_bot, data, args = null) {
     customRegReply[gid]["group_id"] = data.group_id;
     fs.writeFileSync(replyPath_reg, JSON.stringify(customRegReply, null, '\t'));
 } // 简化代号：initPlugin，请删除本函数
-
-exports.update = update;
-exports.install = install;
