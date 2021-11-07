@@ -7,9 +7,11 @@ const permissionPath = permissionDir + "/permission.json";
 const { getPermission } = require("../lib/permission");
 
 async function banned(_bot, data) {
-    if (!await getPermission(data, "closeAll")) return;
+    // if (!await getPermission(data, "closeAll")) return;
+    if (data.user_id !== _bot.uin) return;
     let permission = _readFileSync(permissionDir, "permission");
     const gid = String(data.group_id);
+    if (typeof permission?.[gid] === "undefined") return;
 
     if (data.duration > 0) {    // 被禁言
         permission[gid]["banned"] = true;

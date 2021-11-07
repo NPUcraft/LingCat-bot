@@ -149,6 +149,7 @@ try {
  *              - "请用给定的数字解答！"
  *              - "验证此题无解"
  */
+const { limitedEvaluate } = require("../../lib/limited-evaluate");
 exports.check = function (list, target, str) {
     if (str.trim() === "无解") {
         throw new Error("验证此题无解");
@@ -200,7 +201,6 @@ exports.check = function (list, target, str) {
         throw new Error("请用给定的数字解答！");
     }
 
-    const { limitedEvaluate } = require("../../lib/limited-evaluate");
     try {
         return Math.abs(limitedEvaluate(result) - target) < 1e-6;
     } catch (error) {

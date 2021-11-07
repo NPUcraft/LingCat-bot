@@ -27,7 +27,7 @@ async function helpList(_bot, data, args) {
             content += `${index++}. <${doc[name]["help"]["cmd"]}> ${doc[name]["help"]["desc"]} ${await getPermission(data, name.slice(1)) ? "" : "(已关闭)"}\n`;
         }
     }
-    const end = `有什么建议可以直接通过<-send 消息>联系窝~~`;
+    const end = `如有疑问可以通过<命令 help>查询详细帮助，如<-井字棋 help>\n有什么建议可以直接通过<-send 消息>联系窝~~`;
     data.reply(`${header}\n${content + end}`);
 }
 exports.helpList = helpList;

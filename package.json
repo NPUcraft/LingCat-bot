@@ -3,7 +3,7 @@
     "account": 1330615670,
     "botNickname": "灵音",
     "owner": 1368616836,
-    "version": "2.1.4",
+    "version": "2.3.1",
     "description": "",
     "main": "index.js",
     "scripts": {
@@ -15,13 +15,17 @@
         "axios": "^0.21.4",
         "cheerio": "^1.0.0-rc.10",
         "jimp": "^0.16.1",
+        "log4js": "^6.3.0",
         "mathjs": "^9.4.4",
+        "midi-writer-js": "^2.0.1",
         "minecraft-protocol": "^1.26.5",
         "mongodb": "^4.1.0",
         "oicq": "^1.19.3",
+        "quick-midi": "^1.0.1",
         "seed-random": "^2.2.0"
     },
     "devDependencies": {
-        "@types/node": "^16.4.13"
+        "@types/node": "^16.4.13",
+        "nth-check": ">=2.0.1"
     }
 }
