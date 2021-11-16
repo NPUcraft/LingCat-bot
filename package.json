@@ -3,7 +3,7 @@
     "account": 1330615670,
     "botNickname": "灵音",
     "owner": 1368616836,
-    "version": "2.3.1",
+    "version": "2.3.2",
     "description": "",
     "main": "index.js",
     "scripts": {

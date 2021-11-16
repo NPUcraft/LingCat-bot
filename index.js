@@ -2,8 +2,8 @@
 const log4js = require("log4js");
 const fs = require("fs");
 const path = require("path");
-const botInfo = JSON.parse(fs.readFileSync(path.join(__dirname, "./package.json")));
-const account = botInfo.account;
+const accountInfo = JSON.parse(fs.readFileSync(path.join(__dirname, "./account.json")));
+const account = accountInfo.account;
 const parseCommand = require("./lib/command");
 const bot = require("oicq").createClient(account, {
     platform: 5
@@ -169,7 +169,7 @@ bot.on("message.group.normal", function (e) {
     // 处理错误信息并汇报给主人
     msgHandle(cmd, e, args).catch(err => {
         this.logger.error(err);
-        this.sendPrivateMsg(botInfo?.["owner"], err.message);
+        this.sendPrivateMsg(accountInfo?.["owner"], err.message);
     })
 })
 
@@ -189,7 +189,7 @@ bot.on("message.private", function (e) {
     // 处理错误信息并汇报给主人
     msgHandle(cmd, e, args).catch(err => {
         this.logger.error(err);
-        this.sendPrivateMsg(botInfo?.["owner"], err.message);
+        this.sendPrivateMsg(accountInfo?.["owner"], err.message);
     })
 
 })
@@ -219,7 +219,7 @@ bot.on("notice.group", function (e) {
     // 处理错误信息并汇报给主人
     msgHandle(_bot, e).catch(err => {
         this.logger.error(err);
-        this.sendPrivateMsg(botInfo?.["owner"], err.message);
+        this.sendPrivateMsg(accountInfo?.["owner"], err.message);
     });
 })
 

@@ -22,6 +22,7 @@ async function setRegReply(_bot, data, key, value, pattern = null) {
         return;
     } // 检测发消息者是不是管理以及超级用户
     replyData[gid]["reply"][key] = value;
+    replyData[gid]["pattern"][key] = pattern;
     fs.writeFileSync(replyPath, JSON.stringify(replyData, null, '\t'));
     data.reply("添加成功");
 }
