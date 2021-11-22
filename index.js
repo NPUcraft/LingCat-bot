@@ -80,8 +80,8 @@ bot.once("system.online", function (e) {
 // 群消息监听类插件
 bot.on("message.group.normal", function (e) {
     let _bot = this;
-    let [cmd, ...args] = parseCommand(e.raw_message);
-    cmd = cmd ? cmd : e.raw_message;
+    let [cmd, ...args] = parseCommand(e.raw_message); // 非命令会返回为空
+
     const msgHandle = async function (cmd, e, args) {
         switch (cmd) {
             case "-echo":     // -复述功能
@@ -120,18 +120,32 @@ bot.on("message.group.normal", function (e) {
             case "-井字棋":     // 井字棋
                 await ticTactics(_bot, e, args).catch(errorHandler);
                 break;
-            case "#set":        // 添加自定义词
+            case "#set":        // 添加自定义回复
                 await setReply(_bot, e, args[0], args[1]).catch(errorHandler);
                 break;
-            case "#del":        // 删除自定义词
+            case "#del":        // 删除自定义回复
                 await deleteReply(_bot, e, args).catch(errorHandler);
                 break;
             case "-调教字典":   // 查看自定义回复列表
                 await getReplyList(_bot, e, args).catch(errorHandler);
                 break;
+            // case "#set regular":        // 添加自定义正则回复
+            //     await setRegReply(_bot, e, args[0], args[1]).catch(errorHandler);
+            //     break;
+            // case "#set pattern":        // 添加自定义正则模式
+            //     await setRegPattern(_bot, e, args[0], args[1]).catch(errorHandler);
+            //     break;
+            // case "#del regular":        // 删除自定义正则回复
+            //     await deleteRegReply(_bot, e, args).catch(errorHandler);
+            //     break;
+            // case "-调教字典 regular":   // 查看自定义正则回复列表
+            //     await getReplyList(_bot, e, args).catch(errorHandler);
+            //     break;
+            case "安装":
             case "#install":    // 安装
                 await install(_bot, e, args).catch(errorHandler);
                 break;
+            case "更新":
             case "#update":     // 更新
                 await update(_bot, e, args).catch(errorHandler);
                 break;
@@ -156,7 +170,9 @@ bot.on("message.group.normal", function (e) {
             // case "-wordcloud":  // 词云分析
             //     getWordCloud(_bot, e, args);
             //     break;
-            default:
+            default:       
+                cmd = e.raw_message; // 非命令被还原成原字符串
+                
                 // getMessage(_bot, e);
                 await saveFile(_bot, e).catch(errorHandler);    // 保存.mscg文件内容
                 await noAbbreviated(_bot, e).catch(errorHandler); // 好好说话
