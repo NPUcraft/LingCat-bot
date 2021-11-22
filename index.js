@@ -130,15 +130,23 @@ bot.on("message.group.normal", function (e) {
                 await getReplyList(_bot, e, args).catch(errorHandler);
                 break;
             // case "#set regular":        // 添加自定义正则回复
+            // case "#set r":
+            // case "#set 正则":
             //     await setRegReply(_bot, e, args[0], args[1]).catch(errorHandler);
             //     break;
             // case "#set pattern":        // 添加自定义正则模式
+            // case "#set p":
+            // case "#set 模式":
             //     await setRegPattern(_bot, e, args[0], args[1]).catch(errorHandler);
             //     break;
             // case "#del regular":        // 删除自定义正则回复
+            // case "#del r":
+            // case "#del 正则":
             //     await deleteRegReply(_bot, e, args).catch(errorHandler);
             //     break;
             // case "-调教字典 regular":   // 查看自定义正则回复列表
+            // case "-调教字典 r":
+            // case "-调教字典 正则":
             //     await getReplyList(_bot, e, args).catch(errorHandler);
             //     break;
             case "安装":

@@ -30,11 +30,12 @@ async function setWelcomeMsg(_bot, data, args) {
         data.reply(`权限不足`);
         return;
     }
-    if (args?.length === 1 && ["help", '帮助'].indexOf(args?.[0]) !== -1) {
+    if (args?.length === 1 && ["help", "帮助", ""].indexOf(args?.[0]) !== -1) {
         data.reply(help);
         return;
     } else if (args?.length === 0) {
         data.reply(help);
+        console.log("Warning！参数长度不应该为0");
         return;
     }
     new Data().updateWelcome(data.group_id, args[0]);

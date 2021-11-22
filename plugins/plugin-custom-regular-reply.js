@@ -7,8 +7,16 @@ const accountInfo = JSON.parse(fs.readFileSync(path.join(__dirname, "../account.
 const replyPath = replyDir + "/customRegReply.json";
 const { getPermission } = require("../lib/permission");
 //const { segment } = require("oicq");
-const help = `
-查看自定义正则回复触发词列表
+const help_set = `
+#set regular/r/正则 [关键词]=[内容]
+#set pattern/p/模式 [关键词]=[匹配模式]
+`.trim();
+const help_del = `
+#del regular/r/正则 [关键词]
+`.trim();
+const help_dic = `
+-调教字典 regular/r/正则
+查看自定义回复触发词列表
 `.trim();
 
 async function setRegReply(_bot, data, key, reply) {
@@ -141,10 +149,10 @@ exports.customRegReply = customRegReply;
 
 async function getRegReplyList(_bot, data, args = null) {
     if (!await getPermission(data, "自定义正则回复")) return;
-    if (args?.length === 1 && ["help", '帮助'].indexOf(args?.[0]) !== -1) {
-        data.reply(help);
+    if (args?.length == 1 && ["help", '帮助'].indexOf(args?.[0]) !== -1) {
+        data.reply(help_dic);
         return;
-    } else if (args?.length > 1) {
+    } else if (args?.length >= 1) {
         return;
     }
     const gid = String(data.group_id);
