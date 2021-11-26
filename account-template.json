@@ -1,0 +1,6 @@
+{
+	"//" :"本文件使用时建一个副本重命名成account.json(已添加至.gitignore)",
+    "account": 123456789,
+    "botNickname": "灵喵",
+    "owner": 123456789
+}
