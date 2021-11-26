@@ -8,18 +8,18 @@ const replyPath = replyDir + "/customRegReply.json";
 const { getPermission } = require("../lib/permission");
 //const { segment } = require("oicq");
 const help_set = `
-#set regular/r/正则 [关键词]=[内容]
-#set pattern/p/模式 [关键词]=[匹配模式]
+#set(regular)/#set(r)/#set(正则) [关键词]=[内容]
+#set(pattern)/#set(p)/#set(模式) [关键词]=[匹配模式]
 `.trim();
 const help_del = `
-#del regular/r/正则 [关键词]
+#del(regular)/#del(r)/#del(正则) [关键词]
 `.trim();
 const help_dic = `
--调教字典 regular/r/正则
+-调教字典(regular)/-调教字典(r)/-调教字典(正则)
 查看自定义回复触发词列表
 `.trim();
 
-async function setRegReply(_bot, data, key, reply) {
+async function setRegReply(_bot, data, key, value) {
     if (!await getPermission(data, "自定义正则回复")) return; // 检测功能是否开启
     if (key.startsWith("[CQ:")) return; // CQ码开头的消息不触发功能
 
@@ -33,26 +33,31 @@ async function setRegReply(_bot, data, key, reply) {
         return;
     }
 
-    // 添加失败
-    if (typeof reply?.[0] === "undefined") {
-        data.reply("添加失败！请设置回复内容");
+    // help
+    if ((key?.[0] === undefined || ["help", "帮助"].indexOf(key) !== -1) && value?.[0] === undefined) {
+        data.reply(help_set);
         return;
     }
-    if (typeof key?.[0] === "undefined") {
-        data.reply("添加失败！请设置回复关键词");
+
+    // 添加失败
+    if (key?.[0] === undefined && value?.[0] !== undefined) {
+        data.reply("添加失败！请指定关键词");
+        return;
+    }
+    if (value?.[0] === undefined) {
+        data.reply("添加失败！请设置回复内容");
         return;
     }
 
     // 添加成功
-    replyData[gid]["reply"][key] = reply;
+    replyData[gid]["reply"][key] = value;
     fs.writeFileSync(replyPath, JSON.stringify(replyData, null, '\t'));
     data.reply("添加成功");
 }
 exports.setRegReply = setRegReply;
 
-async function setRegPattern(_bot, data, key, pattern) {
+async function setRegPattern(_bot, data, key, value) {
     if (!await getPermission(data, "自定义正则回复")) return; // 检测功能是否开启
-    if (typeof pattern?.[0] === "undefined") return;
     if (key.startsWith("[CQ:")) return;
 
     const gid = String(data.group_id);
@@ -63,7 +68,25 @@ async function setRegPattern(_bot, data, key, pattern) {
         data.reply("权限不足");
         return;
     }
-    replyData[gid]["pattern"][key] = pattern;
+
+    // help
+    if ((key?.[0] === undefined || ["help", "帮助"].indexOf(key) !== -1) && value?.[0] === undefined) {
+        data.reply(help_set);
+        return;
+    }
+
+    // 添加失败
+    if (key?.[0] === undefined && value?.[0] !== undefined) {
+        data.reply("添加失败！请指定关键词");
+        return;
+    }
+    if (value?.[0] === undefined) {
+        data.reply("添加失败！请设置回复内容");
+        return;
+    }
+
+    // 添加成功
+    replyData[gid]["pattern"][key] = value;
     fs.writeFileSync(replyPath, JSON.stringify(replyData, null, '\t'));
     data.reply("添加成功");
 }
@@ -82,11 +105,17 @@ async function deleteRegReply(_bot, data, args) {
         return;
     }
 
-    // 删除失败
-    if (typeof args?.[0] === "undefined") {
-        data.reply("删除失败！请指定关键词");
+    // help
+    if (args?.length == 1 && (args?.[0] === undefined || ["help", "帮助"].indexOf(args?.[0]) !== -1)) {
+        data.reply(help_del);
+        return;
+    } else if (args?.length === 0) {
+        data.reply(help_del);
+        console.log("Warning！参数长度不应该为0");
         return;
     }
+
+    // 删除失败
     if (args.findIndex(elem => {return replyData[gid]["reply"][elem];}) == -1) {
         data.reply("删除失败！关键词不存在");
         return;

@@ -49,6 +49,7 @@ const { banned } = require("./plugins/plugin-ban");   // 机器人被禁言，[�
 const { turnOff, turnOn } = require("./plugins/plugin-manage");      // 插件开关
 const { helpList } = require("./plugins/plugin-help");       // 帮助菜单
 const { setReply, deleteReply, customReply, getReplyList } = require("./plugins/plugin-custom-reply");
+const { setRegReply, setRegPattern, deleteRegReply, customRegReply, getRegReplyList } = require("./plugins/plugin-custom-regular-reply");
 const { g24points } = require("./plugins/24points/plugin-24points");   // 24点游戏
 const { jrjh } = require("./plugins/jr-dontstarve/plugin-jrjh");      // 今日饥荒菜谱
 const { jrmc } = require("./plugins/jrmc/plugin-jrmc");       // 今日MC
@@ -129,31 +130,23 @@ bot.on("message.group.normal", function (e) {
             case "-调教字典":   // 查看自定义回复列表
                 await getReplyList(_bot, e, args).catch(errorHandler);
                 break;
-            // case "#set regular":        // 添加自定义正则回复
-            // case "#set r":
-            // case "#set 正则":
+            // case "#set(r)":        // 添加自定义正则回复
             //     await setRegReply(_bot, e, args[0], args[1]).catch(errorHandler);
             //     break;
-            // case "#set pattern":        // 添加自定义正则模式
-            // case "#set p":
-            // case "#set 模式":
+            // case "#set(p)":        // 添加自定义正则模式
             //     await setRegPattern(_bot, e, args[0], args[1]).catch(errorHandler);
             //     break;
-            // case "#del regular":        // 删除自定义正则回复
-            // case "#del r":
-            // case "#del 正则":
+            // case "#del(r)":        // 删除自定义正则回复
             //     await deleteRegReply(_bot, e, args).catch(errorHandler);
             //     break;
-            // case "-调教字典 regular":   // 查看自定义正则回复列表
-            // case "-调教字典 r":
-            // case "-调教字典 正则":
+            // case "-调教字典(r)":   // 查看自定义正则回复列表
             //     await getReplyList(_bot, e, args).catch(errorHandler);
             //     break;
-            case "安装":
+            case "#安装":
             case "#install":    // 安装
                 await install(_bot, e, args).catch(errorHandler);
                 break;
-            case "更新":
+            case "#更新":
             case "#update":     // 更新
                 await update(_bot, e, args).catch(errorHandler);
                 break;
@@ -185,7 +178,8 @@ bot.on("message.group.normal", function (e) {
                 await saveFile(_bot, e).catch(errorHandler);    // 保存.mscg文件内容
                 await noAbbreviated(_bot, e).catch(errorHandler); // 好好说话
                 await repeater(_bot, e).catch(errorHandler);      // 复读
-                await customReply(_bot, e, cmd).catch(errorHandler);  // 触发自定义回复
+                await customReply(_bot, e, cmd).catch(errorHandler);  // 自定义回复
+                //await customRegReply(_bot, e, cmd).catch(errorHandler);  // 自定义正则回复
                 break;
         }
     };

@@ -10,18 +10,18 @@ const { getPermission } = require("../lib/permission");
 const help_set = `
 #set [关键词]=[内容]
 正则模式：
-#set regular [关键词]=[内容]
-#set pattern [关键词]=[匹配模式]
+#set(regular) [关键词]=[内容]
+#set(pattern) [关键词]=[匹配模式]
 `.trim();
 const help_del = `
 #del [关键词]
 正则模式：
-#del regular [关键词]
+#del(regular) [关键词]
 `.trim();
 const help_dic = `
 查看自定义回复触发词列表
 正则模式：
--调教字典 regular
+-调教字典(regular)
 `.trim();
 
 async function setReply(_bot, data, key, value) { 
@@ -39,17 +39,17 @@ async function setReply(_bot, data, key, value) {
     }
 
     // help
-    if (["help", "帮助", ""].indexOf(key) !== -1) {
+    if ((key?.[0] === undefined || ["help", "帮助"].indexOf(key) !== -1) && value?.[0] === undefined) {
         data.reply(help_set);
-        return;
-    } else if (key?.length === 0) {
-        data.reply(help_set);
-        console.log("Warning！参数长度不应该为0");
         return;
     }
 
     // 添加失败
-    if (typeof value?.[0] === "undefined") {
+    if (key?.[0] === undefined && value?.[0] !== undefined) {
+        data.reply("添加失败！请指定关键词");
+        return;
+    }
+    if (value?.[0] === undefined) {
         data.reply("添加失败！请设置回复内容");
         return;
     }
@@ -75,7 +75,7 @@ async function deleteReply(_bot, data, args) {
     }
 
     // help
-    if (args?.length == 1 && ["help", "帮助", ""].indexOf(args?.[0]) !== -1) {
+    if (args?.length == 1 && (args?.[0] === undefined || ["help", "帮助"].indexOf(args?.[0]) !== -1)) {
         data.reply(help_del);
         return;
     } else if (args?.length === 0) {
@@ -113,7 +113,7 @@ async function getReplyList(_bot, data, args = null) {
     if (args?.length == 1 && ["help", '帮助'].indexOf(args?.[0]) !== -1) {
         data.reply(help_dic);
         return;
-    } else if (args?.length >= 1) {
+    } else if (args?.length >= 1) { // 后面跟无关参数直接退出
         return;
     }
     const gid = String(data.group_id);

@@ -144,8 +144,8 @@
 		"_自定义正则回复": {
 			"activation": false,
 			"help": {
-				"desc": "自定义回复",
-				"cmd": "#seta/#dela"
+				"desc": "自定义正则回复",
+				"cmd": "#set(r)/#del(r)"
 			},
 			"isadmin": [
 				"member",
