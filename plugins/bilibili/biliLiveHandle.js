@@ -6,10 +6,10 @@ const header = { 'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleW
 // 获取直播间信息
 const getLiveInfo = async (live_id) => {
     try {
-        let liveInfo = await axios.get(`http://api.live.bilibili.com/room/v1/Room/getRoomInfoOld?mid=${live_id}`, {
+        let liveInfo = await axios.get(`https://api.bilibili.com/x/space/acc/info?mid=${live_id}`, {
             headers: header,
         })
-        return liveInfo?.data?.data;
+        return liveInfo?.data?.data?.live_room;
     } catch (error) {
         console.error(error)
     }
