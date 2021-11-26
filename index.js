@@ -2,8 +2,8 @@
 const log4js = require("log4js");
 const fs = require("fs");
 const path = require("path");
-const botInfo = JSON.parse(fs.readFileSync(path.join(__dirname, "./package.json")));
-const account = botInfo.account;
+const accountInfo = JSON.parse(fs.readFileSync(path.join(__dirname, "./account.json")));
+const account = accountInfo.account;
 const parseCommand = require("./lib/command");
 const bot = require("oicq").createClient(account, {
     platform: 5
@@ -49,6 +49,7 @@ const { banned } = require("./plugins/plugin-ban");   // 机器人被禁言，[�
 const { turnOff, turnOn } = require("./plugins/plugin-manage");      // 插件开关
 const { helpList } = require("./plugins/plugin-help");       // 帮助菜单
 const { setReply, deleteReply, customReply, getReplyList } = require("./plugins/plugin-custom-reply");
+const { setRegReply, setRegPattern, deleteRegReply, customRegReply, getRegReplyList } = require("./plugins/plugin-custom-regular-reply");
 const { g24points } = require("./plugins/24points/plugin-24points");   // 24点游戏
 const { jrjh } = require("./plugins/jr-dontstarve/plugin-jrjh");      // 今日饥荒菜谱
 const { jrmc } = require("./plugins/jrmc/plugin-jrmc");       // 今日MC
@@ -80,8 +81,8 @@ bot.once("system.online", function (e) {
 // 群消息监听类插件
 bot.on("message.group.normal", function (e) {
     let _bot = this;
-    let [cmd, ...args] = parseCommand(e.raw_message);
-    cmd = cmd ? cmd : e.raw_message;
+    let [cmd, ...args] = parseCommand(e.raw_message); // 非命令会返回为空
+
     const msgHandle = async function (cmd, e, args) {
         switch (cmd) {
             case "-echo":     // -复述功能
@@ -120,18 +121,32 @@ bot.on("message.group.normal", function (e) {
             case "-井字棋":     // 井字棋
                 await ticTactics(_bot, e, args).catch(errorHandler);
                 break;
-            case "#set":        // 添加自定义词
+            case "#set":        // 添加自定义回复
                 await setReply(_bot, e, args[0], args[1]).catch(errorHandler);
                 break;
-            case "#del":        // 删除自定义词
+            case "#del":        // 删除自定义回复
                 await deleteReply(_bot, e, args).catch(errorHandler);
                 break;
             case "-调教字典":   // 查看自定义回复列表
                 await getReplyList(_bot, e, args).catch(errorHandler);
                 break;
+            // case "#set(r)":        // 添加自定义正则回复
+            //     await setRegReply(_bot, e, args[0], args[1]).catch(errorHandler);
+            //     break;
+            // case "#set(p)":        // 添加自定义正则模式
+            //     await setRegPattern(_bot, e, args[0], args[1]).catch(errorHandler);
+            //     break;
+            // case "#del(r)":        // 删除自定义正则回复
+            //     await deleteRegReply(_bot, e, args).catch(errorHandler);
+            //     break;
+            // case "-调教字典(r)":   // 查看自定义正则回复列表
+            //     await getReplyList(_bot, e, args).catch(errorHandler);
+            //     break;
+            case "#安装":
             case "#install":    // 安装
                 await install(_bot, e, args).catch(errorHandler);
                 break;
+            case "#更新":
             case "#update":     // 更新
                 await update(_bot, e, args).catch(errorHandler);
                 break;
@@ -156,12 +171,15 @@ bot.on("message.group.normal", function (e) {
             // case "-wordcloud":  // 词云分析
             //     getWordCloud(_bot, e, args);
             //     break;
-            default:
+            default:       
+                cmd = e.raw_message; // 非命令被还原成原字符串
+                
                 // getMessage(_bot, e);
                 await saveFile(_bot, e).catch(errorHandler);    // 保存.mscg文件内容
                 await noAbbreviated(_bot, e).catch(errorHandler); // 好好说话
                 await repeater(_bot, e).catch(errorHandler);      // 复读
-                await customReply(_bot, e, cmd).catch(errorHandler);  // 触发自定义回复
+                await customReply(_bot, e, cmd).catch(errorHandler);  // 自定义回复
+                //await customRegReply(_bot, e, cmd).catch(errorHandler);  // 自定义正则回复
                 break;
         }
     };
@@ -169,7 +187,7 @@ bot.on("message.group.normal", function (e) {
     // 处理错误信息并汇报给主人
     msgHandle(cmd, e, args).catch(err => {
         this.logger.error(err);
-        this.sendPrivateMsg(botInfo?.["owner"], err.message);
+        this.sendPrivateMsg(accountInfo?.["owner"], err.message);
     })
 })
 
@@ -189,7 +207,7 @@ bot.on("message.private", function (e) {
     // 处理错误信息并汇报给主人
     msgHandle(cmd, e, args).catch(err => {
         this.logger.error(err);
-        this.sendPrivateMsg(botInfo?.["owner"], err.message);
+        this.sendPrivateMsg(accountInfo?.["owner"], err.message);
     })
 
 })
@@ -219,7 +237,7 @@ bot.on("notice.group", function (e) {
     // 处理错误信息并汇报给主人
     msgHandle(_bot, e).catch(err => {
         this.logger.error(err);
-        this.sendPrivateMsg(botInfo?.["owner"], err.message);
+        this.sendPrivateMsg(accountInfo?.["owner"], err.message);
     });
 })
 

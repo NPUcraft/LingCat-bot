@@ -17,6 +17,7 @@ async function repeater(_bot, data, args = null) {
         data.reply(data.raw_message);
         msgList[gid].push("✈");    // 标志已复读
     }
+    //console.log(msgList)
 }
 exports.repeater = repeater;
 

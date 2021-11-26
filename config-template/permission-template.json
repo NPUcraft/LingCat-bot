@@ -141,6 +141,18 @@
 				"owner"
 			]
 		},
+		"_自定义正则回复": {
+			"activation": false,
+			"help": {
+				"desc": "自定义正则回复",
+				"cmd": "#set(r)/#del(r)"
+			},
+			"isadmin": [
+				"member",
+				"admin",
+				"owner"
+			]
+		},
 		"_井字棋": {
 			"activation": true,
 			"help": {

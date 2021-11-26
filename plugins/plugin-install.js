@@ -3,10 +3,12 @@ const fs = require("fs");
 const path = require("path");
 const { _readFileSync } = require("../lib/file");
 const botInfo = JSON.parse(fs.readFileSync(path.join(__dirname, "../package.json")));
+const accountInfo = JSON.parse(fs.readFileSync(path.join(__dirname, "../account.json")));
 const permissionDir = path.join(__dirname, "../config-template/config");
 const permissionPath = permissionDir + "/permission.json";
 const replyDir = path.join(__dirname, "../config-template/config");
 const replyPath = replyDir + "/customReply.json";
+const replyPath_reg = replyDir + "/customRegReply.json";
 const help = `
 <#install> 为本群安装机器人服务
 <#update> 为本群更新到最新的机器人版本
@@ -20,7 +22,7 @@ async function install(_bot, data, args = null) {
         return;
     }
     const gid = String(data.group_id);
-    if (!(["admin", "owner"].indexOf(data.sender.role) !== -1 || data.user_id === Number(botInfo["owner"]))) return;    // 仅管理员或拥有者可以安装机器人
+    if (!(["admin", "owner"].indexOf(data.sender.role) !== -1 || data.user_id === Number(accountInfo["owner"]))) return; // 仅管理员或拥有者可以安装机器人
 
     /* 配置权限 */
     let permission = _readFileSync(permissionDir, "permission");
@@ -30,10 +32,10 @@ async function install(_bot, data, args = null) {
         installedGroup.push(key)
     }
     if (installedGroup.indexOf(gid) !== -1) { // 已存在退出
-        data.reply(`已领养${botInfo.botNickname}咯~`);
+        data.reply(`已领养${accountInfo.botNickname}咯~`);
         return;
     }
-    // 配置该群相关参数
+    // 配置该群相关参数 简化代号：initPlugin，请提取本段代码的接口
     let permissionTemp = JSON.parse(fs.readFileSync(path.join(__dirname, "../config-template/permission-template.json")));
     permissionTemp = permissionTemp["example"];
     permission[gid] = JSON.parse(JSON.stringify(permissionTemp));
@@ -41,7 +43,7 @@ async function install(_bot, data, args = null) {
     permission[gid]["version"] = botInfo.version;
     fs.writeFileSync(permissionPath, JSON.stringify(permission, null, '\t'));
 
-    /* 配置自定义回复 */
+    // 配置自定义回复 简化代号：initPlugin，请提取本段代码的接口
     let customReply = _readFileSync(replyDir, "customReply");
     let customReplyTemp = JSON.parse(fs.readFileSync(path.join(__dirname, "../config-template/customReply-template.json")));
     customReplyTemp = customReplyTemp["example"];
@@ -49,8 +51,17 @@ async function install(_bot, data, args = null) {
     customReply[gid]["group_id"] = data.group_id;
     fs.writeFileSync(replyPath, JSON.stringify(customReply, null, '\t'));
 
-    data.reply(`温柔甜美的${botInfo.botNickname}已被带回家~`);
+    // 配置自定义正则回复 简化代号：initPlugin，请提取本段代码的接口
+    let customRegReply = _readFileSync(replyDir, "customRegReply");
+    let customRegReplyTemp = JSON.parse(fs.readFileSync(path.join(__dirname, "../config-template/customRegReply-template.json")));
+    customRegReplyTemp = customRegReplyTemp["example"];
+    customRegReply[gid] = JSON.parse(JSON.stringify(customRegReplyTemp));
+    customRegReply[gid]["group_id"] = data.group_id;
+    fs.writeFileSync(replyPath_reg, JSON.stringify(customRegReply, null, '\t'));
+
+    data.reply(`温柔甜美的${accountInfo.botNickname}已被带回家~`);
 }
+exports.install = install;
 
 async function update(_bot, data, args = null) {
     if (args?.length === 1 && ["help", '帮助'].indexOf(args?.[0]) !== -1) {
@@ -61,11 +72,12 @@ async function update(_bot, data, args = null) {
     }
     const gid = String(data.group_id);
     let permission = _readFileSync(permissionDir, "permission");
+
     if (typeof permission?.[gid] === "undefined") {
         data.reply("未安装！请管理员先使用#install进行安装");
         return;
     }
-    let permissionTemp = JSON.parse(fs.readFileSync(path.join(__dirname, "../config-template/permission-template.json")));
+    let permissionTemp = JSON.parse(fs.readFileSync(path.join(__dirname, "../config-template/permission-template.json"))); // 权限模板
     let currentVer = permission[gid]["version"];
     if (botInfo.version === currentVer) {
         data.reply(`已是最新版本:[V${botInfo.version}]`);
@@ -88,10 +100,21 @@ async function update(_bot, data, args = null) {
             }
         }
 
-    }
+    }// 初始化新加入的权限设置
+
+    initPlugin(_bot, data); // 暂时用来放初始化(新)插件所需的设置 简化代号：initPlugin，请删除本行
     fs.writeFileSync(permissionPath, JSON.stringify(permission, null, '\t'));
     data.reply(`[V${currentVer} -> V${botInfo.version}]\n我变得更加温柔咯~`);
 }
-
 exports.update = update;
-exports.install = install;
+
+function initPlugin(_bot, data, args = null) {
+    // 配置自定义正则回复
+    const gid = String(data.group_id);
+    let customRegReply = _readFileSync(replyDir, "customRegReply");
+    let customRegReplyTemp = JSON.parse(fs.readFileSync(path.join(__dirname, "../config-template/customRegReply-template.json")));
+    customRegReplyTemp = customRegReplyTemp["example"];
+    customRegReply[gid] = JSON.parse(JSON.stringify(customRegReplyTemp));
+    customRegReply[gid]["group_id"] = data.group_id;
+    fs.writeFileSync(replyPath_reg, JSON.stringify(customRegReply, null, '\t'));
+} // 简化代号：initPlugin，请删除本函数
