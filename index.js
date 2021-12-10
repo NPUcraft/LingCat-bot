@@ -130,18 +130,18 @@ bot.on("message.group.normal", function (e) {
             case "-调教字典":   // 查看自定义回复列表
                 await getReplyList(_bot, e, args).catch(errorHandler);
                 break;
-            // case "#set(r)":        // 添加自定义正则回复
-            //     await setRegReply(_bot, e, args[0], args[1]).catch(errorHandler);
-            //     break;
-            // case "#set(p)":        // 添加自定义正则模式
-            //     await setRegPattern(_bot, e, args[0], args[1]).catch(errorHandler);
-            //     break;
-            // case "#del(r)":        // 删除自定义正则回复
-            //     await deleteRegReply(_bot, e, args).catch(errorHandler);
-            //     break;
-            // case "-调教字典(r)":   // 查看自定义正则回复列表
-            //     await getReplyList(_bot, e, args).catch(errorHandler);
-            //     break;
+            case "#set(r)":        // 添加自定义正则回复
+                await setRegReply(_bot, e, args[0], args[1]).catch(errorHandler);
+                break;
+            case "#set(p)":        // 添加自定义正则模式
+                await setRegPattern(_bot, e, args[0], args[1]).catch(errorHandler);
+                break;
+            case "#del(r)":        // 删除自定义正则回复
+                await deleteRegReply(_bot, e, args).catch(errorHandler);
+                break;
+            case "-调教字典(r)":   // 查看自定义正则回复列表
+                await getRegReplyList(_bot, e, args).catch(errorHandler);
+                break;
             case "#安装":
             case "#install":    // 安装
                 await install(_bot, e, args).catch(errorHandler);
@@ -179,7 +179,7 @@ bot.on("message.group.normal", function (e) {
                 await noAbbreviated(_bot, e).catch(errorHandler); // 好好说话
                 await repeater(_bot, e).catch(errorHandler);      // 复读
                 await customReply(_bot, e, cmd).catch(errorHandler);  // 自定义回复
-                //await customRegReply(_bot, e, cmd).catch(errorHandler);  // 自定义正则回复
+                await customRegReply(_bot, e, cmd).catch(errorHandler);  // 自定义正则回复
                 break;
         }
     };
