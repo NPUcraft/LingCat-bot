@@ -1,5 +1,6 @@
 "use strict"
 const fs = require("fs");
+const { re } = require("mathjs");
 const path = require("path");
 const { _readFileSync } = require("../lib/file");
 const replyDir = path.join(__dirname, "../config-template/config");
@@ -51,8 +52,11 @@ async function setRegReply(_bot, data, key, value) {
 
     // 添加成功
     replyData[gid]["reply"][key] = value;
+    if (replyData[gid]["pattern"][key] === undefined) replyData[gid]["pattern"][key] = ('/' + key.toString() + '/').toString(); // 给未设置pattern的设置默认pattern
     fs.writeFileSync(replyPath, JSON.stringify(replyData, null, '\t'));
     data.reply("添加成功");
+
+    
 }
 exports.setRegReply = setRegReply;
 
@@ -80,15 +84,17 @@ async function setRegPattern(_bot, data, key, value) {
         data.reply("添加失败！请指定关键词");
         return;
     }
-    if (value?.[0] === undefined) {
-        data.reply("添加失败！请设置匹配模式");
+    if (replyData[gid]["reply"][key] === undefined) {
+        data.reply("添加失败！请先添加关键词");
         return;
     }
-
+    
     // 添加成功
     replyData[gid]["pattern"][key] = value;
+    if (value?.[0] === undefined) replyData[gid]["pattern"][key] = ('/' + key.toString() + '/').toString(); // 如果value为空设置默认pattern
     fs.writeFileSync(replyPath, JSON.stringify(replyData, null, '\t'));
-    data.reply("添加成功");
+    if (value?.[0] === undefined) data.reply("添加成功！将匹配模式设置为默认"); // 可以设置为空，不视为添加失败
+    else data.reply("添加成功");
 }
 exports.setRegPattern = setRegPattern;
 
@@ -133,10 +139,6 @@ exports.deleteRegReply = deleteRegReply;
 
 async function customRegReply(_bot, data, args) {
     if (!await getPermission(data, "自定义正则回复")) return;
-    const gid = String(data.group_id);
-    let replyData = _readFileSync(replyDir, "customRegReply");
-    let replyObj = replyData[gid]["reply"];
-    //data.reply(replyObj?.[args]);
 
     _bot.getGroupMemberInfo(data.group_id, data.sender.user_id).then(res => { 
         // 判断是否是新人
@@ -147,10 +149,32 @@ async function customRegReply(_bot, data, args) {
         let isOwner = data.user_id == accountInfo["owner"]?true:false;
 
         // 判断是否是机器人id
-        let isID = (data.sender.user_id != 2987084315 && data.sender.user_id != 1354825038)?true:false;
+        let isRobot = (data.user_id == 2987084315 || // 灵喵
+                       data.user_id == 1354825038 || // 榴莲
+                       data.user_id == 1330615670 || // 灵音
+                       data.user_id == 3636520140 || // 灵喵test
+                       data.user_id == 2761001868 || // 木木
+                       data.user_id == 1441693853 || // 小灵喵
+                       data.user_id == 2847446242);  // 小天狼星
 
-        if ((isNew  && isID) || isOwner) {
-            data.reply(replyObj?.[args]);
+        if ((isNew  && !isRobot) || isOwner) {
+            const gid = data.group_id.toString();
+            let replyData = _readFileSync(replyDir, "customRegReply");
+            
+            replyData[gid].forEach(elem => {
+                let rawPatt = replyData[gid]["pattern"][elem];
+                let patt, mod;
+                rawPatt.match("/");
+                let re = new RegExp();
+                //let re = new RegExp(patt);
+                if (String(args).match(re) != null) data.reply(`[CQ:at,qq=${data.user_id}]\n` + replyData[gid]["reply"][elem]);
+            });
+
+            console.log(args);
+            console.log(patternObj[args]);
+            //data.reply(replyObj?.[args]);
+
+
             // if (RegExp(/考核服/).test(data.message[0].data.text) == true) {
             //     data.reply("[CQ:at,qq=" + data.sender.user_id + "]" + "\n请阅读常见问题解答：https://wiki.npucraft.com/npucraftwiki/index.php/%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98%E8%A7%A3%E7%AD%94");  
             // }

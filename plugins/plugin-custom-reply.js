@@ -26,7 +26,7 @@ const help_dic = `
 
 async function setReply(_bot, data, key, value) { 
     if (!await getPermission(data, "自定义回复")) return; // 检测功能是否开启
-    if (key.startsWith("[CQ:")) return; // CQ码开头的消息不触发功能
+    //if (key.startsWith("[CQ:")) return; // CQ码开头的消息不触发功能
 
     // 检测权限
     const gid = String(data.group_id);
