@@ -94,6 +94,21 @@ async function setRegPattern(_bot, data, key, value) {
     if (value?.[0] === undefined) replyData[gid]["pattern"][key] = ('/' + key.toString() + '/').toString(); // 如果value为空设置默认pattern
     fs.writeFileSync(replyPath, JSON.stringify(replyData, null, '\t'));
     if (value?.[0] === undefined) data.reply("添加成功！将匹配模式设置为默认"); // 可以设置为空，不视为添加失败
+    // 检测value的值是否符合语法
+    else if (function(){
+        // 该函数用来判断正则表达式模式和修饰符是否符合语法
+        let rawPatt = new String(value).slice(String(value).indexOf("/"), String(value).lastIndexOf("/") + 1); // 用第一个和最后一个"/"分割
+        let patt = new RegExp(rawPatt.slice(1, -1)).toString(); // RegExp构造函数参数不需要两头的"/"
+        let rawMod = new String(value).slice(String(value).lastIndexOf("/") + 1).split("").sort().join(""); // 构造函数会把修饰符gims重新排序，所以需要sort之后比较
+        let mod = new RegExp(" ", rawMod.toString()).toString().slice(3);
+
+        // console.log("rawPatt = " + rawPatt);
+        // console.log("patt = " + patt);
+        // console.log("rawMod = " + rawMod);
+        // console.log("mod = " + mod);
+
+        return rawPatt != patt || rawMod != mod;
+    }()) data.reply("添加成功！警告：匹配模式不符合语法");
     else data.reply("添加成功");
 }
 exports.setRegPattern = setRegPattern;
@@ -161,19 +176,19 @@ async function customRegReply(_bot, data, args) {
             const gid = data.group_id.toString();
             let replyData = _readFileSync(replyDir, "customRegReply");
             
-            replyData[gid].forEach(elem => {
-                let rawPatt = replyData[gid]["pattern"][elem];
-                let patt, mod;
-                rawPatt.match("/");
-                let re = new RegExp();
-                //let re = new RegExp(patt);
-                if (String(args).match(re) != null) data.reply(`[CQ:at,qq=${data.user_id}]\n` + replyData[gid]["reply"][elem]);
-            });
-
-            console.log(args);
-            console.log(patternObj[args]);
+            // replyData[gid]["pattern"].forEach(elem => {
+            //     //let rawPatt = replyData[gid]["pattern"][elem];
+            //     //let patt, mod;
+            //     //rawPatt.match("/");
+            //     //let re = new RegExp();
+            //     //let re = new RegExp(patt);
+            //     //if (String(args).match(re) != null) data.reply(`[CQ:at,qq=${data.user_id}]\n` + replyData[gid]["reply"][elem]);
+            // });
+            let patternObj = replyData[gid]["pattern"];
+            console.log(patternObj);
+            console.log(patternObj[0]);
+            
             //data.reply(replyObj?.[args]);
-
 
             // if (RegExp(/考核服/).test(data.message[0].data.text) == true) {
             //     data.reply("[CQ:at,qq=" + data.sender.user_id + "]" + "\n请阅读常见问题解答：https://wiki.npucraft.com/npucraftwiki/index.php/%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98%E8%A7%A3%E7%AD%94");  
