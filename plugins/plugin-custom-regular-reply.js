@@ -52,7 +52,9 @@ async function setRegReply(_bot, data, key, value) {
 
     // 添加成功
     replyData[gid]["reply"][key] = value;
-    if (replyData[gid]["pattern"][key] === undefined) replyData[gid]["pattern"][key] = ('/' + key.toString() + '/').toString(); // 给未设置pattern的设置默认pattern
+    if (replyData[gid]["pattern"][key] === undefined) {
+        replyData[gid]["pattern"][key] = ('/' + key.toString() + '/').toString(); // 给未设置pattern的设置默认pattern // 这句确保每一个reply都有对应的pattern
+    }
     fs.writeFileSync(replyPath, JSON.stringify(replyData, null, '\t'));
     data.reply("添加成功");
 
@@ -64,6 +66,7 @@ async function setRegPattern(_bot, data, key, value) {
     if (!await getPermission(data, "自定义正则回复")) return; // 检测功能是否开启
     if (key.startsWith("[CQ:")) return;
 
+    // 检测权限
     const gid = String(data.group_id);
     let replyData = _readFileSync(replyDir, "customRegReply");
     if (!((data.sender.role === "member" && replyData[gid]["SUPERUSER"].indexOf(data.user_id) !== -1) // 检测发消息者是不是超级用户
@@ -98,16 +101,21 @@ async function setRegPattern(_bot, data, key, value) {
     else if (function(){
         // 该函数用来判断正则表达式模式和修饰符是否符合语法
         let rawPatt = new String(value).slice(String(value).indexOf("/"), String(value).lastIndexOf("/") + 1); // 用第一个和最后一个"/"分割
-        let patt = new RegExp(rawPatt.slice(1, -1)).toString(); // RegExp构造函数参数不需要两头的"/"
         let rawMod = new String(value).slice(String(value).lastIndexOf("/") + 1).split("").sort().join(""); // 构造函数会把修饰符gims重新排序，所以需要sort之后比较
-        let mod = new RegExp(" ", rawMod.toString()).toString().slice(3);
+        let patt, mod;
+        try {
+            patt = new RegExp(rawPatt.slice(1, -1)).toString(); // RegExp构造函数参数不需要两头的"/"
+            mod = new RegExp(" ", rawMod.toString()).toString().slice(3);
+        } catch(err) {
+            return true;
+        }
 
         // console.log("rawPatt = " + rawPatt);
         // console.log("patt = " + patt);
         // console.log("rawMod = " + rawMod);
         // console.log("mod = " + mod);
 
-        return rawPatt != patt || rawMod != mod;
+        return rawPatt != patt || rawMod != mod; // 不合语法的话返回true
     }()) data.reply("添加成功！警告：匹配模式不符合语法");
     else data.reply("添加成功");
 }
@@ -161,9 +169,10 @@ async function customRegReply(_bot, data, args) {
         let time = Date.now() - join_time;
         let newTime = 3;// 判定为新人的时间，单位：天
         let isNew = ((time / 86400000 < newTime) || data.sender.level == 1)?true:false;
+        // 判断是不是号主
         let isOwner = data.user_id == accountInfo["owner"]?true:false;
-
-        // 判断是否是机器人id
+        //let isOwner = false;
+        // 判断是不是机器人id
         let isRobot = (data.user_id == 2987084315 || // 灵喵
                        data.user_id == 1354825038 || // 榴莲
                        data.user_id == 1330615670 || // 灵音
@@ -172,23 +181,31 @@ async function customRegReply(_bot, data, args) {
                        data.user_id == 1441693853 || // 小灵喵
                        data.user_id == 2847446242);  // 小天狼星
 
-        if ((isNew  && !isRobot) || isOwner) {
+        if ((isNew && !isRobot) || isOwner) {
             const gid = data.group_id.toString();
             let replyData = _readFileSync(replyDir, "customRegReply");
-            
-            // replyData[gid]["pattern"].forEach(elem => {
-            //     //let rawPatt = replyData[gid]["pattern"][elem];
-            //     //let patt, mod;
-            //     //rawPatt.match("/");
-            //     //let re = new RegExp();
-            //     //let re = new RegExp(patt);
-            //     //if (String(args).match(re) != null) data.reply(`[CQ:at,qq=${data.user_id}]\n` + replyData[gid]["reply"][elem]);
-            // });
+            let defalutReplyData = _readFileSync(replyDir, "customRegReply-default");
+
             let patternObj = replyData[gid]["pattern"];
+            patternObj = Object.assign(patternObj, defalutReplyData["default"]["pattern"]); // 此行拼合了自定义对象和默认对象
             console.log(patternObj);
-            console.log(patternObj[0]);
-            
-            //data.reply(replyObj?.[args]);
+            for (let key in patternObj) 
+            {
+                let value = patternObj[key];
+                let rawPatt = new String(value).slice(String(value).indexOf("/"), String(value).lastIndexOf("/") + 1); // 用第一个和最后一个"/"分割
+                let rawMod = new String(value).slice(String(value).lastIndexOf("/") + 1).split("").sort().join(""); // 构造函数会把修饰符gims重新排序，所以需要sort之后比较
+
+                let re;
+                try {
+                    re = new RegExp(rawPatt.slice(1, -1), rawMod.toString());
+                    if (String(args).match(re) != null) {
+                        data.reply(`[CQ:at,qq=${data.user_id}]\n` + replyData[gid]["reply"][key]); // 正则回复核心代码
+                    }
+                    //console.log(re);
+                } catch(err) {
+                    console.log(err);
+                }
+            }
 
             // if (RegExp(/考核服/).test(data.message[0].data.text) == true) {
             //     data.reply("[CQ:at,qq=" + data.sender.user_id + "]" + "\n请阅读常见问题解答：https://wiki.npucraft.com/npucraftwiki/index.php/%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98%E8%A7%A3%E7%AD%94");  
