@@ -1,13 +1,11 @@
 "use strict"
 const fs = require("fs");
-const { re } = require("mathjs");
 const path = require("path");
 const { _readFileSync } = require("../lib/file");
 const replyDir = path.join(__dirname, "../config-template/config");
 const accountInfo = JSON.parse(fs.readFileSync(path.join(__dirname, "../account.json")));
 const replyPath = replyDir + "/customRegReply.json";
 const { getPermission } = require("../lib/permission");
-//const { segment } = require("oicq");
 const help_set = `
 #set(regular)/#set(r)/#set(正则) [关键词]=[内容]
 #set(pattern)/#set(p)/#set(模式) [关键词]=[匹配模式]
@@ -184,7 +182,8 @@ async function customRegReply(_bot, data, args) {
         if ((isNew && !isRobot) || isOwner) {
             const gid = data.group_id.toString();
             let replyData = _readFileSync(replyDir, "customRegReply");
-            let defalutReplyData = _readFileSync(replyDir, "customRegReply-default");
+            const templateReplyDir = path.join(__dirname, "../config-template");
+            let defalutReplyData = _readFileSync(templateReplyDir, "customRegReply-default");
             let patternObj = replyData[gid]["pattern"];
             let replyObj = replyData[gid]["reply"];
 

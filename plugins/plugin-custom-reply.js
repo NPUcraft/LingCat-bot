@@ -1,6 +1,5 @@
 "use strict"
 const fs = require("fs");
-const { arg } = require("mathjs");
 const path = require("path");
 const { _readFileSync } = require("../lib/file");
 const replyDir = path.join(__dirname, "../config-template/config");
