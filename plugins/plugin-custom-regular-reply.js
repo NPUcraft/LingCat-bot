@@ -202,6 +202,7 @@ async function customRegReply(_bot, data, args) {
                     re = new RegExp(rawPatt.slice(1, -1), rawMod.toString());
                     if (String(args).match(re) != null) {
                         data.reply(`[CQ:at,qq=${data.user_id}]\n` + replyObj[key]); // 正则回复核心代码
+                        console.log(args);
                     }
                     //console.log(re);
                 } catch(err) {
