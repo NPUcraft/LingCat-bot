@@ -15,8 +15,8 @@ async function jrrp(_bot, data, args = null) {
         return;
     }
     const seedID = data.sender.user_id + new Date().toLocaleDateString();
-    const randomnum = seedRandom.getRandomIntInclusive(seedID, -20, 120)
+    const randomnum = seedRandom.getRandomIntInclusive(seedID, -20, 120);
     let card = data.sender.card;
-    data.reply(`${card === '' ? data.sender.nickname : card} 今日的人品为 ${randomnum}`)
+    data.reply(`${card === '' ? data.sender.nickname : card} 今日的人品为 ${randomnum}`);
 }
 exports.jrrp = jrrp;

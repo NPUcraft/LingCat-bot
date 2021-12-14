@@ -259,6 +259,18 @@
 				"admin",
 				"owner"
 			]
+		},
+		"_randomFAQ": {
+			"activation": true,
+			"help": {
+				"desc": "查看一个随机问答",
+				"cmd": "-随机问答"
+			},
+			"isadmin": [
+				"member",
+				"admin",
+				"owner"
+			]
 		}
 	}
 }

@@ -3,6 +3,7 @@ const fs = require("fs");
 const path = require("path");
 const { _readFileSync } = require("../lib/file");
 const replyDir = path.join(__dirname, "../config-template/config");
+const templateReplyDir = path.join(__dirname, "../config-template");
 const accountInfo = JSON.parse(fs.readFileSync(path.join(__dirname, "../account.json")));
 const replyPath = replyDir + "/customRegReply.json";
 const { getPermission } = require("../lib/permission");
@@ -182,7 +183,6 @@ async function customRegReply(_bot, data, args) {
         if ((isNew && !isRobot) || isOwner) {
             const gid = data.group_id.toString();
             let replyData = _readFileSync(replyDir, "customRegReply");
-            const templateReplyDir = path.join(__dirname, "../config-template");
             let defalutReplyData = _readFileSync(templateReplyDir, "customRegReply-default");
             let patternObj = replyData[gid]["pattern"];
             let replyObj = replyData[gid]["reply"];
@@ -202,9 +202,7 @@ async function customRegReply(_bot, data, args) {
                     re = new RegExp(rawPatt.slice(1, -1), rawMod.toString());
                     if (String(args).match(re) != null) {
                         data.reply(`[CQ:at,qq=${data.user_id}]\n` + replyObj[key]); // 正则回复核心代码
-                        console.log(args);
                     }
-                    //console.log(re);
                 } catch(err) {
                     console.log(err);
                 }

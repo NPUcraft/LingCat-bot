@@ -40,38 +40,39 @@ bot.on("system.login.qrcode", function (e) {
 
 /* =========== Plugins =========== */
 // 系统类插件
-const { online } = require("./plugins/plugin-online");      //  机器人上线事件
+const { online } = require("./plugins/plugin-online");                                   //  机器人上线事件
 // 私聊类插件
-const { whatsUp } = require("./plugins/plugin-private");   // 私聊敷衍
+const { whatsUp } = require("./plugins/plugin-private");                                 // 私聊敷衍
 // 群聊类插件
-const { install, update } = require("./plugins/plugin-install"); // 安装|更新机器人
-const { banned } = require("./plugins/plugin-ban");   // 机器人被禁言，[所有]功能禁用
-const { turnOff, turnOn } = require("./plugins/plugin-manage");      // 插件开关
-const { helpList } = require("./plugins/plugin-help");       // 帮助菜单
-const { setReply, deleteReply, customReply, getReplyList } = require("./plugins/plugin-custom-reply");
-const { setRegReply, setRegPattern, deleteRegReply, customRegReply, getRegReplyList } = require("./plugins/plugin-custom-regular-reply");
-const { g24points } = require("./plugins/24points/plugin-24points");   // 24点游戏
-const { jrjh } = require("./plugins/jr-dontstarve/plugin-jrjh");      // 今日饥荒菜谱
-const { jrmc } = require("./plugins/jrmc/plugin-jrmc");       // 今日MC
-const { jrrp } = require("./plugins/plugin-jrrp");        // 今日人品
-const { jrmchl } = require("./plugins/plugin-jrmchl");        // 今日mc运势
-const { chp } = require("./plugins/plugin-chp");       // 彩虹屁
-const { ticTactics } = require("./plugins/tic-tactics/plugin-tic-tactics");     // 超级井字棋
-const { baiduForU } = require("./plugins/plugin-baidu-for-u");     // 为你百度
-const { send } = require("./plugins/plugin-send");    // 反馈
+const { install, update } = require("./plugins/plugin-install");                         // 安装|更新机器人
+const { banned } = require("./plugins/plugin-ban");                                      // 机器人被禁言，[所有]功能禁用
+const { turnOff, turnOn } = require("./plugins/plugin-manage");                          // 插件开关
+const { helpList } = require("./plugins/plugin-help");                                   // 帮助菜单
+const { setReply, deleteReply, customReply, getReplyList } = require("./plugins/plugin-custom-reply"); // 自定义回复
+const { setRegReply, setRegPattern, deleteRegReply, customRegReply, getRegReplyList } = require("./plugins/plugin-custom-regular-reply"); // 自定义正则回复
+const { g24points } = require("./plugins/24points/plugin-24points");                     // 24点游戏
+const { jrjh } = require("./plugins/jr-dontstarve/plugin-jrjh");                         // 今日饥荒菜谱
+const { jrmc } = require("./plugins/jrmc/plugin-jrmc");                                  // 今日MC
+const { jrrp } = require("./plugins/plugin-jrrp");                                       // 今日人品
+const { jrmchl } = require("./plugins/plugin-jrmchl");                                   // 今日mc运势
+const { chp } = require("./plugins/plugin-chp");                                         // 彩虹屁
+const { ticTactics } = require("./plugins/tic-tactics/plugin-tic-tactics");              // 超级井字棋
+const { baiduForU } = require("./plugins/plugin-baidu-for-u");                           // 为你百度
+const { send } = require("./plugins/plugin-send");                                       // 反馈
 const { biliLive, getEveryLiveStatus } = require("./plugins/bilibili/plugin-bili-live"); // bili直播间
-const { ping } = require("./plugins/mcbot/plugin-mcbot");   // mcbot
-const { repeater } = require("./plugins/plugin-repeater");      // 复读
-const { noAbbreviated } = require("./plugins/plugin-yyds");      // 好好说话 
-const { getWordCloud, getMessage } = require("./plugins/wordCloud/plugin-wordcloud");       // 词云分析
-const { echo } = require("./plugins/plugin-echo");  // 复述功能
-const { findPic } = require("./plugins/plugin-findPic");       // 搜图
-const { musicgen, saveFile } = require("./plugins/musicgen/plugin-musicgen");     // 生成音乐 
-// const { checkRecall } = require("./plugins/plugin-check-recall");       // 查撤回
+const { ping } = require("./plugins/mcbot/plugin-mcbot");                                // mcbot
+const { repeater } = require("./plugins/plugin-repeater");                               // 复读
+const { noAbbreviated } = require("./plugins/plugin-yyds");                              // 好好说话 
+const { getWordCloud, getMessage } = require("./plugins/wordCloud/plugin-wordcloud");    // 词云分析
+const { echo } = require("./plugins/plugin-echo");                                       // 复述功能
+const { findPic } = require("./plugins/plugin-findPic");                                 // 搜图
+const { musicgen, saveFile } = require("./plugins/musicgen/plugin-musicgen");            // 生成音乐 
+const { randomFAQ } = require("./plugins/plugin-randomFAQ");                             // 随机问答
+// const { checkRecall } = require("./plugins/plugin-check-recall");                     // 查撤回
 // 通知类插件
-const { increase, setWelcomeMsg } = require("./plugins/increase/plugin-increase");      // 入群欢迎
-const { decrease } = require("./plugins/plugin-decrease");     // 退群
-const { poke } = require("./plugins/plugin-poke");    // 戳一戳
+const { increase, setWelcomeMsg } = require("./plugins/increase/plugin-increase");       // 入群欢迎
+const { decrease } = require("./plugins/plugin-decrease");                               // 退群
+const { poke } = require("./plugins/plugin-poke");                                       // 戳一戳
 
 
 bot.once("system.online", function (e) {
@@ -167,6 +168,9 @@ bot.on("message.group.normal", function (e) {
                 break;
             case "-musicgen":
                 await musicgen(_bot, e, args).catch(errorHandler);
+                break;
+            case "-随机问答":
+                await randomFAQ(_bot, e, args).catch(errorHandler);
                 break;
             // case "-wordcloud":  // 词云分析
             //     getWordCloud(_bot, e, args);
