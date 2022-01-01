@@ -271,6 +271,18 @@
 				"admin",
 				"owner"
 			]
+		},
+		"_年度水群报告": {
+			"activation": true,
+			"help": {
+				"desc": "查看年度水群报告",
+				"cmd": "-年度水群报告"
+			},
+			"isadmin": [
+				"member",
+				"admin",
+				"owner"
+			]
 		}
 	}
 }

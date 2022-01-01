@@ -5,7 +5,6 @@ const help = `
 查看今日人品
 `.trim();
 
-//jrrp功能
 async function jrrp(_bot, data, args = null) {
     if (!await getPermission(data, "jrrp")) return;
     if (args?.length === 1 && ["help", '帮助'].indexOf(args?.[0]) !== -1) {
@@ -14,9 +13,10 @@ async function jrrp(_bot, data, args = null) {
     } else if (args?.length > 1) {
         return;
     }
+    
     const seedID = data.sender.user_id + new Date().toLocaleDateString();
-    const randomnum = seedRandom.getRandomIntInclusive(seedID, -20, 120);
-    let card = data.sender.card;
-    data.reply(`${card === '' ? data.sender.nickname : card} 今日的人品为 ${randomnum}`);
+    const randomNum = seedRandom.getRandomIntInclusive(seedID, -20, 120);
+    let sender = data.sender.card ? data.sender.card : data.sender.nickname;
+    data.reply(`${sender} 今日的人品为 ${randomNum}`);
 }
 exports.jrrp = jrrp;

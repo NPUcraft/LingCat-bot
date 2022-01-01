@@ -3,7 +3,7 @@
     "account": 123456789,   "//1" :"请使用account.json",
     "botNickname": "灵喵",  "//2" :"请使用account.json",
     "owner": 123456789,     "//3" :"请使用account.json",
-    "version": "2.3.5",
+    "version": "2.3.6",
     "description": "",
     "main": "index.js",
     "scripts": {
@@ -20,7 +20,7 @@
         "midi-writer-js": "^2.0.1",
         "minecraft-protocol": "^1.26.5",
         "mongodb": "^4.1.0",
-        "oicq": "^1.19.3",
+        "oicq": "^1.21.2",
         "quick-midi": "^1.0.1",
         "seed-random": "^2.2.0"
     },

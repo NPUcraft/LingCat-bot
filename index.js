@@ -68,6 +68,7 @@ const { echo } = require("./plugins/plugin-echo");                              
 const { findPic } = require("./plugins/plugin-findPic");                                 // 搜图
 const { musicgen, saveFile } = require("./plugins/musicgen/plugin-musicgen");            // 生成音乐 
 const { randomFAQ } = require("./plugins/plugin-randomFAQ");                             // 随机问答
+const { annualReport } = require("./plugins/annual-report/plugin-annual-report");        // 年度水群报告
 // const { checkRecall } = require("./plugins/plugin-check-recall");                     // 查撤回
 // 通知类插件
 const { increase, setWelcomeMsg } = require("./plugins/increase/plugin-increase");       // 入群欢迎
@@ -171,6 +172,9 @@ bot.on("message.group.normal", function (e) {
                 break;
             case "-随机问答":
                 await randomFAQ(_bot, e, args).catch(errorHandler);
+                break;
+            case "-年度水群报告":
+                await annualReport(_bot, e, args).catch(errorHandler);
                 break;
             // case "-wordcloud":  // 词云分析
             //     getWordCloud(_bot, e, args);
