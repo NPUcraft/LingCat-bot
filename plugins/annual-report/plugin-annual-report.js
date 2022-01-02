@@ -1,6 +1,7 @@
 "use strict"
-const seedRandom = require("../lib/seed-random");
-const { getPermission } = require("../lib/permission");
+const seedRandom = require("../../lib/seed-random");
+const { getPermission } = require("../../lib/permission");
+const fs = require("fs");
 const help = `
 查看年度水群报告
 `.trim();
@@ -15,19 +16,16 @@ async function annualReport(_bot, data, args = null) {
     }
 
     let sender = data.sender.card ? data.sender.card : data.sender.nickname;
-    let count = 7299;
-    let rank = 'x';
-    const count_ARKsanlin = 9258;
-    let month_latest = 'x';
-    let date_latest = 'x';
-    let month_earliest = 'x';
-    let date_earliest = 'x';
-    let hour_latest = '5';
-    let minute_latest = 'x';
-    let hour_latest_morning = '6';
-    let minute_latest_morning = 'x';
-    let hour_earliest = '6';
-    let minute_earliest = 'x';
+    let listSender, count, rank, month_latest, date_latest, hour_latest, minute_latest, hour_latest_morning, minute_latest_morning, month_earliest, date_earliest, hour_earliest, minute_earliest;
+    rank = '-1'; // 初始化rank
+
+    let txtData = fs.readFileSync(__dirname + '/juan.txt');
+    let list = txtData.toString().split('\r\n');
+    for (let i in list) {
+       [listSender, count, rank, month_latest, date_latest, hour_latest, minute_latest, hour_latest_morning, minute_latest_morning, month_earliest, date_earliest, hour_earliest, minute_earliest] = list[i].split(' ');
+       if (data.user_id == listSender) break;
+    }
+    count = Number(count);
 
     const seedID = data.user_id + new String(2021);
     let pfmList = [];
@@ -40,26 +38,32 @@ async function annualReport(_bot, data, args = null) {
     const randomNum = seedRandom.getRandomIntInclusive(seedID, 0, pfmList.length - 1);
     let pfm = pfmList[randomNum];
 
-    let replyObj = `${sender} 的年度水群报告(今年只从9.28开始统计)：
+    let replyObj = `${sender} 的2021年度水群报告(今年只从9.28开始统计)：
 
     这一年，你一共水了${count}条消息，在群友中排行第${rank}`
-    if (rank == 1) replyObj += `，恭迎龙神大人！！！`;
+    if (rank == '1') replyObj += `，恭迎龙神大人！！！`;
     else if (count >= 100) {
         if (count <= 500) replyObj += `，你水了${(count / 64).toFixed(2)}组消息！`;
-        else if (count <= 1000) replyObj += `，足足有${(count / 154).toFixed(2)}倍的官号粉丝`;
-        else if (count <= 3000) replyObj += `，大概能达到${(count / 255).toFixed(2)}次附魔上限`;
+        else if (count <= 1000) replyObj += `，足足有${(count / 154).toFixed(2)}倍的官号粉丝。`;
+        else if (count <= 3000) replyObj += `，大概能达到${(count / 255).toFixed(2)}次附魔上限。`;
         else replyObj += `，你水了${(count / count_ARKsanlin).toFixed(2)}个汐灵了，再接再厉！`;
     }
     
     replyObj += `
     ${month_latest}月${date_latest}号，你卷到很晚，${hour_latest}:${minute_latest}还在发消息`;
-    if (hour_latest_morning - hour_latest <= 1) replyObj += `，你是直接通宵了吧`;
+    if (Number(hour_latest_morning) - Number(hour_latest) == 1) replyObj += `，你是直接通宵了吧！`;
+    else replyObj += `。`;
     replyObj += `
     ${month_earliest}月${date_earliest}号，你${hour_earliest}:${minute_earliest}在群里打卡，你起的真早`;
-    if (hour_earliest >= 6 && hour_earliest <= 7) replyObj += `，这天大家都卷不过你`;
+    if (Number(hour_earliest) >= 6 && Number(hour_earliest) <= 7) replyObj += `，这天大家都卷不过你。`;
+    else replyObj += `。`;
     replyObj += `\n
     你的年度喷水形象是：
     ${pfm}`;
+
+    if (rank == '-1') replyObj = `${sender} 的2021年度水群报告(今年只从9.28开始统计)：
+    
+    对不起，暂时没有你的数据呢`;
 
     data.reply(replyObj);
 }
