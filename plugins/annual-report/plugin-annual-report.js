@@ -31,6 +31,7 @@ async function annualReport(_bot, data, args = null) {
     count = Number(count);
 
     const seedID = data.user_id + new String(2021);
+    let count_ARKsanlin = 9258;
     let pfmList = [];
 
     if (count <= 100) pfmList = ['潜海员', '$数据丢失$灵喵喵不认识这个人捏', '不活跃成员会资深会员', '您完全不社交是吗'];
