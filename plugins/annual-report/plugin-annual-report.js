@@ -17,13 +17,16 @@ async function annualReport(_bot, data, args = null) {
 
     let sender = data.sender.card ? data.sender.card : data.sender.nickname;
     let listSender, count, rank, month_latest, date_latest, hour_latest, minute_latest, hour_latest_morning, minute_latest_morning, month_earliest, date_earliest, hour_earliest, minute_earliest;
-    rank = '-1'; // 初始化rank
+    let ifSenderExist = false;
 
     let txtData = fs.readFileSync(__dirname + '/juan.txt');
     let list = txtData.toString().split('\r\n');
     for (let i in list) {
        [listSender, count, rank, month_latest, date_latest, hour_latest, minute_latest, hour_latest_morning, minute_latest_morning, month_earliest, date_earliest, hour_earliest, minute_earliest] = list[i].split(' ');
-       if (data.user_id == listSender) break;
+       if (data.user_id == listSender) {
+           ifSenderExist = true;
+           break;
+       }
     }
     count = Number(count);
 
@@ -61,7 +64,7 @@ async function annualReport(_bot, data, args = null) {
     你的年度喷水形象是：
     ${pfm}`;
 
-    if (rank == '-1') replyObj = `${sender} 的2021年度水群报告(今年只从9.28开始统计)：
+    if (ifSenderExist === false) replyObj = `${sender} 的2021年度水群报告(今年只从9.28开始统计)：
     
     对不起，暂时没有你的数据呢`;
 
