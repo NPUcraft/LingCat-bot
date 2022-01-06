@@ -101,7 +101,7 @@ $ npm run main
 
 机器人基于 Node.js 开发，感谢以下开源项目：
 
-+ [oicq](https://github.com/takayama-lily/oicq) 
++ [oicq](https://github.com/takayama-lily/oicq)
 + [Jimp](https://github.com/oliver-moran/jimp)
 + [cheerio](https://github.com/cheeriojs/cheerio)
 + [mathjs](https://github.com/josdejong/mathjs)
