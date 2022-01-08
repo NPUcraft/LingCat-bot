@@ -273,7 +273,7 @@
 			]
 		},
 		"_年度水群报告": {
-			"activation": true,
+			"activation": false,
 			"help": {
 				"desc": "查看年度水群报告",
 				"cmd": "-年度水群报告"
