@@ -11,7 +11,7 @@
             "skipFiles": [
                 "<node_internals>/**"
             ],
-            "program": "${workspaceFolder}\\plugins\\jrmc\\plugin-jrmc.js"
+            "program": "${workspaceFolder}\\plugins\\mcbot\\mcHandle.js"
         }
     ]
 }

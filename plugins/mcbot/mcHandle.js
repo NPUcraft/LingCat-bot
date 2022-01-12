@@ -39,14 +39,14 @@ exports.getServerFav = getServerFav;
 const getServerPing = async (group_id, host, port = 25565) => {
     if (typeof host === "undefined") {
         let serverList = new Data().getServerList(group_id);
-        let ip = serverList[0]?.ip;
+        let ip = serverList[0]?.ip?.split("|")?.[0];
         if (typeof ip === "undefined") return;
         [host, port] = ip.split(":");
         if (typeof port === "undefined") port = 25565;
     } else {
         let serverList = new Data().getServerList(group_id).filter(server => server?.["uname"] == host);
         if (serverList.length !== 0) {
-            let ip = serverList[0]?.["ip"];
+            let ip = serverList[0]?.["ip"]?.split("|")?.[0];;
             [host, port] = ip.split(":");
             if (typeof port === "undefined") port = 25565;
         } else {
@@ -109,7 +109,7 @@ const listServer = async (group_id) => {
     let result;
     let serverTable = [];
     serverList.forEach(element => {
-        serverTable.push(`[o] ${element["uname"]} (${element["ip"]})`);
+        serverTable.push(`[o] ${element["uname"]} (${element["ip"]?.split("|")[0]})`);
     });
     if (serverList.length !== 0) {
         result = `本群关注服务器列表如下：\n` + `${serverTable.join("\n")}`;
@@ -123,15 +123,24 @@ exports.listServer = listServer;
 // 返回服务器玩家列表信息
 const getPlayersList = async (group_id) => {
     let serverList = new Data().getServerList(group_id);
-    let ip = serverList[0]?.ip;
-    let uname = serverList[0]?.uname;
+    let info = "";
+    let ip = serverList[0]?.ip?.split("|")?.[0];
     if (typeof ip === "undefined") return;
-    let [host, port] = ip.split(":");
-    let playersList = await getPlayerInfo(host, port);
-    let info = `${typeof playersList?.sample === "string" ? playersList?.sample : playersList?.sample.join(", ")}`;
+    let playerMax, playerOnline = 0;
+    for (let cnt = 0; cnt < serverList[0]?.ip?.split("|")?.length; cnt++) {
+        let _ip = serverList[0]?.ip?.split("|")[cnt];
+        let [host, port] = _ip.split(":");
+        let playersList = await getPlayerInfo(host, port);
+        playerMax = playersList.max;
+        if (typeof playersList?.sample === "string") continue;
+        playerOnline += playersList?.sample.length;
+        info += `\n${playersList?.sample.join(", ")}`;
+    }
+    if (info == "") info = "该服务器空荡荡~";
+    let uname = serverList[0]?.uname;
     let msg = [
-        segment.text(`${uname}服务器在线玩家人数：${playersList.online}/${playersList.max}\n`),
-        segment.text(info)
+        `${uname}服务器在线玩家人数：${playerOnline}/${playerMax}`,
+        info
     ];
     return msg;
 }
