@@ -1,11 +1,12 @@
 <div align="center">
 
-# SiriusBot2
+# LingCat-bot
 
 基于 [oicq](https://github.com/takayama-lily/oicq) 的 qq 机器人
 
 [![license](https://img.shields.io/github/license/Sirius0v0/SiriusBot)](https://choosealicense.com/licenses/agpl-3.0/)
-[![version](https://img.shields.io/github/package-json/v/Sirius0v0/SiriusBot)](https://github.com/NPUcraft/LingCat-bot)
+
+[![version](https://img.shields.io/github/package-json/v/NPUcraft/LingCat-bot)](https://github.com/NPUcraft/LingCat-bot)
 [![node](https://img.shields.io/node/v/oicq)](https://github.com/takayama-lily/oicq)
 
 </div>
