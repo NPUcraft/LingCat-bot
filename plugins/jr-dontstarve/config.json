@@ -1,0 +1,30 @@
+{
+    "pluginName": "plugin-dontstarve",
+    "default": true,
+    "privateAvl": false,
+    "cmd": [
+        "jrcp",
+        "今日菜品"
+    ],
+    "options": {
+        "alias": {
+            "h": [
+                "help",
+                "帮助"
+            ]
+        },
+        "boolean": [
+            "h"
+        ],
+        "default": {},
+        "string": []
+    },
+    "usage": "-今日菜品",
+    "description": "查看今日菜品",
+    "showThisFeature": true,
+    "permission": [
+        "member",
+        "admin",
+        "owner"
+    ]
+}

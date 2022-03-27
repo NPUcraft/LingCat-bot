@@ -1,7 +1,4 @@
-const path = require("path");
-const mcServerListDir = path.join(__dirname, "../../config-template/config");
-const { _readFileSync } = require("../../lib/file");
-const fs = require("fs");
+import { loadConfigAsJson, writeConfigSync } from "../../lib/file-system.js";
 
 class Data {
 
@@ -10,20 +7,20 @@ class Data {
         this.load()
     }
 
-    load = () => {
-        try {
-            this._server_list = _readFileSync(mcServerListDir, "mcServerList");
-        } catch (error) {
-            console.log(error.message);
-        }
+    load() {
+        this._server_list = loadConfigAsJson("mcServerList.json");
+        // 不存在则创建
+        if (this._server_list == null) {
+            writeConfigSync("mcServerList.json", "{}")
+            this._server_list = {};
+        };
     }
 
-    dump = () => {
-        _readFileSync(mcServerListDir, "mcServerList");  // 没有则创建配置文件
-        fs.writeFileSync(mcServerListDir + "/mcServerList.json", JSON.stringify(this._server_list, null, '\t'));
+    dump() {
+        writeConfigSync("mcServerList.json", JSON.stringify(this._server_list, null, '\t'), true);
     }
 
-    getServerList = (group_id = null) => {
+    getServerList(group_id = null) {
         let serverList = this._server_list;
         const gid = String(group_id);
         let result = [];
@@ -36,7 +33,7 @@ class Data {
         return result;
     }
 
-    addServer = (server, group_id) => {
+    addServer(server, group_id) {
         const gid = String(group_id);
         let serverList = this.getServerList(group_id);
         if (getFieldList(serverList, "ip").indexOf(server["ip"]) === -1) serverList.push(server);
@@ -44,7 +41,7 @@ class Data {
         this.dump();
     }
 
-    removeServer = (uname, group_id) => {
+    removeServer(uname, group_id) {
         const gid = String(group_id);
         let serverList = this.getServerList(group_id).filter(server => server?.["uname"] !== uname);
         if (serverList) {
@@ -57,7 +54,7 @@ class Data {
     }
 }
 
-exports.Data = Data;
+export { Data };
 
 // 获取[{},{},{}...]中对象某一属性的值
 function getFieldList(list, field) {

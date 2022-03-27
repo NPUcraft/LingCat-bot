@@ -2,7 +2,7 @@
  * @param {Int} upper | 生成四个范围[1, upper]随机数
  * @returns {object}  | data:四个数, result:所有解答
  */
-exports.twentyFourPoints = function (upper, target) {
+function twentyFourPoints(upper, target) {
     const error = 1e-6;
     const ADD = 0, MULTIPLY = 1, SUBTRACT = 2, DIVIDE = 3;
     // 随机生成数据
@@ -124,20 +124,6 @@ exports.twentyFourPoints = function (upper, target) {
 }
 
 
-/*
-// test.js
-
-let games = require("./games");
-let list = [2, 3, 7, 4];
-let str = "（7-3)*(4+2） ";
-try {
-    console.log(games.check(list, str));
-} catch (error) {
-    console.log(error.message);
-}
-
-*/
-
 
 /**
  *  
@@ -149,8 +135,8 @@ try {
  *              - "请用给定的数字解答！"
  *              - "验证此题无解"
  */
-const { limitedEvaluate } = require("../../lib/limited-evaluate");
-exports.check = function (list, target, str) {
+import { limitedEvaluate } from "../../lib/limited-evaluate.js";
+function check(list, target, str) {
     if (str.trim() === "无解") {
         throw new Error("验证此题无解");
     }
@@ -216,4 +202,9 @@ exports.check = function (list, target, str) {
     function parseNumber(str) {
         return str.replace(/[^0-9]/ig, ' ').trim().split(/\s+/).map(Number);
     }
+}
+
+export {
+    twentyFourPoints,   // 生成游戏
+    check               // 检查正确性
 }

@@ -1,0 +1,20 @@
+{
+    "pluginName": "plugin-custom-reply",
+    "default": true,
+    "privateAvl": false,
+    "cmd": [],
+    "options": {
+        "alias": {},
+        "boolean": [],
+        "default": {},
+        "string": []
+    },
+    "usage": "触发关键词",
+    "description": "自定义回复",
+    "showThisFeature": true,
+    "permission": [
+        "member",
+        "admin",
+        "owner"
+    ]
+}

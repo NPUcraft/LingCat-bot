@@ -1,0 +1,10 @@
+{
+    "//": [
+        "请将本文件剪贴至 /data 目录(/data已添加至.gitignore)",
+        "其中nasaAPIKey请自行前往 https://api.nasa.gov/ 申请,不申请也罢,保留DEMO_KEY问题不大"
+    ],
+    "account": 123456798,
+    "botNickname": "botName",
+    "owner": 1234567890,
+    "nasaAPIKey": "DEMO_KEY"
+}

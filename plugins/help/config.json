@@ -1,0 +1,30 @@
+{
+    "pluginName": "plugin-help",
+    "default": true,
+    "privateAvl": false,
+    "cmd": [
+        "帮助",
+        "help"
+    ],
+    "options": {
+        "alias": {
+            "h": [
+                "help",
+                "帮助"
+            ]
+        },
+        "boolean": [
+            "h"
+        ],
+        "default": {},
+        "string": []
+    },
+    "usage": "-help",
+    "description": "查看功能菜单",
+    "showThisFeature": false,
+    "permission": [
+        "member",
+        "admin",
+        "owner"
+    ]
+}

@@ -1,0 +1,55 @@
+{
+    "pluginName": "plugin-bilibili",
+    "default": true,
+    "privateAvl": false,
+    "cmd": [
+        "bili"
+    ],
+    "options": {
+        "alias": {
+            "h": [
+                "help",
+                "帮助"
+            ],
+            "s": [
+                "subscribe",
+                "关注"
+            ],
+            "u": [
+                "unsubscribe",
+                "取关",
+                "TD"
+            ],
+            "v": [
+                "video"
+            ],
+            "r": [
+                "room",
+                "直播间"
+            ],
+            "l": [
+                "list",
+                "列表"
+            ]
+        },
+        "boolean": [
+            "h",
+            "l"
+        ],
+        "default": {},
+        "string": [
+            "s",
+            "u",
+            "r",
+            "v"
+        ]
+    },
+    "usage": "-bili",
+    "description": "推送bilibili动态与直播间",
+    "showThisFeature": true,
+    "permission": [
+        "member",
+        "admin",
+        "owner"
+    ]
+}

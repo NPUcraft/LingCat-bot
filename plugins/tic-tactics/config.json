@@ -1,0 +1,30 @@
+{
+    "pluginName": "plugin-tic-tactics",
+    "default": true,
+    "privateAvl": false,
+    "cmd": [
+        "井字棋",
+        "tictactoe"
+    ],
+    "options": {
+        "alias": {
+            "h": [
+                "help",
+                "帮助"
+            ]
+        },
+        "boolean": [
+            "h"
+        ],
+        "default": {},
+        "string": []
+    },
+    "usage": "-井字棋",
+    "description": "超级井字棋游戏",
+    "showThisFeature": true,
+    "permission": [
+        "member",
+        "admin",
+        "owner"
+    ]
+}

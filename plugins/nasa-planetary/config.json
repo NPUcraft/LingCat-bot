@@ -1,0 +1,30 @@
+{
+    "pluginName": "plugin-planetary",
+    "default": true,
+    "privateAvl": false,
+    "cmd": [
+        "jrap",
+        "今日天文"
+    ],
+    "options": {
+        "alias": {
+            "h": [
+                "help",
+                "帮助"
+            ]
+        },
+        "boolean": [
+            "h"
+        ],
+        "default": {},
+        "string": []
+    },
+    "usage": "-jrap",
+    "description": "今日天文图片",
+    "showThisFeature": true,
+    "permission": [
+        "member",
+        "admin",
+        "owner"
+    ]
+}

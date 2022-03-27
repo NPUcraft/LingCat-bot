@@ -1,15 +1,19 @@
-"use strict"
-const log4js = require("log4js");
-const fs = require("fs");
-const path = require("path");
-const accountInfo = JSON.parse(fs.readFileSync(path.join(__dirname, "./account.json")));
-const account = accountInfo.account;
-const parseCommand = require("./lib/command");
-const bot = require("oicq").createClient(account, {
+import log4js from "log4js";
+import _ from "lodash";
+import fs from "fs";
+import path from "path";
+import { loadFileAsJson, writeFileSync, writeConfigSync } from "./lib/file-system.js";
+import { parseArgs } from "./lib/parse-args.js";
+import { Hooks } from "./lib/hooks.js";
+import { createClient } from "oicq";
+
+const hookBus = new Hooks();
+const botInfo = loadFileAsJson("data/account.json");
+let botEnv = loadFileAsJson("data/bot-env.json");
+const bot = createClient(botInfo.account, {
     platform: 5
 })
 
-const errorHandler = (err) => { throw err };
 // 日志记录配置
 log4js.configure({
     appenders: {
@@ -17,7 +21,7 @@ log4js.configure({
             type: 'dateFile',
             //文件名 = filename + pattern, 设置为alwaysIncludePattern：true
             filename: './logs/log',
-            pattern: '.yyyy-MM-dd.log',
+            pattern: 'yyyy-MM-dd.log',
             // compress: true,
             //包含模型
             alwaysIncludePattern: true,
@@ -38,216 +42,127 @@ bot.on("system.login.qrcode", function (e) {
         this.login()
 }).login()
 
-/* =========== Plugins =========== */
-// 系统类插件
-const { online } = require("./plugins/plugin-online");                                   //  机器人上线事件
-// 私聊类插件
-const { whatsUp } = require("./plugins/plugin-private");                                 // 私聊敷衍
-// 群聊类插件
-const { install, update } = require("./plugins/plugin-install");                         // 安装|更新机器人
-const { banned } = require("./plugins/plugin-ban");                                      // 机器人被禁言，[所有]功能禁用
-const { turnOff, turnOn } = require("./plugins/plugin-manage");                          // 插件开关
-const { helpList } = require("./plugins/plugin-help");                                   // 帮助菜单
-const { setReply, deleteReply, customReply, getReplyList } = require("./plugins/plugin-custom-reply"); // 自定义回复
-const { setRegReply, setRegPattern, deleteRegReply, customRegReply, getRegReplyList } = require("./plugins/plugin-custom-regular-reply"); // 自定义正则回复
-const { g24points } = require("./plugins/24points/plugin-24points");                     // 24点游戏
-const { jrjh } = require("./plugins/jr-dontstarve/plugin-jrjh");                         // 今日饥荒菜谱
-const { jrmc } = require("./plugins/jrmc/plugin-jrmc");                                  // 今日MC
-const { jrrp } = require("./plugins/plugin-jrrp");                                       // 今日人品
-const { jrmchl } = require("./plugins/plugin-jrmchl");                                   // 今日mc运势
-const { chp } = require("./plugins/plugin-chp");                                         // 彩虹屁
-const { ticTactics } = require("./plugins/tic-tactics/plugin-tic-tactics");              // 超级井字棋
-const { baiduForU } = require("./plugins/plugin-baidu-for-u");                           // 为你百度
-const { send } = require("./plugins/plugin-send");                                       // 反馈
-const { biliLive, getEveryLiveStatus } = require("./plugins/bilibili/plugin-bili-live"); // bili直播间
-const { ping } = require("./plugins/mcbot/plugin-mcbot");                                // mcbot
-const { repeater } = require("./plugins/plugin-repeater");                               // 复读
-const { noAbbreviated } = require("./plugins/plugin-yyds");                              // 好好说话 
-const { getWordCloud, getMessage } = require("./plugins/wordCloud/plugin-wordcloud");    // 词云分析
-const { echo } = require("./plugins/plugin-echo");                                       // 复述功能
-const { findPic } = require("./plugins/plugin-findPic");                                 // 搜图
-const { musicgen, saveFile } = require("./plugins/musicgen/plugin-musicgen");            // 生成音乐 
-const { randomFAQ } = require("./plugins/plugin-randomFAQ");                             // 随机问答
-const { annualReport } = require("./plugins/annual-report/plugin-annual-report");        // 年度水群报告
-// const { checkRecall } = require("./plugins/plugin-check-recall");                     // 查撤回
-// 通知类插件
-const { increase, setWelcomeMsg } = require("./plugins/increase/plugin-increase");       // 入群欢迎
-const { decrease } = require("./plugins/plugin-decrease");                               // 退群
-const { poke } = require("./plugins/plugin-poke");                                       // 戳一戳
 
+/* =========== Plugins Load =========== */
+bot.once("system.online", async function (e) {
+    await loadPlugin(); // 加载插件 读取插件列表并更新bot环境中插件列表
 
-bot.once("system.online", function (e) {
-    online(this, e);
+    botEnv = loadFileAsJson("data/bot-env.json");
+    // 初始化黑名单
+    if (loadFileAsJson("data/config/blacklist.json") == null)
+        writeConfigSync("blacklist.json", "[]");
+
+    // 相关插件初始化
+    onCreate(bot);
 });
 
-// 群消息监听类插件
-bot.on("message.group.normal", function (e) {
-    let _bot = this;
-    let [cmd, ...args] = parseCommand(e.raw_message); // 非命令会返回为空
 
-    const msgHandle = async function (cmd, e, args) {
-        switch (cmd) {
-            case "-echo":     // -复述功能
-                await echo(_bot, e, args).catch(errorHandler);
-                break;
-            case "-send":     // -send留言功能
-                await send(_bot, e, args).catch(errorHandler);
-                break;
-            case "-今日菜品":       // 今日饥荒菜谱
-                await jrjh(_bot, e, args).catch(errorHandler);
-                break;
-            case "-jrmc":       // 今日MC
-                await jrmc(_bot, e, args).catch(errorHandler);
-                break;
-            case "-今日运势":   // 今日mc运势
-                await jrmchl(_bot, e, args).catch(errorHandler);
-                break;
-            case "-jrrp":       //今日人品
-                await jrrp(_bot, e, args).catch(errorHandler);
-                break;
-            case "#开启":       // 开启插件
-                await turnOn(_bot, e, args).catch(errorHandler);
-                break;
-            case "#关闭":       // 关闭插件
-                await turnOff(_bot, e, args).catch(errorHandler);
-                break;
-            case "-help":       // 帮助菜单
-                await helpList(_bot, e, args).catch(errorHandler);
-                break;
-            case "-百度":       // 为你百度（恶搞）
-                await baiduForU(_bot, e, args).catch(errorHandler);
-                break;
-            case "-24点":       // 24点游戏
-                await g24points(_bot, e, args).catch(errorHandler);
-                break;
-            case "-井字棋":     // 井字棋
-                await ticTactics(_bot, e, args).catch(errorHandler);
-                break;
-            case "#set":        // 添加自定义回复
-                await setReply(_bot, e, args[0], args[1]).catch(errorHandler);
-                break;
-            case "#del":        // 删除自定义回复
-                await deleteReply(_bot, e, args).catch(errorHandler);
-                break;
-            case "-调教字典":   // 查看自定义回复列表
-                await getReplyList(_bot, e, args).catch(errorHandler);
-                break;
-            case "#set(r)":        // 添加自定义正则回复
-                await setRegReply(_bot, e, args[0], args[1]).catch(errorHandler);
-                break;
-            case "#set(p)":        // 添加自定义正则模式
-                await setRegPattern(_bot, e, args[0], args[1]).catch(errorHandler);
-                break;
-            case "#del(r)":        // 删除自定义正则回复
-                await deleteRegReply(_bot, e, args).catch(errorHandler);
-                break;
-            case "-调教字典(r)":   // 查看自定义正则回复列表
-                await getRegReplyList(_bot, e, args).catch(errorHandler);
-                break;
-            case "#安装":
-            case "#install":    // 安装
-                await install(_bot, e, args).catch(errorHandler);
-                break;
-            case "#更新":
-            case "#update":     // 更新
-                await update(_bot, e, args).catch(errorHandler);
-                break;
-            case "#welcome":
-                await setWelcomeMsg(_bot, e, args).catch(errorHandler);
-                break;
-            case "-bili":       // bilibili相关工具
-                await biliLive(_bot, e, args).catch(errorHandler);
-                break;
-            case "-彩虹屁":     // 彩虹屁
-                await chp(_bot, e, args).catch(errorHandler);
-                break;
-            case "-mc":         // mcbot
-                await ping(_bot, e, args).catch(errorHandler);
-                break;
-            case "-pic":
-                await findPic(_bot, e, args).catch(errorHandler);
-                break;
-            case "-musicgen":
-                await musicgen(_bot, e, args).catch(errorHandler);
-                break;
-            case "-随机问答":
-                await randomFAQ(_bot, e, args).catch(errorHandler);
-                break;
-            case "-年度水群报告":
-                await annualReport(_bot, e, args).catch(errorHandler);
-                break;
-            // case "-wordcloud":  // 词云分析
-            //     getWordCloud(_bot, e, args);
-            //     break;
-            default:       
-                cmd = e.raw_message; // 非命令被还原成原字符串
-                
-                // getMessage(_bot, e);
-                await saveFile(_bot, e).catch(errorHandler);    // 保存.mscg文件内容
-                await noAbbreviated(_bot, e).catch(errorHandler); // 好好说话
-                await repeater(_bot, e).catch(errorHandler);      // 复读
-                await customReply(_bot, e, cmd).catch(errorHandler);  // 自定义回复
-                await customRegReply(_bot, e, cmd).catch(errorHandler);  // 自定义正则回复
-                break;
-        }
-    };
-
+// 群消息处理
+bot.on("message.group.normal", async function (e) {
+    console.log(await e.group.fs.dir())
     // 处理错误信息并汇报给主人
-    msgHandle(cmd, e, args).catch(err => {
+    await onMessage(e).catch(err => {
         this.logger.error(err);
-        this.sendPrivateMsg(accountInfo?.["owner"], err.message);
+        this.sendPrivateMsg(botInfo["owner"], err.message);
     })
 })
 
-// 私聊消息监听类插件
-bot.on("message.private", function (e) {
-    let [cmd, ...args] = parseCommand(e.raw_message);
-    cmd = cmd ? cmd : e.raw_message;
-    const msgHandle = async function (cmd, e, args) {
-        if (cmd === "-musicgen") {
-            e.group_id = 920326805;
-            e.post_type = "notice";
-            await musicgen(null, e, args).catch(errorHandler);
-        }
-        else whatsUp(this, e);     // 私聊敷衍
-    }
-
+// 私聊消息处理
+bot.on("message.private", async function (e) {
     // 处理错误信息并汇报给主人
-    msgHandle(cmd, e, args).catch(err => {
+    await onMessage(e).catch(err => {
         this.logger.error(err);
-        this.sendPrivateMsg(accountInfo?.["owner"], err.message);
+        this.sendPrivateMsg(botInfo["owner"], err.message);
     })
-
 })
 
 // 群通知类插件
-bot.on("notice.group", function (e) {
-    let _bot = this;
-    const msgHandle = async function (_bot, e) {
-        switch (e.sub_type) {
-            case "increase":        //监听群员入群事件
-                await increase(_bot, e).catch(errorHandler);
-                break;
-            case "decrease":        //退群事件
-                await decrease(_bot, e).catch(errorHandler);
-                break;
-            case "poke":            //戳一戳
-                await poke(_bot, e).catch(errorHandler);
-                break;
-            case "ban":             // 机器人被禁言，[所有]功能禁用
-                await banned(_bot, e).catch(errorHandler);
-                break;
-            default:
-                break;
-        }
-    }
-
+bot.on("notice.group", async function (e) {
     // 处理错误信息并汇报给主人
-    msgHandle(_bot, e).catch(err => {
+    await onNotice(e).catch(err => {
         this.logger.error(err);
-        this.sendPrivateMsg(accountInfo?.["owner"], err.message);
-    });
+        this.sendPrivateMsg(botInfo["owner"], err.message);
+    })
 })
 
-// 定时任务插件
-let biliLiveId = setInterval(getEveryLiveStatus, 1 * 30 * 1000, bot);   // bilibili直播状态推送
+function onCreate(bot) {
+    hookBus.invoke('onCreate', bot);
+}
+
+async function onMessage(data) {
+    let cmd = "";
+    let rawArgs = "";
+    let flag = "";
+    let rawMsg = (data.raw_message + "").trim();
+    if (botEnv.cmdFlag.indexOf(rawMsg[0]) !== -1 || botEnv.adminCmdFlag.indexOf(rawMsg[0]) !== -1) {
+        flag = rawMsg.slice(0, 1);
+        if (rawMsg.indexOf(" ") === -1) {
+            cmd = rawMsg.slice(1);
+        } else {
+            cmd = rawMsg.slice(1, rawMsg.indexOf(" "));
+            rawArgs = rawMsg.slice(rawMsg.indexOf(" ") + 1);
+        }
+    }
+    let options = { "unknown": (err) => { return `未知参数${err}` } };
+    for (const cmdd in botEnv.configPath) {
+        if (cmdd.split("|").indexOf(cmd) !== -1) {
+            options = loadFileAsJson(botEnv["configPath"][cmdd]).options;
+            options["unknown"] = (err) => { return `未知参数${err}` };
+            break;
+        }
+    }
+    const args = parseArgs(rawArgs.split(" "), options);
+    await hookBus.invokePromise('onMessage', { "bot": bot, "data": data, "flag": flag, "cmd": cmd, "rawArgs": rawArgs, "args": args })
+        .catch(err => { throw err });
+}
+
+async function onNotice(data) {
+    await hookBus.invokePromise('onNotice', { "bot": bot, "data": data })
+        .catch(err => { throw err });
+}
+
+function hook(name, fn) {
+    hookBus.add(name, fn);
+}
+
+async function loadPlugin() {
+    let num = 0;
+    let pluginsList = [];
+    let cmdList = [];
+    let configPath = [];
+    let isOn = [];
+    let plugins = fs.readdirSync(path.resolve('plugins'))
+        .filter(p => !p.startsWith("_"));
+    for (const plugin of plugins) {
+        let pluginEntry = fs.readdirSync(path.resolve(`plugins/${plugin}`))
+            .filter(item => /index.js/.test(item));
+        if (pluginEntry.length == 0) {
+            let subPluginEntry = fs.readdirSync(path.resolve(`plugins/${plugin}`))
+                .filter(item => !(/config.json/.test(item)))
+                .filter(item => !item.startsWith("_"));
+            for (const sub of subPluginEntry) {
+                cmdList.push(loadFileAsJson(`./plugins/${plugin}/${sub}/config.json`).cmd.join("|"));
+                configPath.push(`./plugins/${plugin}/${sub}/config.json`);
+                let p = await import(`./plugins/${plugin}/${sub}/index.js`);
+                p.apply(hook);
+            }
+        } else {
+            cmdList.push(loadFileAsJson(`./plugins/${plugin}/config.json`).cmd.join("|"));
+            configPath.push(`./plugins/${plugin}/config.json`);
+            let p = await import(`./plugins/${plugin}/${pluginEntry[0]}`);
+            p.apply(hook);
+        }
+        num++;
+        let cfg = loadFileAsJson(`plugins/${plugin}/config.json`);
+        if (cfg !== null) {
+            if (cfg?.pluginName !== "") pluginsList.push(cfg.pluginName)
+            else pluginsList.push(plugin);
+            isOn.push(cfg.default);
+        }
+    }
+    console.log(`[INFO] 已成功加载${num}个插件`);
+    botEnv["pluginsList"] = _.zipObject(pluginsList, isOn);
+    botEnv["configPath"] = _.zipObject(cmdList, configPath);
+    writeFileSync("data/bot-env.json", JSON.stringify(botEnv, null, '\t'), true);
+
+}

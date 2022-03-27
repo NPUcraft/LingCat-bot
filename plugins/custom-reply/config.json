@@ -1,0 +1,27 @@
+{
+    "pluginName": "plugin-custom-reply",
+    "default": true,
+    "privateAvl": false,
+    "cmd": [],
+    "options": {
+        "alias": {
+            "h": [
+                "help",
+                "帮助"
+            ]
+        },
+        "boolean": [
+            "h"
+        ],
+        "default": {},
+        "string": []
+    },
+    "usage": "#set/-调教字典",
+    "description": "自定义回复",
+    "showThisFeature": true,
+    "permission": [
+        "member",
+        "admin",
+        "owner"
+    ]
+}

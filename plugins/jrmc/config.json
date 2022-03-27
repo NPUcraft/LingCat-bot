@@ -1,0 +1,29 @@
+{
+    "pluginName": "plugin-jrmc",
+    "default": true,
+    "privateAvl": false,
+    "cmd": [
+        "jrmc"
+    ],
+    "options": {
+        "alias": {
+            "h": [
+                "help",
+                "帮助"
+            ]
+        },
+        "boolean": [
+            "h"
+        ],
+        "default": {},
+        "string": []
+    },
+    "usage": "-jrmc",
+    "description": "查看今日MC",
+    "showThisFeature": true,
+    "permission": [
+        "member",
+        "admin",
+        "owner"
+    ]
+}

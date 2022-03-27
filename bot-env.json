@@ -1,0 +1,18 @@
+{
+	"//": [
+		"请将本文件剪贴至 /data 目录(/data已添加至.gitignore)",
+		"1. cmdFlag为普通命令标识符,所有用户都可触发",
+		"2. adminCmdFlag为管理员命令标识符,仅管理员及以上可以触发",
+		"3. SUPERUSER为超级用户,内容为qqID(Number)",
+		"4. pluginsList为已加载的插件列表,请勿删除"
+	],
+	"cmdFlag": [
+		"-",
+		"."
+	],
+	"adminCmdFlag": [
+		"#"
+	],
+	"SUPERUSER": [],
+	"pluginsList": {}
+}

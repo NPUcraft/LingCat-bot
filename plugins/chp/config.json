@@ -1,0 +1,30 @@
+{
+    "pluginName": "plugin-chp",
+    "default": true,
+    "privateAvl": false,
+    "cmd": [
+        "chp",
+        "彩虹屁"
+    ],
+    "options": {
+        "alias": {
+            "h": [
+                "help",
+                "帮助"
+            ]
+        },
+        "boolean": [
+            "h"
+        ],
+        "default": {},
+        "string": []
+    },
+    "usage": "-彩虹屁",
+    "description": "为你说一句彩虹屁",
+    "showThisFeature": true,
+    "permission": [
+        "member",
+        "admin",
+        "owner"
+    ]
+}

@@ -1,0 +1,29 @@
+{
+    "pluginName": "plugin-custom-reply",
+    "default": true,
+    "privateAvl": false,
+    "cmd": [
+        "调教字典"
+    ],
+    "options": {
+        "alias": {
+            "h": [
+                "help",
+                "帮助"
+            ]
+        },
+        "boolean": [
+            "h"
+        ],
+        "default": {},
+        "string": []
+    },
+    "usage": "-调教字典",
+    "description": "查看自定义的关键字",
+    "showThisFeature": true,
+    "permission": [
+        "member",
+        "admin",
+        "owner"
+    ]
+}

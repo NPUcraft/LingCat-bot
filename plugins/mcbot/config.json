@@ -1,0 +1,51 @@
+{
+    "pluginName": "plugin-mcbot",
+    "default": true,
+    "privateAvl": false,
+    "cmd": [
+        "mc"
+    ],
+    "options": {
+        "alias": {
+            "h": [
+                "help",
+                "帮助"
+            ],
+            "l": [
+                "list",
+                "列表"
+            ],
+            "a": [
+                "add"
+            ],
+            "r": [
+                "remove"
+            ],
+            "p": [
+                "ping"
+            ],
+            "o": [
+                "online"
+            ]
+        },
+        "boolean": [
+            "h",
+            "l",
+            "o"
+        ],
+        "default": {},
+        "string": [
+            "a",
+            "r",
+            "p"
+        ]
+    },
+    "usage": "-mc",
+    "description": "mcping并查看在线人数",
+    "showThisFeature": true,
+    "permission": [
+        "member",
+        "admin",
+        "owner"
+    ]
+}

@@ -1,0 +1,29 @@
+{
+    "pluginName": "plugin-send",
+    "default": true,
+    "privateAvl": false,
+    "cmd": [
+        "send"
+    ],
+    "options": {
+        "alias": {
+            "h": [
+                "help",
+                "帮助"
+            ]
+        },
+        "boolean": [
+            "h"
+        ],
+        "default": {},
+        "string": []
+    },
+    "usage": "-send 内容",
+    "description": "反馈消息",
+    "showThisFeature": false,
+    "permission": [
+        "member",
+        "admin",
+        "owner"
+    ]
+}

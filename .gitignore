@@ -1,5 +1,5 @@
 # Logs
-logs
+logs/
 *.log
 npm-debug.log*
 yarn-debug.log*
@@ -103,8 +103,9 @@ dist
 node_modules/
 jspm_packages/
 package-lock.json
-config-template/config
+
+# VSCode file
+.vscode/
 
 # Personalized Info
 data/
-account.json

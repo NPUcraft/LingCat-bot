@@ -1,0 +1,28 @@
+{
+    "pluginName": "plugin-increase-decrease",
+    "default": true,
+    "privateAvl": false,
+    "cmd": [
+        "welcome"
+    ],
+    "options": {
+        "alias": {
+            "h": [
+                "help",
+                "帮助"
+            ]
+        },
+        "boolean": [
+            "h"
+        ],
+        "default": {},
+        "string": []
+    },
+    "usage": "#welcome",
+    "description": "定制入群欢迎词",
+    "showThisFeature": true,
+    "permission": [
+        "admin",
+        "owner"
+    ]
+}

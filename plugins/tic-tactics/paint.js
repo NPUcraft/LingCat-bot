@@ -1,5 +1,7 @@
-const Jimp = require("jimp");
-const path = require("path");
+import Jimp from "jimp";
+import path from "path";
+import dirname from "../../lib/dirname.js";
+const __dirname = dirname(import.meta.url);
 
 /**
  * 选择区域
@@ -158,9 +160,11 @@ async function selectPlayer(img, type) {
     return img;
 }
 
-exports.selectPlayer = selectPlayer;
-exports.getNextImgWithoutSel = getNextImgWithoutSel;
-exports.getNextImgWithSel = getNextImgWithSel;
-exports.getWaitingImg = getWaitingImg;
-exports.getPKImg = getPKImg;
-exports.getGrid = getGrid;
+export {
+    selectPlayer,
+    getNextImgWithSel,
+    getNextImgWithoutSel,
+    getWaitingImg,
+    getPKImg,
+    getGrid
+}

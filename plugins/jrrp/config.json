@@ -1,0 +1,29 @@
+{
+    "pluginName": "plugin-jrrp",
+    "default": true,
+    "privateAvl": false,
+    "cmd": [
+        "jrrp"
+    ],
+    "options": {
+        "alias": {
+            "h": [
+                "help",
+                "帮助"
+            ]
+        },
+        "boolean": [
+            "h"
+        ],
+        "default": {},
+        "string": []
+    },
+    "usage": "-jrrp",
+    "description": "查看今日人品",
+    "showThisFeature": true,
+    "permission": [
+        "member",
+        "admin",
+        "owner"
+    ]
+}

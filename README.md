@@ -1,15 +1,17 @@
 <div align="center">
 
-# LingCat-bot
+# SiriusBot2
 
-基于 [oicq](https://github.com/takayama-lily/oicq) 的 qq 机器人，由[SiriusBot](https://github.com/Sirius0v0/SiriusBot)融合转化而来
+基于 [oicq](https://github.com/takayama-lily/oicq) 的 qq 机器人
 
 [![license](https://img.shields.io/github/license/Sirius0v0/SiriusBot)](https://choosealicense.com/licenses/agpl-3.0/)
 [![version](https://img.shields.io/github/package-json/v/Sirius0v0/SiriusBot)](https://github.com/NPUcraft/LingCat-bot)
 [![node](https://img.shields.io/node/v/oicq)](https://github.com/takayama-lily/oicq)
 
 </div>
+
 ## 简介
+
 一款什么都想做的QQ机器人。基于 [`oicq`](https://github.com/takayama-lily/oicq ) 开发。
 
 灵喵 致力于为群友提供一个娱乐的互动方案，让群友们友好交流，活跃群内话题。同时还期望其能够让qq群与MC服务器通信，带来更佳的游戏体验。
@@ -18,7 +20,7 @@
 
 ## 开始使用
 
-**（推荐方式）通过脚手架安装**
+~~**（推荐方式）通过脚手架安装【已废弃】**~~
 
 1. 安装管理工具
 
@@ -67,7 +69,7 @@ $ npm i
 3. 运行
 
 ```bash
-$ npm run main
+$ npm run start
 ```
 
 
@@ -105,6 +107,10 @@ $ npm run main
 + [Jimp](https://github.com/oliver-moran/jimp)
 + [cheerio](https://github.com/cheeriojs/cheerio)
 + [mathjs](https://github.com/josdejong/mathjs)
++ [lodash](https://github.com/lodash/lodash)
++ [got](https://github.com/sindresorhus/got)
++ [seed-random](https://github.com/ForbesLindesay/seed-random)
++ [log4js](https://github.com/log4js-node/log4js-node)
 
 ## 一些参考资料
 

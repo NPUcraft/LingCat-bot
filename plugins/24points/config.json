@@ -1,0 +1,35 @@
+{
+    "pluginName": "plugin-24points",
+    "default": true,
+    "privateAvl": false,
+    "cmd": [
+        "24点",
+        "24p"
+    ],
+    "options": {
+        "alias": {
+            "h": [
+                "help",
+                "帮助"
+            ],
+            "r": [
+                "ranking",
+                "排行榜"
+            ]
+        },
+        "boolean": [
+            "h",
+            "r"
+        ],
+        "default": {},
+        "string": []
+    },
+    "usage": "-24p/-24点",
+    "description": "24点游戏",
+    "showThisFeature": true,
+    "permission": [
+        "member",
+        "admin",
+        "owner"
+    ]
+}

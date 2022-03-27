@@ -1,0 +1,30 @@
+{
+    "pluginName": "plugin-mc-enchant",
+    "default": true,
+    "privateAvl": false,
+    "cmd": [
+        "附魔",
+        "fm"
+    ],
+    "options": {
+        "alias": {
+            "h": [
+                "help",
+                "帮助"
+            ]
+        },
+        "boolean": [
+            "h"
+        ],
+        "default": {},
+        "string": []
+    },
+    "usage": "-fm",
+    "description": "附魔台附魔",
+    "showThisFeature": true,
+    "permission": [
+        "member",
+        "admin",
+        "owner"
+    ]
+}

@@ -1,7 +1,4 @@
-const path = require("path");
-const scoreListDir = path.join(__dirname, "../../config-template/config");
-const { _readFileSync } = require("../../lib/file");
-const fs = require("fs");
+import { loadFileAsJson, writeConfigSync } from "../../lib/file-system.js";
 
 class Score {
 
@@ -10,25 +7,25 @@ class Score {
         this.load()
     }
 
-    load = () => {
-        try {
-            this._score_list = _readFileSync(scoreListDir, "24pointScoreList");
-        } catch (error) {
-            console.log(error.message);
-        }
+    load() {
+        this._score_list = loadFileAsJson("data/config/24pointScoreList.json");
+        // 不存在则创建
+        if (this._score_list == null) {
+            writeConfigSync("24pointScoreList.json", "{}")
+            this._score_list = {};
+        };
     }
 
-    dump = () => {
-        _readFileSync(scoreListDir, "24pointScoreList");  // 没有则创建配置文件
-        fs.writeFileSync(scoreListDir + "/24pointScoreList.json", JSON.stringify(this._score_list, null, '\t'));
+    dump() {
+        writeConfigSync("24pointScoreList.json", JSON.stringify(this._score_list, null, '\t'), true);
     }
 
-    getScoreList = () => {
+    getScoreList() {
         let scoreList = this._score_list;
         return scoreList;
     }
 
-    updateScore = (user_id = null, uname = null, time = null) => {
+    updateScore(user_id = null, uname = null, time = null) {
         const uid = String(user_id);
         let scoreList = this.getScoreList();
         if (typeof scoreList[uid] === "undefined") scoreList[uid] = { "uname": "", "time": 0, "score": 0 };
@@ -39,7 +36,7 @@ class Score {
         this.dump();
     }
 
-    updateName = (user_id = null, uname = null) => {
+    updateName(user_id = null, uname = null) {
         const uid = String(user_id);
         let scoreList = this.getScoreList();
         if (typeof scoreList[uid] === "undefined") scoreList[uid] = { "uname": "", "time": 0, "score": 0 };
@@ -49,4 +46,4 @@ class Score {
     }
 }
 
-exports.Score = Score;
+export { Score };

@@ -1,20 +1,20 @@
-const { Data } = require("./mcData");
-const { segment } = require("oicq");
-const mc = require('minecraft-protocol');
+import { Data } from "./mcData.js";
+import { segment } from "oicq";
+import mc from "minecraft-protocol";
 
 // 获取服务器信息
-const getServerInfo = async (host, port = 25565) => {
+async function getServerInfo(host, port = 25565) {
     try {
         return await mc.ping({ host: host, port: port });
     } catch (error) {
         return "出错啦！";
     }
 }
-exports.getServerInfo = getServerInfo;
 
 // 获取服务器玩家列表信息
-const getPlayerInfo = async (host, port = 25565) => {
+async function getPlayerInfo(host, port = 25565) {
     let serverInfo = await getServerInfo(host, port);
+    if (typeof serverInfo == "string") return null;
     let playerInfo = serverInfo?.players;
     let playerList = serverInfo?.players?.sample;
     let players = [];
@@ -26,21 +26,20 @@ const getPlayerInfo = async (host, port = 25565) => {
     playerInfo["sample"] = players;
     return playerInfo;
 }
-exports.getPlayerInfo = getPlayerInfo;
+
 
 // 获取服务器图标
-const getServerFav = async (host, port = 25565) => {
+async function getServerFav(host, port = 25565) {
     let serverInfo = await getServerInfo(host, port);
     return serverInfo?.favicon;
 }
-exports.getServerFav = getServerFav;
 
 // 获取服务器状态
-const getServerPing = async (group_id, host, port = 25565) => {
-    if (typeof host === "undefined") {
+async function getServerPing(group_id, host, port = 25565) {
+    if (host === "") {
         let serverList = new Data().getServerList(group_id);
         let ip = serverList[0]?.ip?.split("|")?.[0];
-        if (typeof ip === "undefined") return;
+        if (typeof ip === "undefined") return "服务器呢？";
         [host, port] = ip.split(":");
         if (typeof port === "undefined") port = 25565;
     } else {
@@ -63,23 +62,22 @@ const getServerPing = async (group_id, host, port = 25565) => {
     let msg;
     if (typeof fav === "undefined") {
         msg = [
-            segment.text(`服务器地址: ${serverAddress}\n`),
-            segment.text(`Ping: ${ping}ms`)
+            `服务器地址: ${serverAddress}\n`,
+            `Ping: ${ping}ms`
         ];
     } else {
         fav = fav.split(",").slice(1).join(",");
         msg = [
             segment.image(Buffer.from(fav, "base64")),
-            segment.text(`服务器地址: ${serverAddress}\n`),
-            segment.text(`Ping: ${ping}ms`)
+            `服务器地址: ${serverAddress}\n`,
+            `Ping: ${ping}ms`
         ];
     }
     return msg;
 }
-exports.getServerPing = getServerPing;
 
 // 保存服务器信息
-const addServer = async (group_id, uname, host, port = 25565) => {
+async function addServer(group_id, uname, host, port = 25565) {
     [host, port] = host.split(":");
     if (typeof port === "undefined") port = 25565;
     let serverInfo = await getServerInfo(host, port);
@@ -91,20 +89,18 @@ const addServer = async (group_id, uname, host, port = 25565) => {
     }, group_id);
     return `关注${uname}(${address})服务器成功！`;
 }
-exports.addServer = addServer;
 
 // 删除服务器信息
-const removeServer = async (group_id, uname) => {
+async function removeServer(group_id, uname) {
     let serverList = new Data().getServerList(group_id)
         .filter(server => server?.["uname"] == uname.trim());
     if (serverList.length === 0) return "未查到该服务器";
     new Data().removeServer(uname, group_id);
     return "已删除该服务器！";
 }
-exports.removeServer = removeServer;
 
 // 查看服务器列表
-const listServer = async (group_id) => {
+async function listServer(group_id) {
     let serverList = new Data().getServerList(group_id);
     let result;
     let serverTable = [];
@@ -118,19 +114,19 @@ const listServer = async (group_id) => {
     }
     return result;
 }
-exports.listServer = listServer;
 
 // 返回服务器玩家列表信息
-const getPlayersList = async (group_id) => {
+async function getPlayersList(group_id) {
     let serverList = new Data().getServerList(group_id);
     let info = "";
     let ip = serverList[0]?.ip?.split("|")?.[0];
-    if (typeof ip === "undefined") return;
+    if (typeof ip === "undefined") return "服务器呢？";
     let playerMax, playerOnline = 0;
     for (let cnt = 0; cnt < serverList[0]?.ip?.split("|")?.length; cnt++) {
         let _ip = serverList[0]?.ip?.split("|")[cnt];
         let [host, port] = _ip.split(":");
         let playersList = await getPlayerInfo(host, port);
+        if (!playersList) continue;
         playerMax = playersList.max;
         if (typeof playersList?.sample === "string") continue;
         playerOnline += playersList?.sample.length;
@@ -144,4 +140,11 @@ const getPlayersList = async (group_id) => {
     ];
     return msg;
 }
-exports.getPlayersList = getPlayersList;
+
+export {
+    listServer,
+    getPlayersList,
+    getServerPing,
+    addServer,
+    removeServer
+}

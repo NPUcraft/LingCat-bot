@@ -1,0 +1,33 @@
+{
+    "pluginName": "plugin-manage",
+    "default": true,
+    "privateAvl": false,
+    "cmd": [
+        "on",
+        "开启",
+        "开",
+        "off",
+        "关闭",
+        "关"
+    ],
+    "options": {
+        "alias": {
+            "h": [
+                "help",
+                "帮助"
+            ]
+        },
+        "boolean": [
+            "h"
+        ],
+        "default": {},
+        "string": []
+    },
+    "usage": "#on/#off",
+    "description": "管理功能",
+    "showThisFeature": true,
+    "permission": [
+        "admin",
+        "owner"
+    ]
+}

@@ -1,0 +1,39 @@
+{
+    "pluginName": "plugin-custom-reply",
+    "default": true,
+    "privateAvl": false,
+    "cmd": [
+        "set"
+    ],
+    "options": {
+        "alias": {
+            "h": [
+                "help",
+                "帮助"
+            ],
+            "r": [
+                "remove",
+                "删"
+            ],
+            "i": [
+                "info",
+                "查"
+            ]
+        },
+        "boolean": [
+            "h"
+        ],
+        "default": {},
+        "string": [
+            "r",
+            "i"
+        ]
+    },
+    "usage": "#set",
+    "description": "自定义回复内容",
+    "showThisFeature": true,
+    "permission": [
+        "admin",
+        "owner"
+    ]
+}

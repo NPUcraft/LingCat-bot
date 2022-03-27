@@ -1,0 +1,30 @@
+{
+    "pluginName": "plugin-baiduForU",
+    "default": true,
+    "privateAvl": false,
+    "cmd": [
+        "百度",
+        "baidu"
+    ],
+    "options": {
+        "alias": {
+            "h": [
+                "help",
+                "帮助"
+            ]
+        },
+        "boolean": [
+            "h"
+        ],
+        "default": {},
+        "string": []
+    },
+    "usage": "-baidu",
+    "description": "让我帮你百度",
+    "showThisFeature": true,
+    "permission": [
+        "member",
+        "admin",
+        "owner"
+    ]
+}

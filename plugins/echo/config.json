@@ -1,0 +1,20 @@
+{
+    "pluginName": "plugin-echo",
+    "default": true,
+    "privateAvl": false,
+    "cmd": [],
+    "options": {
+        "alias": {},
+        "boolean": [],
+        "default": {},
+        "string": []
+    },
+    "usage": "'学说话内容'",
+    "description": "学说话",
+    "showThisFeature": true,
+    "permission": [
+        "member",
+        "admin",
+        "owner"
+    ]
+}

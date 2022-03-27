@@ -1,0 +1,41 @@
+{
+    "pluginName": "plugin-artifact",
+    "default": true,
+    "privateAvl": false,
+    "cmd": [
+        "syw",
+        "圣遗物"
+    ],
+    "options": {
+        "alias": {
+            "h": [
+                "help",
+                "帮助"
+            ],
+            "背包": [
+                "b"
+            ],
+            "强化": [
+                "e"
+            ]
+        },
+        "boolean": [
+            "h",
+            "b",
+            "e"
+        ],
+        "default": {},
+        "string": [
+            "b",
+            "e"
+        ]
+    },
+    "usage": "-syw",
+    "description": "刷圣遗物模拟器",
+    "showThisFeature": true,
+    "permission": [
+        "member",
+        "admin",
+        "owner"
+    ]
+}

@@ -1,0 +1,30 @@
+{
+    "pluginName": "plugin-jrmchl",
+    "default": true,
+    "privateAvl": false,
+    "cmd": [
+        "jrmchl",
+        "今日运势"
+    ],
+    "options": {
+        "alias": {
+            "h": [
+                "help",
+                "帮助"
+            ]
+        },
+        "boolean": [
+            "h"
+        ],
+        "default": {},
+        "string": []
+    },
+    "usage": "-今日运势",
+    "description": "查看今日运势",
+    "showThisFeature": true,
+    "permission": [
+        "member",
+        "admin",
+        "owner"
+    ]
+}

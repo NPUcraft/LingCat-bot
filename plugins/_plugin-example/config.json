@@ -1,0 +1,40 @@
+{
+    "//": [
+        "本字段仅作为注释食用: ",
+        "1. pluginName为空则以文件夹名作为插件名称",
+        "   若文件夹以_开头(如本示例插件)则不加载该插件",
+        "2. default为插件默认开启状态",
+        "3. privateAvl(private available)为是否支持私聊",
+        "3. cmd中为可触发插件功能的命令字符",
+        "4. options中配置命令解析, alias为必填项,需要填写所有可选必选参数,如下所示,",
+        "   其他非必填项,具体配置规则查看/lib/parse-args.js",
+        "5. usage为简单的指令",
+        "6. showThisFeature为是否展示该功能到功能列表",
+        "tip: 插件名不能为纯数字且不建议更改,否则会视为新插件重新加载并配置"
+    ],
+    "pluginName": "",
+    "default": true,
+    "privateAvl": false,
+    "cmd": [],
+    "options": {
+        "alias": {
+            "h": [
+                "help",
+                "帮助"
+            ]
+        },
+        "boolean": [
+            "h"
+        ],
+        "default": {},
+        "string": []
+    },
+    "usage": "'<学说话内容>'",
+    "description": "学说话~",
+    "showThisFeature": true,
+    "permission": [
+        "member",
+        "admin",
+        "owner"
+    ]
+}

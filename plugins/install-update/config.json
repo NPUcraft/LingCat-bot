@@ -1,0 +1,36 @@
+{
+    "pluginName": "plugin-install-update",
+    "default": true,
+    "privateAvl": false,
+    "cmd": [
+        "bot"
+    ],
+    "options": {
+        "alias": {
+            "h": [
+                "help",
+                "帮助"
+            ],
+            "install": [
+                "安装",
+                "i"
+            ],
+            "update": [
+                "更新",
+                "u"
+            ]
+        },
+        "boolean": [
+            "help"
+        ],
+        "default": {},
+        "string": []
+    },
+    "usage": "#install/#安装",
+    "description": "安装机器人服务",
+    "showThisFeature": false,
+    "permission": [
+        "admin",
+        "owner"
+    ]
+}
