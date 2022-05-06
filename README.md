@@ -20,8 +20,8 @@
 
 ## 开始使用
 
-~~**（推荐方式）通过脚手架安装【已废弃】**~~
-
+~~**（推荐方式）通过脚手架安装【已废弃,待更新后重新开启】**~~
+<!-- 
 1. 安装管理工具
 
 ```bash
@@ -44,20 +44,18 @@ $ sirios run
 ```bash
 # 注意在项目根目录下执行
 $ sirios plugin new
-```
+``` -->
 **（纯净安装）不使用脚手架安装**
 
 1. 从 GitHub 仓库拉取项目
 
 >**注意**
 >
->从 dev 分支中安装意味着你将使用最新特性的代码，它们并没有进行充分的稳定性测试 在任何情况下请不要将其应用于生产环境!
+>项目路径不能包含中文！
+> 
 
 ```bash
-# main分支
-$ git clone https://github.com/Sirius0v0/SiriusBot.git#main
-# dev分支
-$ git clone https://github.com/Sirius0v0/SiriusBot.git#dev
+$ git clone git@github.com:NPUcraft/LingCat-bot.git
 ```
 
 2. 安装依赖
@@ -94,7 +92,7 @@ $ npm run start
   - [x] 随机问答
   - [x] 年度水群报告
   - [ ] wiki查询
-  - [ ] bilibili直播间推送
+  - [x] bilibili直播间推送
   - [ ] UP主视频更新推送
   - [ ] MC&QQ跨平台聊天
   - [ ] 限免游戏信息
