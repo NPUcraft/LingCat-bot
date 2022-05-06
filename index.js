@@ -59,7 +59,6 @@ bot.once("system.online", async function (e) {
 
 // 群消息处理
 bot.on("message.group.normal", async function (e) {
-    console.log(await e.group.fs.dir())
     // 处理错误信息并汇报给主人
     await onMessage(e).catch(err => {
         this.logger.error(err);
