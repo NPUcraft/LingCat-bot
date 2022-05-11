@@ -12,6 +12,7 @@ function apply(hook) {
         /* 检查命令是否匹配及其功能使用权限 */
         if (!getPermission(e.data, __dirname)) return;
         if (e.data.sub_type !== "poke") return;
+        if (e.data.target_id !== e.data.self_id) return;
         if (Math.random() > PR) return;
         e.bot.sendGroupMsg(e.data.group_id, sendMsg(e.data));
     });
