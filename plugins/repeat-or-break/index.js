@@ -2,9 +2,11 @@ console.log('plugin-repeater loaded');
 
 import _ from "lodash";
 import { segment } from "oicq";
+import { loadFileAsJson } from "../../lib/file-system.js";
 import { getPermission } from "../../lib/permission.js";
 import dirname from "../../lib/dirname.js";
 const __dirname = dirname(import.meta.url);
+const botEnv = loadFileAsJson("data/bot-env.json");
 
 // 消息列表
 const msgList = {
@@ -26,6 +28,10 @@ function apply(hook) {
         // 初始化当前群的消息列表
         if (msgList[gid] == void 0) msgList[gid] = [];
         let msgAbstract = buildMsgAbstract(e.data.message) + `✈${e.data.user_id}`;
+
+        // 命令不计入复读表中
+        if (_.union(botEnv.cmdFlag, botEnv.adminCmdFlag).indexOf(msgAbstract[0]) !== -1) return;
+
         // 判断消息一致且连续两个人不是同一个人则压入消息列表,不一致则重置
         if (findSubstrBeforeSym(msgAbstract, "✈") == findSubstrBeforeSym(msgList[gid][msgList[gid].length - 1], "✈")) {
             if (msgList[gid][msgList[gid].length - 1] !== msgAbstract)
