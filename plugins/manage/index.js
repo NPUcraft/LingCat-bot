@@ -51,7 +51,7 @@ function on(data, plugin) {
     const gid = String(data.group_id);
     if (plugin.trim().length === 0) return help;
     let zip = getPluginNum();
-    if (!Number.isNaN(Number(plugin))) plugin = zip?.[plugin];
+    if (!Number.isNaN(Number(plugin))) plugin = zip?.[Number(plugin)];
     let permission = loadConfigAsJson("permission.json");
     let pluginsList = Object.keys(permission[gid])
     _.pull(pluginsList, "version");      // 去除version字段 剩余为已安装的插件列表
@@ -67,7 +67,7 @@ function off(data, plugin) {
     const gid = String(data.group_id);
     if (plugin.trim().length === 0) return help;
     let zip = getPluginNum();
-    if (!Number.isNaN(Number(plugin))) plugin = zip?.[plugin];
+    if (!Number.isNaN(Number(plugin))) plugin = zip?.[Number(plugin)];
     let permission = loadConfigAsJson("permission.json");
     let pluginsList = Object.keys(permission[gid])
     _.pull(pluginsList, "version");      // 去除version字段 剩余为已安装的插件列表
