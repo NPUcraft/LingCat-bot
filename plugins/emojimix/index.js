@@ -7,6 +7,7 @@ import { loadFileAsJson } from "../../lib/file-system.js";
 import { getPermission } from "../../lib/permission.js";
 import dirname from "../../lib/dirname.js";
 const __dirname = dirname(import.meta.url);
+// emojimix更新地址https://tikolu.net/emojimix/emojis.js
 const emojiList = loadFileAsJson([__dirname, "./emoji.json"]);
 let emojiDic = {};
 for (const iterator of emojiList) {
