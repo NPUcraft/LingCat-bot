@@ -1,0 +1,29 @@
+{
+    "pluginName": "plugin-emojimix",
+    "default": true,
+    "privateAvl": false,
+    "cmd": [
+        "emoji"
+    ],
+    "options": {
+        "alias": {
+            "h": [
+                "help",
+                "帮助"
+            ]
+        },
+        "boolean": [
+            "h"
+        ],
+        "default": {},
+        "string": []
+    },
+    "usage": "-emoji 😎+😁",
+    "description": "emoji合成",
+    "showThisFeature": true,
+    "permission": [
+        "member",
+        "admin",
+        "owner"
+    ]
+}
