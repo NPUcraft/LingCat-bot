@@ -1,5 +1,6 @@
 import _ from "lodash";
 import { segment } from "oicq";
+import fs from "fs";
 import { loadConfigAsJson } from "../../../lib/file-system.js";
 import { getPermission } from "../../../lib/permission.js";
 import dirname from "../../../lib/dirname.js";
@@ -25,7 +26,7 @@ function _reply(data) {
     let msgAbstract = buildMsgAbstract(data.message).trim();
     for (const replyInfo of replyDoc[gid]["reply"]) {
         if (replyInfo.abstract.trim().toLocaleLowerCase() == msgAbstract.toLocaleLowerCase())
-            return buildSendableMsg(replyInfo.words);
+            return buildSendableMsg_(replyInfo.words, gid);
     }
     return "";
 }
@@ -48,8 +49,8 @@ function buildMsgAbstract(message) {
     return abstract.join("");
 }
 
-// 构建可发送的消息列表
-function buildSendableMsg(message) {
+// 构建可发送的消息列表(与buildSendableMsg不一样，更改了图片为本地地址)
+function buildSendableMsg_(message, gid) {
     let replyMsg = [];
     message.forEach(m => {
         if (m.type === 'text') {
@@ -57,7 +58,8 @@ function buildSendableMsg(message) {
         } else if (m.type === 'face') {
             replyMsg.push(segment.face(m?.id));
         } else if (m.type === 'image') {
-            replyMsg.push(segment.image(m?.url));
+            let imageData = fs.readFileSync(`data/config/custom-reply-dist/${gid}/${m?.file}`);
+            replyMsg.push(segment.image(imageData));
         } else if (m.type === 'at') {
             replyMsg.push(segment.at(m?.qq));
         } else {

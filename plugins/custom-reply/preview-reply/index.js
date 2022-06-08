@@ -1,7 +1,7 @@
 import _ from "lodash";
-import { loadFileAsJson, loadConfigAsJson } from "../../../lib/file-system.js";
+import { loadConfigAsJson } from "../../../lib/file-system.js";
 import { getPermission } from "../../../lib/permission.js";
-import { parseArgs } from "../../../lib/parse-args.js";
+import fs from "fs";
 import { segment } from "oicq";
 import dirname from "../../../lib/dirname.js";
 const __dirname = dirname(import.meta.url);
@@ -63,16 +63,17 @@ function showReplyDoc(data) {
             }
         }
         if (pureText) {
-            textKeywords.push(buildSendableMsg(replyInfo["key"]).join(""));
+            textKeywords.push(buildSendableMsg_(replyInfo["key"], gid).join(""));
         } else {
-            otherKeywords = _.concat(otherKeywords, buildSendableMsg(replyInfo["key"]), [" | "])
+            otherKeywords = _.concat(otherKeywords, buildSendableMsg_(replyInfo["key"], gid), [" | "])
         }
     }
     otherKeywords.pop();    // 去掉 |
     return { textKeywords: textKeywords.join(" | "), otherKeywords: otherKeywords };
 }
 
-function buildSendableMsg(message) {
+// 构建可发送的消息列表(与buildSendableMsg不一样，更改了图片为本地地址)
+function buildSendableMsg_(message, gid) {
     let replyMsg = [];
     message.forEach(m => {
         if (m.type === 'text') {
@@ -80,7 +81,8 @@ function buildSendableMsg(message) {
         } else if (m.type === 'face') {
             replyMsg.push(segment.face(m?.id));
         } else if (m.type === 'image') {
-            replyMsg.push(segment.image(m?.url));
+            let imageData = fs.readFileSync(`data/config/custom-reply-dist/${gid}/${m?.file}`);
+            replyMsg.push(segment.image(imageData));
         } else if (m.type === 'at') {
             replyMsg.push(segment.at(m?.qq));
         } else {

@@ -1,6 +1,7 @@
 console.log('plugin-custom-reply loaded');
 
 import _ from "lodash";
+import download from "download";
 import { loadConfigAsJson, writeConfigSync, loadFileAsJson } from "../../../lib/file-system.js";
 import { getPermission } from "../../../lib/permission.js";
 import dirname from "../../../lib/dirname.js";
@@ -27,7 +28,7 @@ function apply(hook) {
             `.trim();
     });
 
-    hook('onMessage', function (e) {
+    hook('onMessage', async function (e) {
         /* 检查命令是否匹配及其功能使用权限 */
         if (!getPermission(e.data, __dirname, [e.flag, e.cmd])) return;
         /* 解析命令 参数未知报错提示 */
@@ -54,12 +55,12 @@ function apply(hook) {
             }
         }
         if (!subCmd) {
-            e.data.reply(customReply(e.data, e.cmd));
+            e.data.reply(await customReply(e.data, e.cmd));
         }
     });
 }
 
-function customReply(data, cmd) {
+async function customReply(data, cmd) {
     const gid = String(data.group_id);
     let replyInfo = parseDefinition(data.message, cmd.length);
     if (typeof replyInfo === "string") return replyInfo;
@@ -81,9 +82,23 @@ function customReply(data, cmd) {
             "words": replyInfo.words
         });
         writeConfigSync("custom-reply.json", JSON.stringify(replyDoc, null, '\t'), true);
+        await saveImg(replyInfo.key, replyInfo.words, gid);
         return "添加成功";
     } else {
         return "[ERROR] 添加失败！关键词已存在,请删除后重新添加";
+    }
+}
+
+async function saveImg(key, words, guid) {
+    for (let k = 0; k < key.length; k++) {
+        if (key[k].type == "image") {
+            await download(key[k].url, `data/config/custom-reply-dist/${guid}`, { "filename": key[k].file });
+        }
+    }
+    for (let w = 0; w < words.length; w++) {
+        if (words[w].type == "image") {
+            await download(words[w].url, `data/config/custom-reply-dist/${guid}`, { "filename": words[w].file });
+        }
     }
 }
 
