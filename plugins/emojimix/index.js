@@ -54,6 +54,11 @@ async function runEmojiMix(message) {
     message = message.join(" ").replace(/\s+/ig, '');
     if (message.length === 0) return help;
     let emojis = message.split("+");
+    if (emojis.length !== 2) {
+        emojis = message.split("＋");
+        if (emojis.length !== 2)
+            return ["命令格式错误！\n格式为:<命令><空格><表情+表情>\n例如-emoji 😎+😁"];
+    }
     let url = await emojimixer(emojis[0], emojis[1]);
     return [url.startsWith("[") ? url : segment.image(url)];
 }
