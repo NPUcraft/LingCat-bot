@@ -88,6 +88,7 @@ function onCreate(bot) {
     hookBus.invoke('onCreate', bot);
 }
 
+let messageDic = {};
 async function onMessage(data) {
     let cmd = "";
     let rawArgs = "";
@@ -111,11 +112,25 @@ async function onMessage(data) {
         }
     }
     const args = parseArgs(rawArgs.split(" "), options);
+
+    // 记录用户消息对应的bot消息id
+    function recordMid(func) {
+        return function (content, quote = false) {
+            let result = func.call(this, content, quote);
+            result.then(res => {
+                messageDic[data.message_id] = res.message_id;
+            })
+            return result;
+        }
+    }
+    data.reply = recordMid(data.reply);
+
     await hookBus.invokePromise('onMessage', { "bot": bot, "data": data, "flag": flag, "cmd": cmd, "rawArgs": rawArgs, "args": args })
         .catch(err => { throw err });
 }
 
 async function onNotice(data) {
+    data["messageDic"] = messageDic;
     await hookBus.invokePromise('onNotice', { "bot": bot, "data": data })
         .catch(err => { throw err });
 }
