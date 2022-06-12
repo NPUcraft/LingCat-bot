@@ -1,0 +1,20 @@
+{
+    "pluginName": "plugin-follow-recall",
+    "default": true,
+    "privateAvl": false,
+    "cmd": [],
+    "options": {
+        "alias": {},
+        "boolean": [],
+        "default": {},
+        "string": []
+    },
+    "usage": "撤回消息",
+    "description": "跟随撤回消息",
+    "showThisFeature": false,
+    "permission": [
+        "member",
+        "admin",
+        "owner"
+    ]
+}
