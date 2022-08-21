@@ -45,7 +45,12 @@ function apply(hook) {
                 if (e.args[arg] == "current") {
                     time = getCurrentTimeStr();
                 } else {
-                    time = e.args[arg];
+                    if (Number.isInteger(Number(e.args[arg])) && e.args[arg].length == 4)
+                        time = e.args[arg];
+                    else {
+                        e.data.reply(["设定的时间应为四位数字，如8:05应设置为0805"]);
+                        break;
+                    }
                 }
                 e.data.reply(await addDida(e.data.group_id, time, e.data, e.args["_"]));
                 subCmd = true;

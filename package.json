@@ -1,6 +1,6 @@
 {
   "name": "siriusbot2",
-  "version": "3.5.0",
+  "version": "3.5.1",
   "description": "qqGroup bot for fun",
   "main": "index.js",
   "scripts": {
