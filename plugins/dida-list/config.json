@@ -1,0 +1,46 @@
+{
+    "pluginName": "plugin-dida",
+    "default": true,
+    "privateAvl": false,
+    "cmd": [
+        "dida"
+    ],
+    "options": {
+        "alias": {
+            "h": [
+                "help",
+                "帮助"
+            ],
+            "t": [
+                "time",
+                "时间"
+            ],
+            "l": [
+                "list",
+                "列表"
+            ],
+            "r": [
+                "remove",
+                "移除"
+            ]
+        },
+        "boolean": [
+            "h",
+            "l"
+        ],
+        "default": {
+            "t": "current"
+        },
+        "string": [
+            "t",
+            "r"
+        ]
+    },
+    "usage": "#dida",
+    "description": "定时发送消息",
+    "showThisFeature": true,
+    "permission": [
+        "admin",
+        "owner"
+    ]
+}
